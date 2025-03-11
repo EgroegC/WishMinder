@@ -2,11 +2,12 @@ const pool = require('../../config/db');
 
 class User {
     
-    constructor({ name, email, password }) {
-      this.name = name;
-      this.email = email;
-      this.password = password;
-    }
+    constructor({ id = null, name, email, password }) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+      }
   
     async save() {
       const result = await pool.query(
@@ -14,6 +15,9 @@ class User {
          VALUES ($1, $2, $3) RETURNING *`,
         [this.name, this.email, this.password]
       );
+      
+      this.id = result.rows[0].id;
+
       return result.rows[0]; 
     }
   
