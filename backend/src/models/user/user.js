@@ -29,6 +29,14 @@ class User {
       return null;
     }
 
+    static async findById(id) {
+      const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+      if (result.rows.length) {
+        return new User(result.rows[0]); 
+      }
+      return null;
+    }
+
     static async update(id, { name, email, password }) {
         const result = await pool.query(
           `UPDATE users
