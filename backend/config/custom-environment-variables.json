@@ -1,0 +1,8 @@
+{
+    "database": {
+      "url": "DATABASE_URL"
+    },
+
+    "jwtPrivateKey": "JOB_TRACKER_JWT_PRIVATE_KEY"
+  }
+  
