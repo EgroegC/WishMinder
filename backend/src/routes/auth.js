@@ -21,7 +21,6 @@ router.post('/', async (req, res) => {
     res.send(token);
 });
 
-
 function validate(req) {
     const userSchema = Joi.object({
         email: Joi.string().min(9).max(255).required().email(),
@@ -30,6 +29,5 @@ function validate(req) {
       
   return userSchema.validate(req);
 }
-
 
 module.exports = router;

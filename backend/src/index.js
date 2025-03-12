@@ -1,4 +1,7 @@
 require("dotenv").config();
+require('express-async-errors');
+const winston = require('winston');
+const error = require('./middleware/error');
 const config = require('config');
 const pool = require('./config/db');
 const users = require('./routes/users');
@@ -18,6 +21,7 @@ pool.connect()
 app.use(express.json());
 app.use('/api/users', users);
 app.use('/api/auth', auth);
+app.use(error);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
