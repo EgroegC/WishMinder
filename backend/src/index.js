@@ -1,6 +1,5 @@
 require("dotenv").config();
 require('express-async-errors');
-const winston = require('winston');
 const error = require('./middleware/error');
 const config = require('config');
 const pool = require('./config/db');
