@@ -1,5 +1,5 @@
-const logger = require('../config/logger');
-const rollbar = require('../config/rollbar');
+const logger = require('../config/logger')();
+const rollbar = require('../config/rollbar')();
 
 module.exports = function(error, req, res, next){
     logger.error(error.message);

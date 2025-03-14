@@ -1,5 +1,4 @@
-const logger = require('../config/logger');
-const rollbar = require('../config/rollbar');
+const logger = require('../config/logger')();
 
 module.exports = function(){
   process.on("uncaughtException", (err) => {
