@@ -1,8 +1,10 @@
 {
-    "database": {
-      "url": ""
-    },
-    
-    "jwtPrivateKey": ""
+  "database": {
+    "url": ""
+  },
+  "jwtPrivateKey": "",
+  "environment": "",
+  "rollbar": {
+    "access_token": ""
   }
-  
+}
