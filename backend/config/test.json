@@ -1,0 +1,10 @@
+{
+    "database": {
+      "url": "aaaaaaa"
+    },
+    "jwtPrivateKey": "1234",
+    "environment": "",
+    "rollbar": {
+      "access_token": "aaaaaaa"
+    }
+  }
