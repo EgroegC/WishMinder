@@ -1,10 +1,7 @@
 {
-    "database": {
-      "url": "aaaaaaa"
-    },
-    "jwtPrivateKey": "1234",
-    "environment": "",
-    "rollbar": {
-      "access_token": "aaaaaaa"
-    }
+  "database": {
+    "host": "localhost",
+    "user": "test_user",
+    "name": "test_job_tracker"
   }
+}

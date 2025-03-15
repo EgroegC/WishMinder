@@ -1,12 +1,18 @@
 const { Pool } = require("pg");
 const config = require("config");
 
+const dbConfig = config.get("database");
+
 module.exports = function(){
-  if (!config.get("database.url")) {
-    throw new Error("FATAL ERROR: DATABASE_URL is not set in .env file");
+  if (!process.env.DATABASE_PASSWORD) {
+    throw new Error("FATAL ERROR: DATABASE_PASSWORD is not set in .env file");
   }
-  
+
   return new Pool({
-    connectionString: config.get("database.url"),
+    host: dbConfig.host,
+    port: dbConfig.port,
+    user: dbConfig.user,
+    password: process.env.DATABASE_PASSWORD,
+    database: dbConfig.name
   });
 }
