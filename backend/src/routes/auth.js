@@ -1,8 +1,8 @@
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const Joi = require('joi');
 const User = require('../models/user/user'); 
+const validate = require('./validation/auth_validation');
 const express = require('express');
 const router = express.Router();
 
@@ -19,14 +19,5 @@ router.post('/', async (req, res) => {
     const token = jwt.sign({ id: user.id }, process.env.JOB_TRACKER_JWT_PRIVATE_KEY);
     res.send(token);
 });
-
-function validate(req) {
-    const userSchema = Joi.object({
-        email: Joi.string().min(9).max(255).required().email(),
-        password: Joi.string().min(5).max(255).required(),
-      });
-      
-  return userSchema.validate(req);
-}
 
 module.exports = router;

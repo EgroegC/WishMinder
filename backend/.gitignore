@@ -2,3 +2,8 @@
 # Ignore environment files
 .env
 
+# Ignore node_modules
+node_modules/
+
+#Ignore test coverage
+coverage/
