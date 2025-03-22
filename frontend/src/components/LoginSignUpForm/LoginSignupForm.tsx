@@ -1,77 +1,90 @@
-import React, { useState } from "react";
 import "./LoginSignUpForm.css";
 import { FaUser, FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { FieldValues, useForm } from "react-hook-form";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface AuthFormProps {
   isSignup: boolean;
   onSubmit: (email: string, password: string, name?: string) => void;
 }
 
+const schema = z.object({
+  name: z.string().min(3, { message: "Name must be at least 3 characters." }),
+  email: z
+    .string()
+    .min(12, { message: "Email must be at least 12 characters." })
+    .email({ message: "Invalid email format." }),
+  password: z
+    .string()
+    .min(5, { message: "Password must be at least 5 characters." }),
+});
+
 function AuthForm({ isSignup, onSubmit }: AuthFormProps) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [error, setError] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(schema) });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  //   e.preventDefault();
 
-    if (!email || !password || (isSignup && !name)) {
-      setError("Please fill in all fields");
-    } else {
-      setError("");
-      onSubmit(email, password, isSignup ? name : undefined);
-    }
+  const onFormSubmit = (data: FieldValues) => {
+    onSubmit(data.email, data.password, isSignup ? data.name : undefined);
   };
 
   return (
     <div className="wrapper">
       <h1 className="header">{isSignup ? "Sign Up" : "Login"}</h1>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onFormSubmit)}>
         {isSignup && (
           <div className="input-box">
             <input
+              {...register("name")}
               type="text"
               placeholder="Username"
               id="name"
               name="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
               required
             />
             <FaUser className="icon" />
+            {errors.name && (
+              <p className="text-danger">{errors.name.message}</p>
+            )}
           </div>
         )}
 
         <div className="input-box">
           <input
-            type="email"
+            {...register("email")}
+            type="text"
             placeholder="Email"
             id="email"
             name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             required
           />
           <MdEmail className="icon" />
+          {errors.email && (
+            <p className="text-danger">{errors.email.message}</p>
+          )}
         </div>
 
         <div className="input-box">
           <input
+            {...register("password")}
             type="password"
             placeholder="Password"
             id="password"
             name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
             required
           />
           <FaLock className="icon" />
+          {errors.password && (
+            <p className="text-danger">{errors.password.message}</p>
+          )}
         </div>
 
         <button type="submit">{isSignup ? "Sign Up" : "Login"}</button>
