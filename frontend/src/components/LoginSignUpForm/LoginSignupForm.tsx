@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./LoginSignUpForm.css";
 import { FaUser, FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 interface AuthFormProps {
   isSignup: boolean;
@@ -74,6 +75,18 @@ function AuthForm({ isSignup, onSubmit }: AuthFormProps) {
         </div>
 
         <button type="submit">{isSignup ? "Sign Up" : "Login"}</button>
+
+        <div className="register-link">
+          {isSignup ? (
+            <p>
+              Already have an account? <Link to="/login">Login</Link>
+            </p>
+          ) : (
+            <p>
+              Don't have an account? <Link to="/signup">Register</Link>
+            </p>
+          )}
+        </div>
       </form>
     </div>
   );
