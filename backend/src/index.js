@@ -1,9 +1,11 @@
 require("dotenv").config();
 require('express-async-errors');
 const express = require('express');
+const cors = require("cors");
 const logger = require('./config/logger')();
 const app = express();
 
+app.use(cors());
 require('./startup/logging')();
 require('./startup/routes')(app);
 require('./startup/db')();
