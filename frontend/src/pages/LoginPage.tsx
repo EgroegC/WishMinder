@@ -1,5 +1,6 @@
 import AuthForm from "../components/LoginSignUpForm/LoginSignupForm";
 import "../components/LoginSignUpForm/LoginSignUpForm.css";
+import { Link } from "react-router-dom";
 
 function LoginPage() {
   function handleLogin(email: string, password: string) {
@@ -12,7 +13,7 @@ function LoginPage() {
 
       <div className="register-link">
         <p>
-          Don't have an account? <a href="#">Register</a>
+          Don't have an account? <Link to="/signup">Register</Link>
         </p>
       </div>
     </div>
