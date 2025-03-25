@@ -57,7 +57,6 @@
     font-size: 16px;
     color: #333;
     font-weight: 700;
-    margin-top: -40px;
 }
 
 .wrapper .register-link {
@@ -79,4 +78,5 @@
 .input-box p {
     font-size: 14px; /* Adjust size as needed */
     text-align: center;
+    margin-top: 8px;
 }
