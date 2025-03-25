@@ -22,7 +22,7 @@ describe('authorization middleware', () => {
         user = new User( {name: 'TestUser', email: 'test_user@gmail.com', password: hashedPassword} );
         await user.save();
         
-        token = jwt.sign({ id: user.id }, process.env.JOB_TRACKER_JWT_PRIVATE_KEY);
+        token = jwt.sign({ id: user.id }, process.env.JWT_ACCESS_TOKEN);
     });
 
     afterEach( async () => {
@@ -37,12 +37,12 @@ describe('authorization middleware', () => {
         expect(res.status).toBe(401);``
     });
 
-    it('should return 400 if token is invalid', async () => {
+    it('should return 403 if token is invalid', async () => {
         token = 'a';
 
         const res = await exec();
 
-        expect(res.status).toBe(400);
+        expect(res.status).toBe(403);
     });
 
     it('should return 200 if token is valid', async () => {

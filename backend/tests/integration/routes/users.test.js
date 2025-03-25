@@ -23,7 +23,7 @@ describe('/api/users', () => {
             user = new User( {name: 'TestUser', email: 'test_user@gmail.com', password: hashedPassword} );
             await user.save();
             
-            token = jwt.sign({ id: user.id }, process.env.JOB_TRACKER_JWT_PRIVATE_KEY);
+            token = jwt.sign({ id: user.id }, process.env.JWT_ACCESS_TOKEN);
         });
     
         afterEach( async () => {
@@ -31,7 +31,7 @@ describe('/api/users', () => {
         })
     
         it('should return 404 if token does not corespond to a existing user', async () => {
-            token = jwt.sign({ id: user.id+1 }, process.env.JOB_TRACKER_JWT_PRIVATE_KEY);
+            token = jwt.sign({ id: user.id+1 }, process.env.JWT_ACCESS_TOKEN);
     
             const res = await exec();
     

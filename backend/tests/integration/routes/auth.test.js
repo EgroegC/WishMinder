@@ -42,12 +42,14 @@ describe('/api/auth', () => {
         })
 
         it('should return a token if email and password are valid', async () => {
-            const token = jwt.sign({ id: user.id }, process.env.JOB_TRACKER_JWT_PRIVATE_KEY);
 
             const res = await exec();
 
+            const decodedToken = jwt.decode(res.body.accessToken);
+            console.log(decodedToken);
+
             expect(res.status).toBe(200);
-            expect(res.text).toBe(token);
+            expect(decodedToken.id).toBe(user.id);
         });
 
         it('should return a 400 response if email or password are invalid', async () => {
