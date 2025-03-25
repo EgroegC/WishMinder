@@ -12,7 +12,10 @@ interface AuthFormProps {
 }
 
 const schema = z.object({
-  name: z.string().min(3, { message: "Name must be at least 3 characters." }),
+  name: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters." })
+    .optional(),
   email: z
     .string()
     .min(12, { message: "Email must be at least 12 characters." })
@@ -28,8 +31,6 @@ function AuthForm({ isSignup, onSubmit }: AuthFormProps) {
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: zodResolver(schema) });
-
-  //   e.preventDefault();
 
   const onFormSubmit = (data: FieldValues) => {
     onSubmit(data.email, data.password, isSignup ? data.name : undefined);

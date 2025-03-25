@@ -6,7 +6,8 @@ function LoginPage() {
   function handleLogin(email: string, password: string) {
     apiClient
       .post("/api/auth", { email, password })
-      .then((res) => console.log(res.data));
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err.message));
   }
 
   return (
