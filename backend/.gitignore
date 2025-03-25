@@ -7,3 +7,5 @@ node_modules/
 
 #Ignore test coverage
 coverage/
+
+.DS_Store
