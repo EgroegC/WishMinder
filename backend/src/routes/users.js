@@ -2,7 +2,7 @@ const {authenticateToken} = require('../middleware/authorization');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const validate = require('./validation/user_validation');
-const User = require('../models/user/user'); 
+const User = require('../models/user'); 
 const express = require('express');
 const router = express.Router();
 

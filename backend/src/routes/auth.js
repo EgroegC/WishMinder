@@ -1,14 +1,14 @@
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const User = require('../models/user/user'); 
+const User = require('../models/user'); 
 const validate = require('./validation/auth_validation');
 const express = require('express');
 const router = express.Router();
 const {authenticateRefreshToken} = require('../middleware/authorization');
 
 const generateAccessToken = (user) => {
-    return jwt.sign({ id: user.id }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '10s' });
+    return jwt.sign({ id: user.id }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '10m' });
 };
 
 const generateRefreshToken = (user) => {

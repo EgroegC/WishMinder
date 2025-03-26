@@ -13,8 +13,8 @@ describe('authorization middleware', () => {
 
     const exec = async () => {
         return request(server)
-            .get('/api/users/me')
-            .set('Bearer', token);
+        .get('/api/users/me')
+        .set('Authorization', `Bearer ${token}`);
     }
 
     beforeEach( async () => {
