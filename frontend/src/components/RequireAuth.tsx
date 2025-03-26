@@ -1,5 +1,5 @@
-import { Navigate, Outlet } from "react-router-dom"; // To redirect the user
-import { useAuth } from "../hooks/useAuth"; // To use the access token from context
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const RequireAuth = () => {
   const { accessToken } = useAuth();

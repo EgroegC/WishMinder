@@ -10,7 +10,7 @@ function LoginPage() {
 
   function handleLogin(email: string, password: string) {
     apiClient
-      .post("/api/auth", { email, password })
+      .post("/api/auth", { email, password }, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
         setAccessToken(res.data.accessToken);

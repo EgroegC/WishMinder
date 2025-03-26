@@ -1,19 +1,22 @@
-import { useAuth } from "../hooks/useAuth";
-import { useState } from "react";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 function HomePage() {
-  const { accessToken } = useAuth();
-  const [token, setToken] = useState("");
+  const axiosPrivate = useAxiosPrivate();
 
   return (
-    <div>
-      <button
-        onClick={() => setToken(accessToken ? accessToken : "No token found")}
-      >
-        Show Token
-      </button>
-      <p>{token}</p>
-    </div>
+    <>
+      <div>
+        <button
+          onClick={() => {
+            axiosPrivate.get("/api/users/me").then((res) => {
+              console.log(res.data);
+            });
+          }}
+        >
+          Show Token
+        </button>
+      </div>
+    </>
   );
 }
 
