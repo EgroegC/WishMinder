@@ -15,8 +15,8 @@ describe('/api/users', () => {
         const exec = async () => {
             return request(server)
                 .get('/api/users/me')
-                .set('x-auth-token', token);
-        }
+                .set('Bearer', token);
+        } 
     
         beforeEach( async () => {
             const hashedPassword = await bcrypt.hash('12345', 10);

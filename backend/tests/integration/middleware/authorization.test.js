@@ -14,7 +14,7 @@ describe('authorization middleware', () => {
     const exec = async () => {
         return request(server)
             .get('/api/users/me')
-            .set('x-auth-token', token);
+            .set('Bearer', token);
     }
 
     beforeEach( async () => {

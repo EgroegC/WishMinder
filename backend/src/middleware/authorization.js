@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const authenticateToken = (req, res, next) => {
-    const token = req.header('x-auth-token');
+    const token = req.header('Authorization')?.split(' ')[1];
     if (!token) return res.status(401).send('Access denied. No token provided.');
 
     try{
@@ -22,11 +22,17 @@ const authenticateRefreshToken = (req, res, next) => {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.status(403).send('No refresh token provided.');
 
-    jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN, (err, user) => {
-        if (err) return res.status(403).send('Invalid refresh token.');
+    try {
+        const user = jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN);
         req.user = user;
-        next();
-    });
+        next();  
+    } catch (err) {
+        if (err.name === 'TokenExpiredError') {
+            return res.status(403).send('Refresh token expired.');
+        } else {
+            return res.status(403).send('Invalid refresh token.');
+        }
+    }
 };
 
 module.exports = { authenticateToken, authenticateRefreshToken };

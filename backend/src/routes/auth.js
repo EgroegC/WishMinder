@@ -8,11 +8,11 @@ const router = express.Router();
 const {authenticateRefreshToken} = require('../middleware/authorization');
 
 const generateAccessToken = (user) => {
-    return jwt.sign({ id: user.id }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '1m' });
+    return jwt.sign({ id: user.id }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '10s' });
 };
 
 const generateRefreshToken = (user) => {
-    return jwt.sign({ id: user.id }, process.env.JWT_REFRESH_TOKEN, { expiresIn: '7d' });
+    return jwt.sign({ id: user.id }, process.env.JWT_REFRESH_TOKEN, { expiresIn: '7h' });
 };
 
 router.post('/', async (req, res) => {
