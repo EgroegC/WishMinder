@@ -16,7 +16,7 @@ function SignupPage() {
   }
 
   return (
-    <div>
+    <div className="auth-page">
       <AuthForm isSignup={true} onSubmit={handleSignup} />
     </div>
   );

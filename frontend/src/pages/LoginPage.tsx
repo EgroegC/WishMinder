@@ -20,7 +20,7 @@ function LoginPage() {
   }
 
   return (
-    <div>
+    <div className="auth-page">
       <AuthForm isSignup={false} onSubmit={handleLogin} />
     </div>
   );
