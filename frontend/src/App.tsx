@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import HomePage from "./pages/HomePage";
-import RequireAuth from "./components/RequireAuth";
+import RequireAuth from "./components/AuthenticationForPages/RequireAuth";
 
 function App() {
   return (
