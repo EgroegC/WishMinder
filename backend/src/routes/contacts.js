@@ -22,4 +22,13 @@ router.post('/', authenticateToken, async (req, res) => {
     res.send(contact);
 });
 
+router.get('/', authenticateToken, async (req, res) => {
+    try {
+        const contacts = await Contact.getAllContacts(req.user.id);
+        res.json(contacts);
+    } catch (error) {
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 module.exports = router;

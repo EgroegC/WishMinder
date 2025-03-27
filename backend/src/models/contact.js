@@ -12,7 +12,7 @@ class Contact {
       this.birthdate = birthdate;
     }
   
-      async save() {
+      async save() {  
         const result = await pool.query(
           `INSERT INTO contacts (user_id, name, surname, phone, email, birthdate)
            VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
@@ -32,6 +32,14 @@ class Contact {
         }
         return null;
       }
+
+      static async getAllContacts(user_id) {
+        const result = await pool.query(
+            `SELECT * FROM contacts WHERE user_id = $1 ORDER BY name ASC`, 
+            [user_id]
+        );
+        return result.rows;
+    }
   }
 
 module.exports = Contact;
