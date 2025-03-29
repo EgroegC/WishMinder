@@ -11,7 +11,7 @@ function HomePage() {
       gridTemplateColumns={"1fr"}
       minH="100vh"
     >
-      <GridItem area="nav" p={4}>
+      <GridItem area="nav" p={-1}>
         <NavBar />
       </GridItem>
       <GridItem area="main" bg="dodgerblue" p={4}>
