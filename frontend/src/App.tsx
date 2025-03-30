@@ -3,6 +3,7 @@ import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import HomePage from "./pages/HomePage";
 import RequireAuth from "./components/AuthenticationForPages/RequireAuth";
+import BirthdaysPage from "../src/pages/BirthdaysPage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         {/* Add other routes here */}
         <Route element={<RequireAuth />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/birthdays" element={<BirthdaysPage />} />
         </Route>
       </Routes>
     </Router>

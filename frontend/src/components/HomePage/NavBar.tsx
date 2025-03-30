@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { HStack, Image, Text, Box, Button } from "@chakra-ui/react";
-import logo from "../assets/openart-raw.jpg";
-import profileImage from "../assets/profile_image.jpg";
+import logo from "../../assets/openart-raw.jpg";
+import profileImage from "../../assets/profile_image.jpg";
 import { useAuth } from "@/hooks/useAuth";
 
 const NavBar = () => {
@@ -34,7 +34,7 @@ const NavBar = () => {
         >
           <Image
             src={profileImage}
-            boxSize="35px"
+            boxSize="38px"
             borderRadius="10px"
             onClick={toggleDropdown}
           ></Image>

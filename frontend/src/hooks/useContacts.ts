@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { CanceledError } from "axios";
 
-interface Contact {
+export interface Contact {
   id: number;
   user_id: number;
   name: string;

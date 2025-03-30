@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
 import NavBar from "../components/HomePage/NavBar";
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Flex, Grid, GridItem } from "@chakra-ui/react";
+import BirthdayBox from "@/components/Birthdays/BirthdayBox";
+import BirthdayList from "@/components/Birthdays/BirthdayList";
 
 function HomePage() {
   return (
@@ -18,9 +19,15 @@ function HomePage() {
 
       {/* Main Content */}
       <GridItem area="main" bg="gray.100" p={6}>
-        <p>
-          Go to Birthdays Page <Link to="/birthdays">BirthdaysPage</Link>
-        </p>
+        <Flex
+          justifyContent="center"
+          gap={6}
+          flexWrap="wrap"
+          maxW="80%" // Limits max width to 80% of the page
+          mx="auto" // Centers content
+        >
+          <BirthdayBox heading="🎉 Birthdays" children={<BirthdayList />} />
+        </Flex>
       </GridItem>
     </Grid>
   );
