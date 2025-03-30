@@ -13,7 +13,7 @@ function HomePage() {
       minH="100vh"
     >
       {/* Navbar */}
-      <GridItem area="nav" p={-1}>
+      <GridItem area="nav" p={-1} bg="white" boxShadow="sm">
         <NavBar />
       </GridItem>
 
@@ -23,8 +23,8 @@ function HomePage() {
           justifyContent="center"
           gap={6}
           flexWrap="wrap"
-          maxW="80%" // Limits max width to 80% of the page
-          mx="auto" // Centers content
+          maxW="80%"
+          mx="auto"
         >
           <BirthdayBox heading="🎉 Birthdays" children={<BirthdayList />} />
         </Flex>

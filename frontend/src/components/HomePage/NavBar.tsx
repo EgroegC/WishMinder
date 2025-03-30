@@ -16,7 +16,9 @@ const NavBar = () => {
       {/* Logo */}
       <HStack>
         <Image src={logo} boxSize="35px" borderRadius="10px" />
-        <Text fontSize="xl">NavBar</Text>
+        <Text fontSize="xl" color={"black"}>
+          NavBar
+        </Text>
       </HStack>
 
       {/* Profile and Custom Dropdown */}

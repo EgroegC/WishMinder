@@ -114,6 +114,7 @@ const BirthdayList = () => {
                         </Text>
                         <Badge
                           colorScheme="blue"
+                          backgroundColor={"blackAlpha.700"}
                           fontSize="md"
                           px={4}
                           py={2}
