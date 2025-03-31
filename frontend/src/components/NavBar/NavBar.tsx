@@ -1,82 +1,42 @@
 import { useState } from "react";
-import { HStack, Image, Text, Box, Button } from "@chakra-ui/react";
+import { Image, Text, Button } from "@chakra-ui/react";
 import logo from "../../assets/openart-raw.jpg";
 import profileImage from "../../assets/profile_image.jpg";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import "./NavBar.css";
 
 const NavBar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { setAccessToken } = useAuth();
   const navigate = useNavigate();
 
-  // Toggle the dropdown
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   return (
-    <HStack justify="space-between" w="100%" p={4}>
+    <div className="navbar-container">
       {/* Logo */}
-      <HStack>
-        <Image
-          src={logo}
-          boxSize="35px"
-          borderRadius="10px"
-          onClick={() => navigate("/")}
-        />
-        <Text fontSize="xl" color={"black"}>
-          NavBar
-        </Text>
-      </HStack>
+      <div className="logo-container" onClick={() => navigate("/")}>
+        <Image src={logo} className="logo-image" />
+        <Text className="navbar-title">NavBar</Text>
+      </div>
 
-      {/* Profile and Custom Dropdown */}
-      <HStack>
-        <Box
-          width="30px"
-          height="30px"
-          borderRadius="full"
-          bg="gray.400"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          fontWeight="bold"
-          color="white"
-        >
-          <Image
-            src={profileImage}
-            boxSize="38px"
-            borderRadius="10px"
-            onClick={toggleDropdown}
-          ></Image>
-        </Box>
+      {/* Profile & Dropdown */}
+      <div className="profile-container" onClick={toggleDropdown}>
+        <Image src={profileImage} className="profile-image" />
+      </div>
 
-        {/* Custom Dropdown Menu */}
-        {isDropdownOpen && (
-          <Box
-            position="absolute"
-            right="50px"
-            mt="1"
-            p="1"
-            bg="white"
-            borderRadius="md"
-            boxShadow="md"
-            zIndex="1"
+      {isDropdownOpen && (
+        <div className="dropdown-menu">
+          <Button
+            className="logout-button"
+            onClick={() => setAccessToken(null)}
           >
-            <Button
-              variant="outline"
-              colorScheme="red"
-              w="100%"
-              onClick={() => setAccessToken(null)}
-              _hover={{
-                bg: "blue.100", // Hover effect
-                color: "blue.700",
-              }}
-            >
-              Log Out
-            </Button>
-          </Box>
-        )}
-      </HStack>
-    </HStack>
+            Log Out
+          </Button>
+        </div>
+      )}
+    </div>
   );
 };
 

@@ -1,0 +1,70 @@
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 16px;
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .logo-image {
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+  }
+  
+  .navbar-title {
+    font-size: 1.25rem;
+    color: black;
+    margin-left: 8px;
+  }
+  
+  .profile-container {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .profile-image {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    right: 50px;
+    margin-top: 4px;
+    padding: 8px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+  }
+  
+  .logout-button {
+    width: 100%;
+    border: 1px solid red;
+    color: red;
+    background: none;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .logout-button:hover {
+    background-color: #ebf8ff;
+    color: #2b6cb0;
+  }
+  
