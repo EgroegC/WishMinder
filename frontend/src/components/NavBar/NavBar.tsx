@@ -3,10 +3,12 @@ import { HStack, Image, Text, Box, Button } from "@chakra-ui/react";
 import logo from "../../assets/openart-raw.jpg";
 import profileImage from "../../assets/profile_image.jpg";
 import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { setAccessToken } = useAuth();
+  const navigate = useNavigate();
 
   // Toggle the dropdown
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
@@ -15,7 +17,12 @@ const NavBar = () => {
     <HStack justify="space-between" w="100%" p={4}>
       {/* Logo */}
       <HStack>
-        <Image src={logo} boxSize="35px" borderRadius="10px" />
+        <Image
+          src={logo}
+          boxSize="35px"
+          borderRadius="10px"
+          onClick={() => navigate("/")}
+        />
         <Text fontSize="xl" color={"black"}>
           NavBar
         </Text>

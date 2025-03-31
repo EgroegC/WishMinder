@@ -114,7 +114,7 @@ const BirthdayList = () => {
                         </Text>
                         <Badge
                           colorScheme="blue"
-                          backgroundColor={"blackAlpha.700"}
+                          backgroundColor={"whiteAlpha.100"}
                           fontSize="md"
                           px={4}
                           py={2}
@@ -130,6 +130,8 @@ const BirthdayList = () => {
                         <Button
                           size="md"
                           colorScheme="blue"
+                          bg={"white"}
+                          color={"black"}
                           _hover={{ bg: "blue.600", transform: "scale(1.05)" }}
                         >
                           Set Reminder
@@ -137,6 +139,8 @@ const BirthdayList = () => {
                         <Button
                           size="md"
                           colorScheme="green"
+                          bg={"white"}
+                          color={"black"}
                           _hover={{ bg: "green.600", transform: "scale(1.05)" }}
                         >
                           Auto Message

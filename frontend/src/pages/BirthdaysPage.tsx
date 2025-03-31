@@ -1,4 +1,4 @@
-import NavBar from "../components/HomePage/NavBar";
+import NavBar from "../components/NavBar/NavBar";
 import { Flex, Grid, GridItem } from "@chakra-ui/react";
 import BirthdayBox from "@/components/Birthdays/BirthdayBox";
 import BirthdayList from "@/components/Birthdays/BirthdayList";

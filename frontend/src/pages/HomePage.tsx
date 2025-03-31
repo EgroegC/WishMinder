@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { FaBirthdayCake, FaCalendarAlt, FaQuoteLeft } from "react-icons/fa";
-import NavBar from "../components/HomePage/NavBar";
+import NavBar from "../components/NavBar/NavBar";
 
 const HomePage = () => {
   const navigate = useNavigate(); // Hook for navigation
