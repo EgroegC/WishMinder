@@ -26,7 +26,10 @@ function HomePage() {
           maxW="80%"
           mx="auto"
         >
-          <BirthdayBox heading="🎉 Birthdays" children={<BirthdayList />} />
+          <BirthdayBox
+            heading="🎉 Birthdays"
+            children={<BirthdayList isBirthday={true} />}
+          />
         </Flex>
       </GridItem>
     </Grid>

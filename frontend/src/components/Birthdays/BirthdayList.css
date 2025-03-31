@@ -1,0 +1,108 @@
+.birthday-list-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  
+  .month-header {
+    background-color: #e2e8f0;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: none;
+  }
+  
+  .month-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2d3748;
+  }
+  
+  .birthday-card {
+    background-color: white;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: none;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .birthday-card:hover {
+    transform: scale(1.02);
+  }
+  
+  .avatar-container {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+  }
+  
+  .contact-name {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-left: 12px;
+  }
+  
+  .date-info,
+  .age-info {
+    text-align: center;
+    min-width: 80px;
+    margin-left: 12px;
+  }
+  
+  .date-label,
+  .age-label {
+    font-size: 0.875rem;
+    color: #4a5568;
+  }
+  
+  .date-value {
+    color: #3182ce;
+    font-size: 1rem;
+  }
+  
+  .age-badge {
+    color: white;
+    background-color: #3182ce;
+    font-size: 0.875rem;
+    padding: 6px 12px;
+    border-radius: 999px;
+  }
+  
+  .button-container {
+    display: flex;
+    gap: 8px; /* Reduced gap between buttons */
+    margin-top: 12px; /* Added space between age info and buttons */
+  }
+  
+  .reminder-button,
+  .auto-message-button {
+    font-size: 0.75rem; /* Reduced font size */
+    color: black;
+    background-color: white;
+    padding: 6px 12px; /* Reduced padding */
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    border: 1px solid #3182ce; /* Added border to match hover effect */
+  }
+  
+  .reminder-button:hover {
+    background-color: #3182ce;
+    color: white;
+  }
+  
+  .auto-message-button {
+    background-color: white;
+    border: 1px solid #38a169;
+  }
+  
+  .auto-message-button:hover {
+    background-color: #38a169;
+    color: white;
+  }
+  
