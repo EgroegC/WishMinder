@@ -10,6 +10,8 @@ import {
 import { FaUserCircle } from "react-icons/fa";
 import useContacts from "@/hooks/useContacts";
 import { Contact } from "../../hooks/useContacts";
+import useUpcommingNamedays from "@/hooks/useUpcommingNamedays";
+import { Nameday } from "@/hooks/useUpcommingNamedays";
 import "./BirthdayList.css";
 
 interface Props {
@@ -18,9 +20,23 @@ interface Props {
 
 const BirthdayList = ({ isBirthday }: Props) => {
   const { contacts, error } = useContacts();
+  const { upcNamedays } = useUpcommingNamedays();
+
   const currentYear = new Date().getFullYear();
 
-  const celebrationByMonth = getBirthdaysByMonth(contacts);
+  let celebrationByMonth;
+  let celebrationDateByMonth: Record<number, Date[]> = {};
+
+  if (isBirthday) {
+    celebrationByMonth = getBirthdaysByMonth(contacts);
+  } else {
+    const { namedayByMonth, namedayDateByMonth } = getUpcomingContactsNamedays(
+      upcNamedays,
+      contacts
+    );
+    celebrationByMonth = namedayByMonth;
+    celebrationDateByMonth = namedayDateByMonth;
+  }
 
   if (error) return <Text color="red.500">Failed to load contacts.</Text>;
 
@@ -46,12 +62,21 @@ const BirthdayList = ({ isBirthday }: Props) => {
               {contacts.map((contact) => {
                 if (!contact.birthdate) return null;
 
-                const birthDate = new Date(contact.birthdate);
-                const formattedDate = birthDate.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                });
-                const age = currentYear - birthDate.getFullYear();
+                const celebrationDate = isBirthday
+                  ? new Date(contact.birthdate)
+                  : celebrationDateByMonth[parseInt(month)][
+                      contacts.indexOf(contact)
+                    ];
+
+                const formattedDate =
+                  celebrationDate instanceof Date
+                    ? celebrationDate.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })
+                    : "Invalid Date";
+
+                const age = currentYear - celebrationDate.getFullYear();
 
                 return (
                   <Box key={contact.id} className="birthday-card">
@@ -121,6 +146,48 @@ const getBirthdaysByMonth = (contacts: Contact[]) => {
   });
 
   return birthdaysByMonth;
+};
+
+const getUpcomingContactsNamedays = (
+  upcNamedays: Nameday[],
+  contacts: Contact[]
+) => {
+  try {
+    const namedayMap = new Map<string, Date[]>();
+
+    upcNamedays.forEach((nd) => {
+      if (!namedayMap.has(nd.name)) {
+        namedayMap.set(nd.name, []);
+      }
+      namedayMap.get(nd.name)?.push(new Date(nd.nameday_date));
+    });
+
+    const namedayByMonth: Record<number, Contact[]> = {};
+    const namedayDateByMonth: Record<number, Date[]> = {};
+
+    contacts.forEach((contact) => {
+      if (!namedayMap.has(contact.name)) return;
+
+      namedayMap.get(contact.name)!.forEach((date) => {
+        const month = new Date(date).getMonth() + 1;
+
+        if (!namedayByMonth[month]) {
+          namedayByMonth[month] = [];
+        }
+        if (!namedayDateByMonth[month]) {
+          namedayDateByMonth[month] = [];
+        }
+
+        namedayByMonth[month].push(contact);
+        namedayDateByMonth[month].push(date);
+      });
+    });
+
+    return { namedayByMonth, namedayDateByMonth };
+  } catch (error) {
+    console.error("❌ Error: ", error);
+    throw error;
+  }
 };
 
 export default BirthdayList;

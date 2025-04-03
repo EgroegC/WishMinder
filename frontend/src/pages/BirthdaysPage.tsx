@@ -28,7 +28,7 @@ function HomePage() {
         >
           <BirthdayBox
             heading="🎉 Birthdays"
-            children={<BirthdayList isBirthday={true} />}
+            children={<BirthdayList isBirthday={false} />}
           />
         </Flex>
       </GridItem>

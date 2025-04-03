@@ -2,19 +2,14 @@ import { useEffect, useState } from "react";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { CanceledError } from "axios";
 
-export interface Contact {
-  id: number;
-  user_id: number;
+export interface Nameday {
+  name_id: number;
   name: string;
-  surname: string;
-  phone: string;
-  email?: string;
-  birthdate?: Date;
-  created_at: Date;
+  nameday_date: Date;
 }
 
-const useContacts = () => {
-  const [contacts, setContacts] = useState<Contact[]>([]);
+const useUpcommingNamedays = () => {
+  const [upcNamedays, setUpcNamedays] = useState<Nameday[]>([]);
   const [error, setError] = useState("");
   const axiosPrivate = useAxiosPrivate();
 
@@ -22,10 +17,10 @@ const useContacts = () => {
     const controller = new AbortController(); 
 
     axiosPrivate
-      .get<Contact[]>("/api/contacts", {
+      .get<Nameday[]>("/api/namedays/upcomming", {
         signal: controller.signal, 
       })
-      .then((res) => setContacts(res.data))
+      .then((res) => setUpcNamedays(res.data))
       .catch((err) => {
         if(err instanceof CanceledError) return;
         setError(err.message);
@@ -34,7 +29,7 @@ const useContacts = () => {
       return () => controller.abort(); 
   }, [axiosPrivate]);
 
-  return {contacts, error}
+  return {upcNamedays, error}
 }
 
-export default useContacts
+export default useUpcommingNamedays
