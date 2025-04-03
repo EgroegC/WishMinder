@@ -34,7 +34,7 @@ class Contact {
       }
 
       static async getAllContacts(user_id) {
-        const result = await pool.query(
+                const result = await pool.query(
             `SELECT * FROM contacts WHERE user_id = $1 ORDER BY name ASC`, 
             [user_id]
         );
