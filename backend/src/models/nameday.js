@@ -1,15 +1,16 @@
 const pool = require("../config/db")();
 
 class Nameday {
-  constructor(id, name, namedayDate) {
+  constructor(id, name, nameday_date) {
     this.id = id;
     this.name = name;
-    this.namedayDate = namedayDate;
+    this.nameday_date = nameday_date;
   }
 
   static async getUpcomingNamedays() {
     try {
       const today = new Date().toISOString().split("T")[0];
+      console.log(today);
 
       const query = `
         SELECT nd.id, n.name, nd.nameday_date
