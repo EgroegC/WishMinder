@@ -12,29 +12,38 @@ import "./CelebrationList.css";
 
 interface Props {
   isBirthday: boolean;
+  searchTerm: string;
 }
 
-const CelebrationList = ({ isBirthday }: Props) => {
+const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
   const { contacts, error: contactsError } = useContacts();
   const { upcNamedays, error: upcNamedaysError } = useUpcommingNamedays();
   const currentYear = new Date().getFullYear();
+
+  const filteredContacts = useMemo(() => {
+    return contacts.filter((contact) =>
+      `${contact.name} ${contact.surname}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    );
+  }, [contacts, searchTerm]);
 
   // Memoize calculations to prevent unnecessary recomputations
   const { celebrationByMonth, celebrationDateByMonth } = useMemo(() => {
     if (isBirthday) {
       return {
-        celebrationByMonth: getBirthdaysByMonth(contacts),
+        celebrationByMonth: getBirthdaysByMonth(filteredContacts),
         celebrationDateByMonth: {} as Record<number, Date[]>,
       };
     } else {
       const { namedayByMonth, namedayDateByMonth } =
-        getUpcomingContactsNamedays(upcNamedays, contacts);
+        getUpcomingContactsNamedays(upcNamedays, filteredContacts);
       return {
         celebrationByMonth: namedayByMonth,
         celebrationDateByMonth: namedayDateByMonth,
       };
     }
-  }, [contacts, upcNamedays, isBirthday]);
+  }, [filteredContacts, upcNamedays, isBirthday]);
 
   if (contactsError || upcNamedaysError)
     return <Text color="red.500">Failed to load data.</Text>;

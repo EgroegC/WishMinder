@@ -1,9 +1,11 @@
 import NavBar from "../components/NavBar/NavBar";
-import { Flex, Grid, GridItem } from "@chakra-ui/react";
+import { Flex, Grid, GridItem, Input } from "@chakra-ui/react";
 import CelebrationBox from "@/components/Celebrations/CelebrationBox";
 import CelebrationList from "@/components/Celebrations/CelebrationList";
+import { useState } from "react";
 
 function BirthdayPage() {
+  const [searchTerm, setSearchTerm] = useState("");
   return (
     <Grid
       templateAreas={`"nav nav"
@@ -26,9 +28,21 @@ function BirthdayPage() {
           maxW="80%"
           mx="auto"
         >
+          {/* 🔍 Search Bar */}
+          <Input
+            placeholder="Search contacts..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            bg="white"
+            maxW="60%"
+            boxShadow="sm"
+          />
+
           <CelebrationBox
             heading="🎉 Namedays"
-            children={<CelebrationList isBirthday={false} />}
+            children={
+              <CelebrationList isBirthday={false} searchTerm={searchTerm} />
+            }
           />
         </Flex>
       </GridItem>

@@ -1,9 +1,12 @@
+import { useState } from "react";
+import { Flex, Grid, GridItem, Input } from "@chakra-ui/react";
 import NavBar from "../components/NavBar/NavBar";
-import { Flex, Grid, GridItem } from "@chakra-ui/react";
 import CelebrationBox from "@/components/Celebrations/CelebrationBox";
 import CelebrationList from "@/components/Celebrations/CelebrationList";
 
 function BirthdayPage() {
+  const [searchTerm, setSearchTerm] = useState("");
+
   return (
     <Grid
       templateAreas={`"nav nav"
@@ -12,23 +15,33 @@ function BirthdayPage() {
       gridTemplateColumns={"1fr"}
       minH="100vh"
     >
-      {/* Navbar */}
       <GridItem area="nav" p={-1} bg="white" boxShadow="sm">
         <NavBar />
       </GridItem>
 
-      {/* Main Content */}
       <GridItem area="main" bg="gray.100" p={6}>
         <Flex
-          justifyContent="center"
+          direction="column"
+          alignItems="center"
           gap={6}
-          flexWrap="wrap"
           maxW="80%"
           mx="auto"
         >
+          {/* 🔍 Search Bar */}
+          <Input
+            placeholder="Search contacts..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            bg="white"
+            maxW="75%"
+            boxShadow="sm"
+          />
+
           <CelebrationBox
             heading="🎉 Birthdays"
-            children={<CelebrationList isBirthday={true} />}
+            children={
+              <CelebrationList isBirthday={true} searchTerm={searchTerm} />
+            }
           />
         </Flex>
       </GridItem>
