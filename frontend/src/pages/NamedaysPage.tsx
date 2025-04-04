@@ -27,8 +27,8 @@ function BirthdayPage() {
           mx="auto"
         >
           <CelebrationBox
-            heading="🎉 Birthdays"
-            children={<CelebrationList isBirthday={true} />}
+            heading="🎉 Namedays"
+            children={<CelebrationList isBirthday={false} />}
           />
         </Flex>
       </GridItem>

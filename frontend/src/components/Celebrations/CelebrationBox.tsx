@@ -6,7 +6,7 @@ interface Props {
   children: ReactElement;
 }
 
-const BirthdayBox = ({ heading, children }: Props) => {
+const CelebrationBox = ({ heading, children }: Props) => {
   return (
     <div>
       <Box
@@ -26,4 +26,4 @@ const BirthdayBox = ({ heading, children }: Props) => {
   );
 };
 
-export default BirthdayBox;
+export default CelebrationBox;

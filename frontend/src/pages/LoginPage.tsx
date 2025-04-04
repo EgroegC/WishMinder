@@ -12,7 +12,6 @@ function LoginPage() {
     apiClient
       .post("/api/auth", { email, password }, { withCredentials: true })
       .then((res) => {
-        console.log(res.data);
         setAccessToken(res.data.accessToken);
         navigate("/");
       })

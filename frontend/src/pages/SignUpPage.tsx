@@ -8,8 +8,7 @@ function SignupPage() {
   function handleSignup(email: string, password: string, name?: string) {
     apiClient
       .post("/api/users", { name, email, password })
-      .then((res) => {
-        console.log(res.data);
+      .then(() => {
         navigate("/login");
       })
       .catch((err) => console.log(err));
