@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Box, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Text, VStack } from "@chakra-ui/react";
 import { Contact } from "../../hooks/useContacts";
 import useContacts from "@/hooks/useContacts";
 import useUpcommingNamedays from "@/hooks/useUpcommingNamedays";
@@ -48,18 +48,39 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
   if (contactsError || upcNamedaysError)
     return <Text color="red.500">Failed to load data.</Text>;
 
+  if (filteredContacts.length > 0) {
+    if (Object.keys(celebrationByMonth).length === 0) {
+      return (
+        <Box textAlign="center" mt={4}>
+          <Text>
+            Namedays have passed for:{" "}
+            {filteredContacts.map((contact) => contact.name).join(", ")}
+          </Text>
+        </Box>
+      );
+    }
+    return (
+      <Box className="birthday-list-container">
+        {Object.entries(celebrationByMonth).map(([month, contacts]) => (
+          <MonthSection
+            key={month}
+            month={parseInt(month)}
+            contacts={contacts}
+            celebrationDateByMonth={celebrationDateByMonth}
+            isBirthday={isBirthday}
+            currentYear={currentYear}
+          />
+        ))}
+      </Box>
+    );
+  }
+
   return (
-    <Box className="birthday-list-container">
-      {Object.entries(celebrationByMonth).map(([month, contacts]) => (
-        <MonthSection
-          key={month}
-          month={parseInt(month)}
-          contacts={contacts}
-          celebrationDateByMonth={celebrationDateByMonth}
-          isBirthday={isBirthday}
-          currentYear={currentYear}
-        />
-      ))}
+    <Box textAlign="center" mt={4}>
+      <Text>No contacts found.</Text>
+      <Button mt={2} colorScheme="blue">
+        Add New Contact
+      </Button>
     </Box>
   );
 };
