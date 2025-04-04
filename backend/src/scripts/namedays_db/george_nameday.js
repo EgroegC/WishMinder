@@ -19,23 +19,30 @@ function getOrthodoxEaster(year) {
     const m = Math.floor((a + 11 * h + 22 * l) / 451);
     const month = Math.floor((h + l - 7 * m + 114) / 31);
     const day = ((h + l - 7 * m + 114) % 31) + 1;
-    
-    return new Date(year, month - 1, day); // Returns a Date object
+
+    // Create the date in UTC (we don't care about the time for Easter date)
+    const easterUTC = new Date(Date.UTC(year, month - 1, day));
+
+    // Convert the UTC date to local time by using the local timezone
+    const localDate = new Date(easterUTC.toLocaleDateString("en-CA"));
+
+    return localDate;
 }
+
 
 // Function to determine George's nameday
 function getGeorgeNameday(year) {
     const easterDate = getOrthodoxEaster(year);
     const april23 = new Date(year, 3, 23); // April is month 3 (0-based index)
 
-    if (april23 < easterDate) {
+    if (april23 < new Date (easterDate)) {
         // If April 23 is before Easter, nameday is on Easter Monday
         const easterMonday = new Date(easterDate);
         easterMonday.setDate(easterMonday.getDate() + 1);
-        return easterMonday.toISOString().split("T")[0];
+        return easterMonday.toLocaleDateString("en-CA");
     } else {
         // Otherwise, nameday stays on April 23
-        return april23.toISOString().split("T")[0];
+        return april23.toLocaleDateString("en-CA");
     }
 }
 
@@ -44,6 +51,7 @@ async function updateGeorgeNameday() {
     try {
         const currentYear = new Date().getFullYear();
         const georgeNameday = getGeorgeNameday(currentYear);
+        console.log('Nameday Date ', georgeNameday);
 
         const georgeVariations = ["Γιώργος", "Γεώργιος", "Γεωργία", "Γεωργούλα", "Γιώργης", "Γιωργής"];
 
@@ -56,16 +64,20 @@ async function updateGeorgeNameday() {
 
             let nameId;
             if (nameResult.rows.length > 0) {
-                nameId = nameResult.rows[0].id; // Get the new ID
+                nameId = nameResult.rows[0].id;
             } else {
                 // If the name already exists, fetch its ID
                 const existingName = await pool.query("SELECT id FROM names WHERE name = $1", [name]);
                 nameId = existingName.rows[0].id;
             }
 
-            // Insert the nameday date for this name
             await pool.query(
-                "INSERT INTO namedays (name_id, nameday_date) VALUES ($1, $2) ON CONFLICT (name_id, nameday_date) DO NOTHING",
+                "DELETE FROM namedays WHERE name_id = $1",
+                [nameId]
+              );
+              
+            await pool.query(
+                "INSERT INTO namedays (name_id, nameday_date) VALUES ($1, $2)",
                 [nameId, georgeNameday]
             );
         }
