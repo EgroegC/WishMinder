@@ -21,10 +21,11 @@ function BirthdayPage() {
 
       <GridItem area="main" bg="gray.100" p={6}>
         <Flex
-          direction="column"
-          alignItems="center"
+          justifyContent="center"
+          direction={"column"}
           gap={6}
-          maxW="80%"
+          flexWrap="wrap"
+          maxW="62%"
           mx="auto"
         >
           {/* 🔍 Search Bar */}
@@ -33,7 +34,7 @@ function BirthdayPage() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             bg="white"
-            maxW="75%"
+            maxW="100%"
             boxShadow="sm"
           />
 

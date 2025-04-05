@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Box, Text } from "@chakra-ui/react";
 import { Contact } from "../../hooks/useContacts";
 import useContacts from "@/hooks/useContacts";
@@ -17,7 +17,8 @@ interface Props {
 }
 
 const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
-  const { contacts, error: contactsError } = useContacts();
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const { contacts, error: contactsError } = useContacts(refreshTrigger);
   const { upcNamedays, error: upcNamedaysError } = useUpcommingNamedays();
   const currentYear = new Date().getFullYear();
 
@@ -35,7 +36,12 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
   if (contactsError || upcNamedaysError)
     return <Text color="red.500">Failed to load data.</Text>;
 
-  if (filteredContacts.length === 0) return <NoContactFoundSection />;
+  if (filteredContacts.length === 0)
+    return (
+      <NoContactFoundSection
+        onContactAdded={() => setRefreshTrigger((prev) => prev + 1)}
+      />
+    );
 
   if (theContactsNamedaysPassedForFilteredContacts(celebrationByMonth))
     return <NamedaysPassedSection filteredContacts={filteredContacts} />;

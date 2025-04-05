@@ -13,7 +13,7 @@ export interface Contact {
   created_at: Date;
 }
 
-const useContacts = () => {
+const useContacts = (refreshTrigger = 0) => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [error, setError] = useState("");
   const axiosPrivate = useAxiosPrivate();
@@ -32,7 +32,7 @@ const useContacts = () => {
     });
 
       return () => controller.abort(); 
-  }, [axiosPrivate]);
+  }, [axiosPrivate, refreshTrigger]);
 
   return {contacts, error}
 }
