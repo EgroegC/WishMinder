@@ -7,9 +7,14 @@ const NamedaysPassedSection = ({
   filteredContacts: Contact[];
 }) => (
   <Box textAlign="center" mt={4}>
-    <Text>
-      Namedays have passed for:{" "}
-      {filteredContacts.map((contact) => contact.name).join(", ")}
+    <Text color="black">
+      Namedays have passed or do not exist for:{" "}
+      {filteredContacts.map((contact, index) => (
+        <span key={contact.id} style={{ fontWeight: "bold" }}>
+          {contact.name}
+          {index < filteredContacts.length - 1 && ", "}
+        </span>
+      ))}
     </Text>
   </Box>
 );
