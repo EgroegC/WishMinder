@@ -36,6 +36,13 @@ function BirthdayPage() {
             bg="white"
             maxW="100%"
             boxShadow="sm"
+            color="black"
+            _placeholder={{ color: "gray.400" }}
+            _focus={{
+              borderColor: "blue.500",
+              boxShadow: "0 0 0 1px #3182ce",
+              outline: "none",
+            }}
           />
 
           <CelebrationBox

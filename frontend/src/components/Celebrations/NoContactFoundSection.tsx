@@ -4,6 +4,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import "./NoContactFoundSection.css";
 
 // Zod validation schema
 const schema = z.object({
@@ -71,7 +72,11 @@ const NoContactFoundSection = ({
       {showForm ? (
         <VStack gap={3} mt={4}>
           <Box w="100%">
-            <Input placeholder="Name" {...register("name")} bg="white" />
+            <Input
+              placeholder="Name"
+              {...register("name")}
+              className="custom-input"
+            />
             {errors.name && (
               <Text color="red.500" fontSize="sm" mt={1}>
                 {errors.name.message}
@@ -80,7 +85,11 @@ const NoContactFoundSection = ({
           </Box>
 
           <Box w="100%">
-            <Input placeholder="Surname" {...register("surname")} bg="white" />
+            <Input
+              placeholder="Surname"
+              {...register("surname")}
+              className="custom-input"
+            />
             {errors.surname && (
               <Text color="red.500" fontSize="sm" mt={1}>
                 {errors.surname.message}
@@ -89,7 +98,11 @@ const NoContactFoundSection = ({
           </Box>
 
           <Box w="100%">
-            <Input placeholder="Phone" {...register("phone")} bg="white" />
+            <Input
+              placeholder="Phone"
+              {...register("phone")}
+              className="custom-input"
+            />
             {errors.phone && (
               <Text color="red.500" fontSize="sm" mt={1}>
                 {errors.phone.message}
@@ -98,7 +111,11 @@ const NoContactFoundSection = ({
           </Box>
 
           <Box w="100%">
-            <Input placeholder="Email" {...register("email")} bg="white" />
+            <Input
+              placeholder="Email"
+              {...register("email")}
+              className="custom-input"
+            />
             {errors.email && (
               <Text color="red.500" fontSize="sm" mt={1}>
                 {errors.email.message}
@@ -107,7 +124,11 @@ const NoContactFoundSection = ({
           </Box>
 
           <Box w="100%">
-            <Input type="date" {...register("birthdate")} bg="white" />
+            <Input
+              type="date"
+              {...register("birthdate")}
+              className="custom-input"
+            />
             {errors.birthdate && (
               <Text color="red.500" fontSize="sm" mt={1}>
                 {errors.birthdate.message}
@@ -115,14 +136,19 @@ const NoContactFoundSection = ({
             )}
           </Box>
 
-          <Button colorScheme="green" onClick={handleSubmit(onFormSubmit)}>
+          <Button className="save-button" onClick={handleSubmit(onFormSubmit)}>
             Save Contact
           </Button>
         </VStack>
       ) : (
         <>
-          <Text>No contacts found.</Text>
-          <Button mt={2} colorScheme="blue" onClick={() => setShowForm(true)}>
+          <Text color="black" fontSize="lg" fontWeight="medium">
+            No contacts found.
+          </Text>
+          <Button
+            className="createContact-button"
+            onClick={() => setShowForm(true)}
+          >
             Add New Contact
           </Button>
         </>
