@@ -1,5 +1,6 @@
 require("dotenv").config();
 require('express-async-errors');
+require('./config/web_push_config')();
 const express = require('express');
 const cors = require("cors");
 const cookieParser = require('cookie-parser');
@@ -8,8 +9,8 @@ const app = express();
 
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:5173', // Your frontend's origin
-    credentials: true // Allow cookies (refresh token) to be sent
+    origin: 'http://localhost:5173', 
+    credentials: true 
 }));
 
 require('./startup/logging')();

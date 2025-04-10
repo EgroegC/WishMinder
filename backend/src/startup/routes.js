@@ -4,6 +4,7 @@ const users = require('../routes/users');
 const auth = require('../routes/auth');
 const contacts = require('../routes/contacts');
 const namedays = require('../routes/namedays');
+const webpush = require('../routes/web_push');
 
 module.exports = function(app){
     app.use(express.json());
@@ -11,5 +12,6 @@ module.exports = function(app){
     app.use('/api/auth', auth);
     app.use('/api/contacts', contacts);
     app.use('/api/namedays', namedays);
+    app.use('/api/', webpush);
     app.use(error);
 }

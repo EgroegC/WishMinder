@@ -31,6 +31,7 @@
     "nodemon": "^3.1.9",
     "pg": "^8.14.0",
     "rollbar": "^2.26.4",
+    "web-push": "^3.6.7",
     "winston": "^3.17.0"
   },
   "devDependencies": {
