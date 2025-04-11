@@ -10,8 +10,29 @@ import {
 import { useNavigate } from "react-router-dom";
 import { FaBirthdayCake, FaCalendarAlt, FaQuoteLeft } from "react-icons/fa";
 import NavBar from "../components/NavBar/NavBar";
+import { useEffect } from "react";
+import {
+  registerServiceWorker,
+  subscribeUser,
+} from "@/services/push/push-notification";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 
 const HomePage = () => {
+  const axiosPrivate = useAxiosPrivate();
+  useEffect(() => {
+    async function initPush() {
+      try {
+        const registration = await registerServiceWorker();
+        await subscribeUser(registration, axiosPrivate);
+        console.log("✅ Push notifications setup complete.");
+      } catch (err) {
+        console.error("Push notifications setup failed:", err);
+      }
+    }
+
+    initPush();
+  }, [axiosPrivate]);
+
   const navigate = useNavigate(); // Hook for navigation
 
   return (
