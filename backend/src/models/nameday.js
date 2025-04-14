@@ -10,7 +10,6 @@ class Nameday {
   static async getUpcomingNamedays() {
     try {
       const today = new Date().toISOString().split("T")[0];
-      console.log(today);
 
       const query = `
         SELECT nd.id, n.name, nd.nameday_date
@@ -19,8 +18,6 @@ class Nameday {
         WHERE nd.nameday_date >= $1
         ORDER BY nd.nameday_date
       `;
-
-      console.log(pool);
 
       const result = await pool.query(query, [today]);
 
