@@ -25,6 +25,14 @@ router.post('/send-notification', authenticateToken, async (req, res) => {
   const user_id = req.user.id;
   let subscriptions;
 
+  const payload = JSON.stringify({
+    title: 'Hey!',
+    body: 'Check out today\'s namedays!',
+    data: {
+      url: 'http://localhost:5173/namedays' // ✅ full URL for dev
+    }
+  });
+
   try{
     subscriptions = await PushSubscription.getByUser(user_id);
 
@@ -35,7 +43,7 @@ router.post('/send-notification', authenticateToken, async (req, res) => {
         keys: sub.keys
       };
   
-     await webpush.sendNotification(pushSub, JSON.stringify({ title: 'Hey!', body: 'It works!' }))
+     await webpush.sendNotification(pushSub, payload);
     }
     res.status(200).json({message: 'Notification process completed'});
   }catch(err){
