@@ -23,8 +23,16 @@ const HomePage = () => {
     async function initPush() {
       try {
         const registration = await registerServiceWorker();
-        await subscribeUser(registration, axiosPrivate);
-        console.log("✅ Push notifications setup complete.");
+        const subscription = await registration.pushManager.getSubscription();
+
+        if (!subscription) {
+          // No subscription yet — subscribe
+          const newSub = await subscribeUser(registration, axiosPrivate);
+          console.log("✅ Subscribed and sent to server:", newSub);
+        } else {
+          await axiosPrivate.post("/api/subscribe", subscription);
+          console.log("✅ Existing subscription sent to server.");
+        }
       } catch (err) {
         console.error("Push notifications setup failed:", err);
       }
