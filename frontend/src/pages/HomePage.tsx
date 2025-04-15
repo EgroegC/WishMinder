@@ -10,36 +10,12 @@ import {
 import { useNavigate } from "react-router-dom";
 import { FaBirthdayCake, FaCalendarAlt, FaQuoteLeft } from "react-icons/fa";
 import NavBar from "../components/NavBar/NavBar";
-import { useEffect } from "react";
-import {
-  registerServiceWorker,
-  subscribeUser,
-} from "@/services/push/push-notification";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 
 const HomePage = () => {
   const axiosPrivate = useAxiosPrivate();
-  useEffect(() => {
-    async function initPush() {
-      try {
-        const registration = await registerServiceWorker();
-        const subscription = await registration.pushManager.getSubscription();
-
-        if (!subscription) {
-          // No subscription yet — subscribe
-          const newSub = await subscribeUser(registration, axiosPrivate);
-          console.log("✅ Subscribed and sent to server:", newSub);
-        } else {
-          await axiosPrivate.post("/api/subscribe", subscription);
-          console.log("✅ Existing subscription sent to server.");
-        }
-      } catch (err) {
-        console.error("Push notifications setup failed:", err);
-      }
-    }
-
-    initPush();
-  }, [axiosPrivate]);
+  usePushNotifications(axiosPrivate);
 
   const navigate = useNavigate(); // Hook for navigation
 
