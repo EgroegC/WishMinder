@@ -7,13 +7,14 @@ const PushSubscription = require('../models/push_subscription');
 router.post('/subscribe', authenticateToken, express.json(), async (req, res) => {
   const subscription = req.body;
   const userId = req.user.id;
+  const userAgent = req.headers['user-agent'];
 
   if (!subscription) {
     return res.status(400).json({ message: 'No subscription in request body' });
   }
 
   try {
-    await PushSubscription.createOrUpdate(userId, subscription);
+    await PushSubscription.createOrUpdate(userId, subscription, userAgent);
     res.status(201).json({ message: 'Subscription stored' });
   } catch (err) {
     console.error(err);
@@ -23,7 +24,6 @@ router.post('/subscribe', authenticateToken, express.json(), async (req, res) =>
 
 router.post('/send-notification', authenticateToken, async (req, res) => {
   const user_id = req.user.id;
-  let subscriptions;
 
   const payload = JSON.stringify({
     title: 'Hey!',
@@ -33,8 +33,8 @@ router.post('/send-notification', authenticateToken, async (req, res) => {
     }
   });
 
-  try{
-    subscriptions = await PushSubscription.getByUser(user_id);
+  try {
+    const subscriptions = await PushSubscription.getByUser(user_id);
 
     for (const sub of subscriptions) {
       const pushSub = {
@@ -42,16 +42,23 @@ router.post('/send-notification', authenticateToken, async (req, res) => {
         expirationTime: sub.expiration_time,
         keys: sub.keys
       };
-  
-     await webpush.sendNotification(pushSub, payload);
+
+      try {
+        await webpush.sendNotification(pushSub, payload);
+      } catch (err) {
+        if (err.statusCode === 410 || err.statusCode === 404) {
+          await PushSubscription.deleteByEndpointAndUser(pushSub.endpoint, user_id);
+          console.log(`🧹 Removed dead subscription: ${pushSub.endpoint}`);
+        } else {
+          console.error(`❌ Failed to send to ${pushSub.endpoint}:`, err);
+        }
+      }
     }
-    res.status(200).json({message: 'Notification process completed'});
-  }catch(err){
-    if (err.statusCode === 410 || err.statusCode === 404) {
-      // remove from DB — subscription is invalid
-    }
-    console.error(err);
-    res.status(400).json({ message: err.message || 'No subscription found for this user' });
+
+    res.status(200).json({ message: 'Notification process completed' });
+  } catch (err) {
+    console.error("🚨 Notification setup failed:", err);
+    res.status(500).json({ message: 'Something went wrong' });
   }
 });
 
