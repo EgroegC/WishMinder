@@ -1,11 +1,9 @@
-import { useNavigate } from "react-router-dom";
 import apiClient from "../services/api-client";
 import { AxiosError } from 'axios'
 import { useAuth } from "./useAuth";
 
 const useRefreshToken = () => {
     const { setAccessToken } = useAuth();
-    const navigate = useNavigate(); 
 
     const refresh = async () => {
         try {
@@ -17,7 +15,7 @@ const useRefreshToken = () => {
             if (err instanceof AxiosError) {
               if (isRefreshTokenInvalidOrExpired(err))
               {
-                  navigate('/login');
+                return null;
               }
           }
 
