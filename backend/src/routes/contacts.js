@@ -9,7 +9,7 @@ router.post('/', authenticateToken, async (req, res) => {
     const { error } = validate(req.body); 
     if (error) return res.status(400).send(error.details[0].message);
     
-    let user = await Contact.findByPhoneNumber(req.body.phone);
+    let user = await Contact.findByPhoneNumber(req.body.user_id, req.body.phone);
     if (user) return res.status(400).send('The Contact Already Exists.');
 
     const contact = new Contact({
@@ -30,5 +30,14 @@ router.get('/', authenticateToken, async (req, res) => {
         res.status(500).json({ error: "Server error" });
     }
 });
+
+router.get('/haveBirthday', authenticateToken, async (req, res) => {
+    try {
+        const contacts_have_birthday = await Contact.getContactsWithBirthdayToday(req.user.id);
+        res.json(contacts_have_birthday);
+    } catch (error) {
+        res.status(500).json({ error: "Server error" });
+    }
+})
 
 module.exports = router;

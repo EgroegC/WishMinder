@@ -25,8 +25,8 @@ class Contact {
     return result.rows[0];
   }
 
-  static async findByPhoneNumber(phone) {
-    const result = await pool.query('SELECT * FROM contacts WHERE phone = $1', [phone]);
+  static async findByPhoneNumber(user_id, phone) {
+    const result = await pool.query('SELECT * FROM contacts WHERE phone = $1 AND user_id = $2', [phone, user_id]);
     if (result.rows.length) {
       return new Contact(result.rows[0]); 
     }
@@ -40,6 +40,18 @@ class Contact {
       );
     return result.rows;
   }
+
+  static async getContactsWithBirthdayToday(user_id) {
+    const result = await pool.query(`
+      SELECT * FROM contacts 
+      WHERE user_id = $1 
+        AND EXTRACT(DAY FROM birthdate) = $2 
+        AND EXTRACT(MONTH FROM birthdate) = $3
+    `, [user_id, new Date().getDate(), new Date().getMonth() + 1]);
+  
+    return result.rows.map(row => new Contact(row));
+  }
+  
 }
 
 module.exports = Contact;
