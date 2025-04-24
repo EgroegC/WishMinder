@@ -22,18 +22,20 @@ router.post('/subscribe', authenticateToken, express.json(), async (req, res) =>
   }
 });
 
-router.post('/send-notification', authenticateToken, async (req, res) => {
+router.post('/send-notification', authenticateToken, express.json(), async (req, res) => {
   const user_id = req.user.id;
-
-  const payload = JSON.stringify({
-    title: 'Hey!',
-    body: 'Check out today\'s namedays!',
-    data: {
-      url: 'http://localhost:5173/namedays' // ✅ full URL for dev
-    }
-  });
+  const payload = JSON.stringify(req.body);
 
   try {
+    sendNotification(user_id, payload)
+    res.status(200).json({ message: 'Notification process completed' });
+  } catch (err) {
+    console.error("🚨 Notification setup failed:", err);
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+});
+
+async function sendNotification(user_id, payload){
     const subscriptions = await PushSubscription.getByUser(user_id);
 
     for (const sub of subscriptions) {
@@ -54,12 +56,9 @@ router.post('/send-notification', authenticateToken, async (req, res) => {
         }
       }
     }
+}
 
-    res.status(200).json({ message: 'Notification process completed' });
-  } catch (err) {
-    console.error("🚨 Notification setup failed:", err);
-    res.status(500).json({ message: 'Something went wrong' });
-  }
-});
-
-module.exports = router;
+module.exports = {
+    router,
+    sendNotification, 
+};

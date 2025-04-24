@@ -33,6 +33,13 @@ class PushSubscription {
     );
   }
 
+  static async getAllSubscribedUsers() {
+    const result = await pool.query(
+      'SELECT DISTINCT user_id FROM push_subscriptions'
+    );
+    return result.rows;
+  }
+
 }
 
 module.exports = PushSubscription;
