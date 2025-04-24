@@ -2,6 +2,7 @@ import { Box, Text, VStack } from "@chakra-ui/react";
 import ContactCard from "./ContactCard";
 import { Contact } from "../../hooks/useContacts";
 import "./ListRow.css";
+import { ButtonConfig } from "./ContactCard";
 
 const ListRow = ({
   month,
@@ -9,12 +10,14 @@ const ListRow = ({
   namedayDateByMonth,
   isBirthday,
   currentYear,
+  buttons,
 }: {
   month: number;
   contacts: Contact[];
   namedayDateByMonth: Record<number, Date[]>;
   isBirthday: boolean;
   currentYear: number;
+  buttons: ButtonConfig[];
 }) => (
   <Box className="month-container">
     <Box className="month-header">
@@ -38,6 +41,7 @@ const ListRow = ({
             }
             isBirthday={isBirthday}
             currentYear={currentYear}
+            buttons={buttons}
           />
         ))}
       </VStack>

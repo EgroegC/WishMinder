@@ -6,10 +6,12 @@ import useUpcommingNamedays from "@/hooks/useUpcommingNamedays";
 import ListRow from "./ListRow";
 import NamedaysPassedSection from "./NamedaysPassedSection";
 import NoContactFoundSection from "./NoContactFoundSection";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import {
   filterContactsBySearchTerm,
   findCelebrationsForEachMonth,
 } from "./MemoHelpers";
+import EditContact from "./EditContact";
 
 interface Props {
   isBirthday: boolean;
@@ -18,9 +20,30 @@ interface Props {
 
 const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [buttonsError, setButtonsError] = useState("");
+  const [contactBeingEdited, setContactBeingEdited] = useState<Contact | null>(
+    null
+  );
   const { contacts, error: contactsError } = useContacts(refreshTrigger);
   const { upcNamedays, error: upcNamedaysError } = useUpcommingNamedays();
   const currentYear = new Date().getFullYear();
+  const axiosPrivate = useAxiosPrivate();
+
+  const handleDelete = (contact: Contact) => {
+    axiosPrivate
+      .delete(`/api/contacts/${contact.id}`)
+      .then(() => setRefreshTrigger((prev) => prev + 1))
+      .catch((err) => setButtonsError(err));
+  };
+
+  const handleEdit = (contact: Contact) => {
+    setContactBeingEdited(contact);
+  };
+
+  const buttons = [
+    { label: "Edit", onClick: handleEdit },
+    { label: "Delete", onClick: handleDelete },
+  ];
 
   const filteredContacts = useMemo(
     () => filterContactsBySearchTerm(contacts, searchTerm),
@@ -35,6 +58,8 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
 
   if (contactsError || upcNamedaysError)
     return <Text color="red.500">Failed to load data.</Text>;
+  if (buttonsError)
+    return <Text color="red.500">Failed to delete contact</Text>;
 
   if (filteredContacts.length === 0)
     return (
@@ -42,6 +67,18 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
         onContactAdded={() => setRefreshTrigger((prev) => prev + 1)}
       />
     );
+
+  if (contactBeingEdited) {
+    return (
+      <EditContact
+        contact={contactBeingEdited}
+        onContactUpdated={() => {
+          setRefreshTrigger((prev) => prev + 1);
+          setContactBeingEdited(null);
+        }}
+      />
+    );
+  }
 
   if (theContactsNamedaysPassedForFilteredContacts(celebrationByMonth))
     return <NamedaysPassedSection filteredContacts={filteredContacts} />;
@@ -56,6 +93,7 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
           namedayDateByMonth={namedayDateByMonth}
           isBirthday={isBirthday}
           currentYear={currentYear}
+          buttons={buttons}
         />
       ))}
     </Box>

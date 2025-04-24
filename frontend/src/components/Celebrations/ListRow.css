@@ -80,8 +80,8 @@
     margin-top: 12px; /* Added space between age info and buttons */
   }
   
-  .reminder-button,
-  .auto-message-button {
+  .listrow_first_button,
+  .listrow_second_button {
     font-size: 0.75rem; /* Reduced font size */
     color: black;
     background-color: white;
@@ -91,17 +91,17 @@
     border: 1px solid #3182ce; /* Added border to match hover effect */
   }
   
-  .reminder-button:hover {
+  .listrow_first_button:hover {
     background-color: #3182ce;
     color: white;
   }
   
-  .auto-message-button {
+  .listrow_second_button {
     background-color: white;
     border: 1px solid #38a169;
   }
   
-  .auto-message-button:hover {
+  .listrow_second_button:hover {
     background-color: #38a169;
     color: white;
   }

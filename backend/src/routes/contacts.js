@@ -44,6 +44,35 @@ router.delete('/:id', authenticateToken, async (req, res) => {
       res.status(500).send('Error deleting contact');
     }
 });
+
+router.put("/:id", authenticateToken, async (req, res) => {
+    const contactId = parseInt(req.params.id);
+    const userId = req.user.id; 
+  
+    const { name, surname, phone, email, birthdate } = req.body;
+  
+    try {
+      const contact = new Contact({
+        id: contactId,
+        user_id: userId,
+        name,
+        surname,
+        phone,
+        email,
+        birthdate,
+      });
+  
+      const updatedContact = await contact.update();
+  
+      if (!updatedContact) {
+        return res.status(404).json({ message: "Contact not found or not updated" });
+      }
+  
+      res.json(updatedContact);
+    } catch (err) {
+      res.status(500).json({ message: "Error updating contact" });
+    }
+  });
   
 router.get('/haveBirthday', authenticateToken, async (req, res) => {
     try {

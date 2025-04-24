@@ -25,6 +25,19 @@ class Contact {
     return result.rows[0];
   }
 
+  async update() {
+    const result = await pool.query(
+      `UPDATE contacts 
+       SET name = $1, surname = $2, phone = $3, email = $4, birthdate = $5 
+       WHERE id = $6 AND user_id = $7
+       RETURNING *`,
+      [this.name, this.surname, this.phone, this.email, this.birthdate, this.id, this.user_id]
+    );
+  
+    return result.rows[0];
+  }
+  
+
   static async findByPhoneNumber(user_id, phone) {
     const result = await pool.query('SELECT * FROM contacts WHERE phone = $1 AND user_id = $2', [phone, user_id]);
     if (result.rows.length) {

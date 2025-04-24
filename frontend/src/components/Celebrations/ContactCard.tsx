@@ -2,11 +2,17 @@ import { Box, Flex, HStack, Button, Badge, Text } from "@chakra-ui/react";
 import { FaUserCircle } from "react-icons/fa";
 import { Contact } from "@/hooks/useContacts";
 
+export type ButtonConfig = {
+  label: string;
+  onClick: (contact: Contact) => void;
+};
+
 interface Props {
   contact: Contact;
   celebrationDate: Date | undefined;
   isBirthday: boolean;
   currentYear: number;
+  buttons: ButtonConfig[];
 }
 
 const ContactCard = ({
@@ -14,6 +20,7 @@ const ContactCard = ({
   celebrationDate,
   isBirthday,
   currentYear,
+  buttons,
 }: Props) => {
   if (!celebrationDate) return null;
 
@@ -54,8 +61,19 @@ const ContactCard = ({
 
         {/* Actions */}
         <HStack gap={6}>
-          <Button className="reminder-button">Set Reminder</Button>
-          <Button className="auto-message-button">Auto Message</Button>
+          <Button
+            className="listrow_first_button"
+            onClick={() => buttons[0].onClick(contact)}
+          >
+            {buttons[0].label}
+          </Button>
+
+          <Button
+            className="listrow_second_button"
+            onClick={() => buttons[1].onClick(contact)}
+          >
+            {buttons[1].label}
+          </Button>
         </HStack>
       </Flex>
     </Box>
