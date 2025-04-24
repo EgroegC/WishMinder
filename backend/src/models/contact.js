@@ -41,6 +41,14 @@ class Contact {
     return result.rows;
   }
 
+  static async deleteContact(contact_id, user_id) {
+    const result = await pool.query(
+      `DELETE FROM contacts WHERE id = $1 AND user_id = $2 RETURNING *`,
+      [contact_id, user_id]
+    );
+    return result.rows[0];
+  }
+
   static async getContactsWithBirthdayToday(user_id) {
     const result = await pool.query(`
       SELECT * FROM contacts 
