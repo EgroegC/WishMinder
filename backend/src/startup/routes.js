@@ -5,6 +5,7 @@ const auth = require('../routes/auth');
 const contacts = require('../routes/contacts');
 const namedays = require('../routes/namedays');
 const {router: webpush} = require('../routes/web_push');
+const todays_celebrations = require('../routes/todays_celebrations');
 
 module.exports = function(app){
     app.use(express.json());
@@ -13,5 +14,6 @@ module.exports = function(app){
     app.use('/api/contacts', contacts);
     app.use('/api/namedays', namedays);
     app.use('/api/', webpush);
+    app.use('/api/todays-celebrations', todays_celebrations);
     app.use(error);
 }
