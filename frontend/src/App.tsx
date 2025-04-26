@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import RequireAuth from "./components/AuthenticationForPages/RequireAuth";
 import BirthdaysPage from "../src/pages/BirthdaysPage";
 import NamedaysPage from "../src/pages/NamedaysPage";
+import TodaysCelebrations from "../src/pages/TodaysCelebrations";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/birthdays" element={<BirthdaysPage />} />
           <Route path="/namedays" element={<NamedaysPage />} />
+          <Route path="/send-wish" element={<TodaysCelebrations />} />
         </Route>
       </Routes>
     </Router>

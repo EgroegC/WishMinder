@@ -40,7 +40,7 @@ async function notifyForTodaysNamedaysAndBirthdays() {
         title: 'Hey!',
         body: 'Check out today\'s namedays!',
         data: {
-        url: 'http://localhost:5173/wish' // ✅ full URL for dev
+        url: 'http://localhost:5173/send-wish'
        }
      });
 
