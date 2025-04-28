@@ -16,7 +16,16 @@ const NavBar = () => {
   return (
     <div className="navbar-container">
       {/* Logo */}
-      <div className="logo-container" onClick={() => navigate("/")}>
+      <div className="logo-container">
+        <Button
+          colorScheme="cyan"
+          variant="solid"
+          size="sm"
+          onClick={() => navigate(-1)}
+          className="back-button"
+        >
+          ←
+        </Button>
         <Image src={logo} className="logo-image" />
         <Text className="navbar-title">NavBar</Text>
       </div>
