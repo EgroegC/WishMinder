@@ -4,7 +4,7 @@ class CelebrationService {
   
     static async getTodaysBirthdaysForUser(userId) {
       const { rows } = await pool.query(`
-        SELECT user_id, name, surname, birthdate
+        SELECT id, user_id, name, surname, phone, birthdate, created_at
         FROM contacts
         WHERE user_id = $1
           AND EXTRACT(MONTH FROM birthdate) = EXTRACT(MONTH FROM CURRENT_DATE)
@@ -15,7 +15,7 @@ class CelebrationService {
   
     static async getTodaysNamedaysForUser(userId) {
       const { rows } = await pool.query(`
-        SELECT c.user_id, c.name, c.surname, nd.nameday_date
+        SELECT c.id, c.user_id, c.name, c.surname, c.phone, c.birthdate, nd.nameday_date, c.created_at
         FROM contacts c
         JOIN names n ON c.name = n.name
         JOIN namedays nd ON nd.name_id = n.id
