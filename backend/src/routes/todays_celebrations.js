@@ -12,7 +12,7 @@ router.get('/', authenticateToken, async (req, res) => {
     } catch (err) {
       console.error(err);
       res.status(500).send('Error fetching celebrations');
-    }  res.status(500).json({ error: "Server error" });
+    }
 });
 
 module.exports = router;
