@@ -2,9 +2,19 @@ const pool = require("../config/db")();
 
 class PushSubscription {
    
+  static async removeOldSubscriptions(userId, userAgent, currentEndpoint) {
+    await pool.query(
+      `DELETE FROM push_subscriptions
+       WHERE user_id = $1 AND user_agent = $2 AND endpoint != $3`,
+      [userId, userAgent, currentEndpoint]
+    );
+  }
+
   static async createOrUpdate(userId, subscription, userAgent) {
     const { endpoint, expirationTime, keys } = subscription;
-  
+
+    await this.removeOldSubscriptions(userId, userAgent, endpoint);
+
     await pool.query(
       `INSERT INTO push_subscriptions (user_id, endpoint, expiration_time, keys, user_agent, updated_at)
        VALUES ($1, $2, $3, $4, $5, now())
