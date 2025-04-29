@@ -12,6 +12,7 @@ import {
   findCelebrationsForEachMonth,
 } from "./MemoHelpers";
 import EditContact from "./EditContact";
+import { ButtonConfig } from "./ContactCard";
 
 interface Props {
   isBirthday: boolean;
@@ -40,9 +41,9 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
     setContactBeingEdited(contact);
   };
 
-  const buttons = [
-    { label: "Edit", onClick: handleEdit },
-    { label: "Delete", onClick: handleDelete },
+  const buttons: ButtonConfig[] = [
+    { label: "Edit", variant: "info", onClick: handleEdit },
+    { label: "Delete", variant: "danger", onClick: handleDelete },
   ];
 
   const filteredContacts = useMemo(

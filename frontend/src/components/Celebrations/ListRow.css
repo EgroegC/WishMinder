@@ -88,21 +88,17 @@
     padding: 6px 12px; /* Reduced padding */
     border-radius: 6px;
     transition: all 0.2s ease;
-    border: 1px solid #3182ce; /* Added border to match hover effect */
   }
   
   .listrow_first_button:hover {
-    background-color: #3182ce;
     color: white;
   }
   
   .listrow_second_button {
     background-color: white;
-    border: 1px solid #38a169;
   }
   
   .listrow_second_button:hover {
-    background-color: #38a169;
     color: white;
   }
   

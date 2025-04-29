@@ -4,6 +4,7 @@ import { Contact } from "@/hooks/useContacts";
 
 export type ButtonConfig = {
   label: string;
+  variant: "danger" | "success" | "info";
   onClick: (contact: Contact) => void;
 };
 
@@ -14,6 +15,12 @@ interface Props {
   currentYear: number;
   buttons: ButtonConfig[];
 }
+
+const colorStyles: Record<"danger" | "success" | "info", string> = {
+  danger: "red.500",
+  success: "green.500",
+  info: "#3182ce",
+};
 
 const ContactCard = ({
   contact,
@@ -62,6 +69,10 @@ const ContactCard = ({
         {/* Actions */}
         <HStack gap={6}>
           <Button
+            borderColor={colorStyles[buttons[0].variant]}
+            _hover={{
+              backgroundColor: colorStyles[buttons[0].variant],
+            }}
             className="listrow_first_button"
             onClick={() => buttons[0].onClick(contact)}
           >
@@ -69,6 +80,10 @@ const ContactCard = ({
           </Button>
 
           <Button
+            borderColor={colorStyles[buttons[1].variant]}
+            _hover={{
+              backgroundColor: colorStyles[buttons[1].variant],
+            }}
             className="listrow_second_button"
             onClick={() => buttons[1].onClick(contact)}
           >

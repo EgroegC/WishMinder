@@ -47,8 +47,8 @@ function TodaysCelebrations() {
 
   const buttons = (type: "birthday" | "nameday"): ButtonConfig[] => {
     return [
-      { label: "Message", onClick: handleMessage(type) },
-      { label: "Call", onClick: handleCall },
+      { label: "Message", variant: "info", onClick: handleMessage(type) },
+      { label: "Call", variant: "success", onClick: handleCall },
     ];
   };
 
