@@ -1,10 +1,12 @@
 import { Flex } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 import CelebrationBox from "@/components/Celebrations/CelebrationBox";
 import ListRow from "@/components/Celebrations/ListRow";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { Contact } from "../../hooks/useContacts";
 import { useEffect, useState } from "react";
 import { CanceledError } from "axios";
+import { ButtonConfig } from "./ContactCard";
 
 type Celebration = Contact & {
   type: "birthday" | "nameday";
@@ -14,6 +16,7 @@ function TodaysCelebrations() {
   const [celebrations, setCelebrations] = useState<Celebration[]>([]);
   const [error, setError] = useState("");
   const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
   const today = new Date();
 
   useEffect(() => {
@@ -32,10 +35,22 @@ function TodaysCelebrations() {
     return () => controller.abort();
   }, [axiosPrivate]);
 
-  const buttons = [
-    { label: "Message", onClick: handleMessage },
-    { label: "Call", onClick: handleCall },
-  ];
+  const handleMessage =
+    (type: "birthday" | "nameday") => (contact: Contact) => {
+      navigate("/messages", {
+        state: {
+          type,
+          phone: contact.phone,
+        },
+      });
+    };
+
+  const buttons = (type: "birthday" | "nameday"): ButtonConfig[] => {
+    return [
+      { label: "Message", onClick: handleMessage(type) },
+      { label: "Call", onClick: handleCall },
+    ];
+  };
 
   const birthdayContacts = filterCelebrationContacts(celebrations, "birthday");
   const namedayContacts = filterCelebrationContacts(celebrations, "nameday");
@@ -63,7 +78,7 @@ function TodaysCelebrations() {
                 namedayDateByMonth={{}}
                 isBirthday={true}
                 currentYear={today.getFullYear()}
-                buttons={buttons}
+                buttons={buttons("birthday")}
               />
             }
           />
@@ -79,7 +94,7 @@ function TodaysCelebrations() {
                 }}
                 isBirthday={false}
                 currentYear={today.getFullYear()}
-                buttons={buttons}
+                buttons={buttons("nameday")}
               />
             }
           />
@@ -88,10 +103,6 @@ function TodaysCelebrations() {
     </Flex>
   );
 }
-
-const handleMessage = (contact: Contact) => {
-  window.location.href = `sms:${contact.phone}`;
-};
 
 const handleCall = (contact: Contact) => {
   window.location.href = `tel:${contact.phone}`;

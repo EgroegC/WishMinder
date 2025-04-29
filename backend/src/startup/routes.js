@@ -6,6 +6,7 @@ const contacts = require('../routes/contacts');
 const namedays = require('../routes/namedays');
 const {router: webpush} = require('../routes/web_push');
 const todays_celebrations = require('../routes/todays_celebrations');
+const messages = require('../routes/messages');
 
 module.exports = function(app){
     app.use(express.json());
@@ -15,5 +16,6 @@ module.exports = function(app){
     app.use('/api/namedays', namedays);
     app.use('/api/', webpush);
     app.use('/api/todays-celebrations', todays_celebrations);
+    app.use('/api/messages', messages);
     app.use(error);
 }
