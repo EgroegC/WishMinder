@@ -3,15 +3,17 @@ const router = express.Router();
 const webpush = require('web-push');
 const {authenticateToken} = require('../middleware/authorization');
 const PushSubscription = require('../models/push_subscription');
+const {validatePushSubscription, 
+  validateNotificationPayload} = require('./validation/subscription_validation');
 
 router.post('/subscribe', authenticateToken, express.json(), async (req, res) => {
+  
+  const { error } = validatePushSubscription(req.body);
+  if (error) return res.status(400).send({ message: error.details[0].message });
+  
   const subscription = req.body;
   const userId = req.user.id;
   const userAgent = req.headers['user-agent'];
-
-  if (!subscription) {
-    return res.status(400).json({ message: 'No subscription in request body' });
-  }
 
   try {
     await PushSubscription.createOrUpdate(userId, subscription, userAgent);
@@ -23,6 +25,10 @@ router.post('/subscribe', authenticateToken, express.json(), async (req, res) =>
 });
 
 router.post('/send-notification', authenticateToken, express.json(), async (req, res) => {
+  
+  const { error } = validateNotificationPayload(req.body);
+  if (error) return res.status(400).send({ message: error.details[0].message });
+  
   const user_id = req.user.id;
   const payload = JSON.stringify(req.body);
 
