@@ -51,6 +51,13 @@ function Messages() {
             <Text>{msg.text}</Text>
           </Box>
         ))}
+        <Box
+          key={"text"}
+          className="message-box"
+          onClick={() => handleSelectMessage("")}
+        >
+          <Text>Add your own message</Text>
+        </Box>
       </SimpleGrid>
     </Flex>
   );
