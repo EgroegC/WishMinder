@@ -47,7 +47,7 @@ function BirthdayPage() {
           />
 
           <CelebrationBox
-            heading="🎉 Namedays"
+            heading="🎉 Upcomming Namedays"
             children={
               <CelebrationList isBirthday={false} searchTerm={searchTerm} />
             }
