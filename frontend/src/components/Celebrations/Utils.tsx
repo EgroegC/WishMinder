@@ -1,10 +1,23 @@
 import { Contact } from "@/hooks/useContacts";
 import { Nameday } from "@/hooks/useUpcommingNamedays";
 
-// Utility function for grouping birthdays by month
 export const getBirthdaysByMonth = (contacts: Contact[]) => {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const currentYear = today.getFullYear();
+
   return contacts.reduce<Record<number, Contact[]>>((acc, contact) => {
     if (!contact.birthdate) return acc;
+
+    const originalDate = new Date(contact.birthdate);
+    const birthdayThisYear = new Date(
+      currentYear,
+      originalDate.getMonth(),
+      originalDate.getDate()
+    );
+
+    if (birthdayThisYear < today) return acc;
+
     const birthMonth = new Date(contact.birthdate).getMonth() + 1;
     if (!acc[birthMonth]) acc[birthMonth] = [];
     acc[birthMonth].push(contact);
@@ -12,7 +25,6 @@ export const getBirthdaysByMonth = (contacts: Contact[]) => {
   }, {});
 };
 
-// Utility function for grouping upcoming namedays
 export const getUpcomingContactsNamedays = (
   upcNamedays: Nameday[],
   contacts: Contact[]
