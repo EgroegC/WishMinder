@@ -32,7 +32,7 @@ const ListRow = ({
       <VStack align="stretch" gap={4}>
         {contacts.map((contact, index) => (
           <ContactCard
-            key={contact.id}
+            key={`${contact.id}-${month}-${index}`}
             contact={contact}
             celebrationDate={
               isBirthday && contact.birthdate
