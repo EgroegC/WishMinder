@@ -30,12 +30,24 @@ router.post('/', async (req, res) => {
 
     // Store refresh token in an HTTP-only cookie
     res.cookie('refreshToken', refreshToken, {
-        httpOnly: true,  // Prevent access via JavaScript
-        secure: true,    // Only send over HTTPS
+        httpOnly: true, // Prevent access via JavaScript
+        secure: true,   // Only send over HTTPS
         sameSite: 'Strict', // Prevent CSRF attacks
+        path: '/' 
     });
 
     res.json({ accessToken });
+});
+
+router.post('/logout', (req, res) => {
+    res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'Strict',
+        path: '/' 
+    });
+
+    return res.sendStatus(204);
 });
 
 router.post('/refresh', authenticateRefreshToken, (req, res) => {
