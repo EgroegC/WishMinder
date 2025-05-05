@@ -3,7 +3,7 @@ const Nameday = require('../models/Nameday');
 const express = require('express');
 const router = express.Router();
 
-router.get('/upcomming', authenticateToken, async (req, res) => {
+router.get('/upcoming', authenticateToken, async (req, res) => {
     try {
         const contacts = await Nameday.getUpcomingNamedays();
         res.json(contacts);

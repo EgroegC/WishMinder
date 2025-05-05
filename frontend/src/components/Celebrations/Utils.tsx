@@ -2,27 +2,9 @@ import { Contact } from "@/hooks/useContacts";
 import { Nameday } from "@/hooks/useUpcommingNamedays";
 
 export const getBirthdaysByMonth = (contacts: Contact[]) => {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const currentYear = today.getFullYear();
+  const contactsByBirthdayMonth = getContactsByBirthdayMonth(contacts);
 
-  return contacts.reduce<Record<number, Contact[]>>((acc, contact) => {
-    if (!contact.birthdate) return acc;
-
-    const originalDate = new Date(contact.birthdate);
-    const birthdayThisYear = new Date(
-      currentYear,
-      originalDate.getMonth(),
-      originalDate.getDate()
-    );
-
-    if (birthdayThisYear < today) return acc;
-
-    const birthMonth = new Date(contact.birthdate).getMonth() + 1;
-    if (!acc[birthMonth]) acc[birthMonth] = [];
-    acc[birthMonth].push(contact);
-    return acc;
-  }, {});
+  return sortContactsByBirthdayMonth(contactsByBirthdayMonth);
 };
 
 export const getUpcomingContactsNamedays = (
@@ -55,4 +37,47 @@ export const getUpcomingContactsNamedays = (
   });
 
   return { namedayByMonth, namedayDateByMonth };
+};
+
+const getContactsByBirthdayMonth = (contacts: Contact[]) => {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const currentYear = today.getFullYear();
+
+  const grouped: Record<number, Contact[]> = {};
+
+  for (const contact of contacts) {
+    if (!contact.birthdate) continue;
+
+    const originalDate = new Date(contact.birthdate);
+    const birthdayThisYear = new Date(
+      currentYear,
+      originalDate.getMonth(),
+      originalDate.getDate()
+    );
+
+    if (birthdayThisYear < today) continue;
+
+    const birthMonth = originalDate.getMonth() + 1;
+
+    if (!grouped[birthMonth]) grouped[birthMonth] = [];
+    grouped[birthMonth].push(contact);
+  }
+
+  return grouped;
+};
+
+const sortContactsByBirthdayMonth = (
+  contactsByMonth: Record<number, Contact[]>
+) => {
+  for (const month in contactsByMonth) {
+    contactsByMonth[month].sort((a, b) => {
+      if (!a.birthdate || !b.birthdate) return 0;
+      const aDate = new Date(a.birthdate);
+      const bDate = new Date(b.birthdate);
+      return aDate.getDate() - bDate.getDate();
+    });
+  }
+
+  return contactsByMonth;
 };

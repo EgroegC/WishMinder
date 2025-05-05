@@ -27,28 +27,7 @@ class Nameday {
       throw error;
     }
   }
-
-  static async getContactsWithUpcomingNamedays(contacts) {
-    try {
-      const upcomingNamedays = await this.getUpcomingNamedays();
   
-      const namedayMap = new Map(upcomingNamedays.map(nd => [nd.name, nd.namedayDate]));
-  
-      const contactsWithNamedays = contacts
-        .filter(contact => namedayMap.has(contact.name))
-        .map(contact => ({
-          contactId: contact.id,
-          name: contact.name,
-          phone: contact.phone,
-          namedayDate: namedayMap.get(contact.name),
-        }));
-  
-      return contactsWithNamedays;
-    } catch (error) {
-      console.error("❌ Error fetching contacts with namedays:", error);
-      throw error;
-    }
-  } 
 }
 
 module.exports = Nameday;

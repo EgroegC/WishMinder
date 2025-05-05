@@ -8,7 +8,7 @@ export interface Nameday {
   nameday_date: Date;
 }
 
-const useUpcommingNamedays = () => {
+const useUpcomingNamedays = () => {
   const [upcNamedays, setUpcNamedays] = useState<Nameday[]>([]);
   const [error, setError] = useState("");
   const axiosPrivate = useAxiosPrivate();
@@ -17,7 +17,7 @@ const useUpcommingNamedays = () => {
     const controller = new AbortController(); 
 
     axiosPrivate
-      .get<Nameday[]>("/api/namedays/upcomming", {
+      .get<Nameday[]>("/api/namedays/upcoming", {
         signal: controller.signal, 
       })
       .then((res) => setUpcNamedays(res.data))
@@ -32,4 +32,4 @@ const useUpcommingNamedays = () => {
   return {upcNamedays, error}
 }
 
-export default useUpcommingNamedays
+export default useUpcomingNamedays

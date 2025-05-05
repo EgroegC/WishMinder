@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Box, Text } from "@chakra-ui/react";
 import { Contact } from "../../hooks/useContacts";
 import useContacts from "@/hooks/useContacts";
-import useUpcommingNamedays from "@/hooks/useUpcommingNamedays";
+import useUpcomingNamedays from "@/hooks/useUpcommingNamedays";
 import ListRow from "./ListRow";
 import NamedaysPassedSection from "./NamedaysPassedSection";
 import NoContactFoundSection from "./NoContactFoundSection";
@@ -26,7 +26,7 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
     null
   );
   const { contacts, error: contactsError } = useContacts(refreshTrigger);
-  const { upcNamedays, error: upcNamedaysError } = useUpcommingNamedays();
+  const { upcNamedays, error: upcNamedaysError } = useUpcomingNamedays();
   const currentYear = new Date().getFullYear();
   const axiosPrivate = useAxiosPrivate();
 

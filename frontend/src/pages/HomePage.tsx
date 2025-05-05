@@ -68,7 +68,7 @@ const HomePage = () => {
               <Heading size="lg" mt={3} color="gray.800">
                 Birthdays
               </Heading>
-              <Text color="gray.600">See upcoming celebrations 🎂</Text>
+              <Text color="gray.600">See upcoming birthdays 🎂</Text>
             </LinkBox>
 
             {/* Name Days Link */}
