@@ -4,12 +4,8 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/upcoming', authenticateToken, async (req, res) => {
-    try {
-        const contacts = await Nameday.getUpcomingNamedays();
-        res.json(contacts);
-    } catch (error) {
-        res.status(500).json({ error: "Server error" });
-    }
+    const contacts = await Nameday.getUpcomingNamedays();
+    res.json(contacts);
 });
 
 module.exports = router;

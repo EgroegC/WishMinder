@@ -2,53 +2,65 @@ require("dotenv").config();
 require('../../config/web_push_config')();
 const pool = require('../../config/db')();
 const { sendNotification } = require('../../routes/web_push');
+const logger = require('../../config/logger')();
+const rollbar = require('../../config/rollbar')();
 
 async function notifyForTodaysNamedaysAndBirthdays() {
+  try {
     const { rows } = await pool.query(`
-    SELECT DISTINCT ps.user_id, c.name, c.surname, c.birthdate AS celebration_date, 'birthday' AS type
-    FROM push_subscriptions ps 
-    JOIN contacts c ON ps.user_id = c.user_id
-    WHERE EXTRACT(MONTH FROM c.birthdate) = EXTRACT(MONTH FROM CURRENT_DATE)
-      AND EXTRACT(DAY FROM c.birthdate) = EXTRACT(DAY FROM CURRENT_DATE)
+      SELECT DISTINCT ps.user_id, c.name, c.surname, c.birthdate AS celebration_date, 'birthday' AS type
+      FROM push_subscriptions ps 
+      JOIN contacts c ON ps.user_id = c.user_id
+      WHERE EXTRACT(MONTH FROM c.birthdate) = EXTRACT(MONTH FROM CURRENT_DATE)
+        AND EXTRACT(DAY FROM c.birthdate) = EXTRACT(DAY FROM CURRENT_DATE)
 
-    UNION ALL
+      UNION ALL
 
-    SELECT DISTINCT ps.user_id, c.name, c.surname, nd.nameday_date AS celebration_date, 'nameday' AS type
-    FROM push_subscriptions ps
-    JOIN contacts c ON ps.user_id = c.user_id
-    JOIN names n ON c.name = n.name
-    JOIN namedays nd ON nd.name_id = n.id
-    WHERE EXTRACT(MONTH FROM nd.nameday_date) = EXTRACT(MONTH FROM CURRENT_DATE)
-      AND EXTRACT(DAY FROM nd.nameday_date) = EXTRACT(DAY FROM CURRENT_DATE);
+      SELECT DISTINCT ps.user_id, c.name, c.surname, nd.nameday_date AS celebration_date, 'nameday' AS type
+      FROM push_subscriptions ps
+      JOIN contacts c ON ps.user_id = c.user_id
+      JOIN names n ON c.name = n.name
+      JOIN namedays nd ON nd.name_id = n.id
+      WHERE EXTRACT(MONTH FROM nd.nameday_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+        AND EXTRACT(DAY FROM nd.nameday_date) = EXTRACT(DAY FROM CURRENT_DATE);
     `);
-    
-  
+
     const notificationsMap = {};
-  
+
     for (const row of rows) {
       if (!notificationsMap[row.user_id]) {
         notificationsMap[row.user_id] = [];
       }
-      notificationsMap[row.user_id].push(row.name);
+      notificationsMap[row.user_id].push(row.surname);
     }
-  
+
     for (const userId of Object.keys(notificationsMap)) {
-      const names = notificationsMap[userId];
-      const message = `🎉 Today's namedays: ${names.join(", ")}`;
+      const surnames = notificationsMap[userId];
+      const message = `🎉 Today's celebrations: ${surnames.join(", ")}`;
 
       const payload = JSON.stringify({
         title: 'Hey!',
-        body: 'Check out today\'s namedays!',
+        body: message,
         data: {
-        url: 'http://localhost:5173/send-wish'
-       }
-     });
+          url: 'http://localhost:5173/send-wish'
+        }
+      });
 
-     sendNotification(userId, payload);
+      try {
+        await sendNotification(userId, payload);
+      } catch (err) {
+        logger.error(`Failed to send notification to user ${userId}: ${err.message}`, {
+          stack: err.stack
+        });
+        rollbar.error(`Script error: Failed to send notification to user ${userId}`, err);
+      }
     }
+  } catch (err) {
+    logger.error(`Script execution failed: ${err.message}`, { stack: err.stack });
+    rollbar.error(`Script error: Notification script failed`, err);
+  }
 }
 
 (async () => {
-    await notifyForTodaysNamedaysAndBirthdays();
+  await notifyForTodaysNamedaysAndBirthdays();
 })();
-  
