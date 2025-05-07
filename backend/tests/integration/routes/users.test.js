@@ -2,7 +2,7 @@ require("dotenv").config();
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const User = require('../../../src/models/user/user');
+const User = require('../../../src/models/user');
 
 describe('/api/users', () => {
     beforeEach( () => { server = require('../../../src/index'); } );
