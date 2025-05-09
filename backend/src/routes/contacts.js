@@ -9,7 +9,7 @@ router.post('/', authenticateToken, async (req, res) => {
     const { error } = validate(req.body); 
     if (error) return res.status(400).send(error.details[0].message);
     
-    let user = await Contact.findByPhoneNumber(req.body.user_id, req.body.phone);
+    let user = await Contact.findByPhoneNumber(req.user.id, req.body.phone);
     if (user) return res.status(400).send('The Contact Already Exists.');
 
     const contact = new Contact({
@@ -25,8 +25,6 @@ router.post('/', authenticateToken, async (req, res) => {
 router.get('/', authenticateToken, async (req, res) => {
 
     const contacts = await Contact.getAllContacts(req.user.id);
-    if(!contacts) throw new Error("Failed to retrieve contacts");
-
     res.json(contacts);
 });
 
