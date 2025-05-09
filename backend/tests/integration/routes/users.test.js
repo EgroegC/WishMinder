@@ -3,6 +3,7 @@ const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../../../src/models/user');
+const {itShouldRequireAuth} = require('../../helpers/auth_test_helper');
 
 describe('/api/users', () => {
     beforeEach( () => { server = require('../../../src/index'); } );
@@ -30,6 +31,8 @@ describe('/api/users', () => {
             await User.delete('test_user@gmail.com');
         })
     
+        itShouldRequireAuth(() => server, '/api/users/me', 'get');
+
         it('should return 404 if token does not corespond to a existing user', async () => {
             token = jwt.sign({ id: user.id+1 }, process.env.JWT_ACCESS_TOKEN);
     
