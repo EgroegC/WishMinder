@@ -23,7 +23,7 @@ function TodaysCelebrations() {
     const controller = new AbortController();
 
     axiosPrivate
-      .get<Celebration[]>("/api/todays-celebrations", {
+      .get<Celebration[]>("/api/celebrations/today", {
         signal: controller.signal,
       })
       .then((res) => setCelebrations(res.data))

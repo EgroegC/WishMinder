@@ -14,8 +14,8 @@ module.exports = function(app){
     app.use('/api/auth', auth);
     app.use('/api/contacts', contacts);
     app.use('/api/namedays', namedays);
-    app.use('/api/', webpush);
-    app.use('/api/todays-celebrations', todays_celebrations);
+    app.use('/api/notification', webpush);
+    app.use('/api/celebrations/today', todays_celebrations);
     app.use('/api/messages', messages);
     app.use(error);
 }

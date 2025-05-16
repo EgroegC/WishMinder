@@ -17,7 +17,7 @@ export const usePushNotifications = (axiosInstance: AxiosInstance) => {
           const newSub = await subscribeUser(registration, axiosInstance);
           console.log("✅ Subscribed and sent to server:", newSub);
         } else {
-          await axiosInstance.post("/api/subscribe", sub);
+          await axiosInstance.post("/api/notification/subscribe", sub);
           console.log("✅ Existing subscription updated.");
         }
       } catch (err) {

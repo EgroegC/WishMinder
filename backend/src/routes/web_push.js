@@ -21,7 +21,7 @@ router.post('/subscribe', authenticateToken, express.json(), async (req, res) =>
   res.status(201).json({ message: 'Subscription stored' });
 });
 
-router.post('/send-notification', authenticateToken, express.json(), async (req, res) => {
+router.post('/send', authenticateToken, express.json(), async (req, res) => {
   
   const { error } = validateNotificationPayload(req.body);
   if (error) return res.status(400).send({ message: error.details[0].message });
