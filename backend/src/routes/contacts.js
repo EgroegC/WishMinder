@@ -64,10 +64,5 @@ router.put("/:id", authenticateToken, async (req, res) => {
 
   res.json(updatedContact);
 });
-  
-router.get('/haveBirthday', authenticateToken, async (req, res) => {
-    const contacts_have_birthday = await Contact.getContactsWithBirthdayToday(req.user.id);
-    res.json(contacts_have_birthday);
-})
 
 module.exports = router;

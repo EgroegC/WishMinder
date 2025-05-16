@@ -163,40 +163,4 @@ describe('/api/contacts', () => {
             expect(res.body.name).toBe('Updated');
         });
     });
-
-    describe('GET /haveBirthday', () => {
-        itShouldRequireAuth(() => server, '/api/contacts/haveBirthday', 'get');
-
-        it('should return contacts who have birthday today', async () => {
-            const today = new Date();
-            const formattedDate = today.toISOString().split('T')[0];
-
-            const contact = new Contact({
-                user_id: user.id,
-                name: 'BirthdayPerson',
-                surname: 'Today',
-                phone: '+1234567899',
-                email: 'bday@email.com',
-                birthdate: formattedDate
-            });
-            await contact.save();
-
-            const res = await request(server)
-                .get('/api/contacts/haveBirthday')
-                .set('Authorization', `Bearer ${token}`);
-
-            expect(res.status).toBe(200);
-            expect(res.body.some(c => c.id === contact.id)).toBeTruthy();
-        });
-
-        it('should return empty array if no contacts have birthdat today', async () => {
-            const res = await request(server)
-                .get('/api/contacts/haveBirthday')
-                .set('Authorization', `Bearer ${token}`);
-
-            expect(res.status).toBe(200);
-            expect(Array.isArray(res.body)).toBe(true);
-            expect(res.body.length).toBe(0);
-        });
-    });
 });
