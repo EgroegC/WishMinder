@@ -55,7 +55,7 @@ async function sendNotification(user_id, payload){
         await webpush.sendNotification(pushSub, payload);
       } catch (err) {
         if (err.statusCode === 410 || err.statusCode === 404) {
-          await PushSubscription.deleteByEndpointAndUser(pushSub.endpoint, user_id);
+          await PushSubscription.deleteSubByEndpointAndUser(pushSub.endpoint, user_id);
           logger.info(`🧹 Removed dead subscription: ${pushSub.endpoint} for User with ID: ${user_id}`);
         } else {
           err.message = `❌ Failed to send to ${pushSub.endpoint}: ${err.message} for User with ID: ${user_id}`;

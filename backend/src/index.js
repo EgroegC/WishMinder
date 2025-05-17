@@ -1,6 +1,6 @@
 require("dotenv").config();
 require('express-async-errors');
-require('./config/web_push_config')();
+require('./config/web_push')();
 const express = require('express');
 const cors = require("cors");
 const cookieParser = require('cookie-parser');

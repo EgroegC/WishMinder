@@ -1,5 +1,5 @@
 require("dotenv").config();
-require('../../config/web_push_config')();
+require('../../config/web_push')();
 const pool = require('../../config/db')();
 const { sendNotification } = require('../../routes/web_push');
 const logger = require('../../config/logger')();

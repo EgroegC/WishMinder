@@ -36,7 +36,7 @@ class PushSubscription {
     return result.rows;
   }
 
-  static async deleteByEndpointAndUser(endpoint, user_id) {
+  static async deleteSubByEndpointAndUser(endpoint, user_id) {
     await pool.query(
       'DELETE FROM push_subscriptions WHERE user_id = $1 AND endpoint = $2',
       [user_id, endpoint]
