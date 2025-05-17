@@ -27,9 +27,6 @@ jest.mock('../../../src/config/logger', () => {
     });
 });
 
-const logger = require('../../../src/config/logger')();
-const rollbar = require('../../../src/config/rollbar')();
-
 describe('/api/notification', () => {
     beforeEach( () => { server = require('../../../src/index'); } );
     afterEach( () => { server.close(); } );
