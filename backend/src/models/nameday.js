@@ -1,6 +1,11 @@
 const pool = require("../config/db")();
 
 class Nameday {
+  constructor(id, name, date) {
+    this.id = id;
+    this.name = name;
+    this.date = date;
+  }
 
   static async getUpcomingNamedays() {
     const today = new Date().toISOString().split("T")[0];
