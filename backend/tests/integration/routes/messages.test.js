@@ -4,6 +4,20 @@ const jwt = require('jsonwebtoken');
 const Messages = require('../../../src/models/messages');
 const {itShouldRequireAuth} = require('../../helpers/auth_test_helper');
 
+jest.mock('../../../src/config/rollbar', () => {
+    const mRollbar = {
+      error: jest.fn()
+    };
+    return () => mRollbar;
+});
+  
+jest.mock('../../../src/config/logger', () => {
+    return () => ({
+      error: jest.fn(),
+      info: jest.fn()
+    });
+});
+
 describe('/api/messages', () => {
     beforeEach( () => { server = require('../../../src/index'); } );
     afterEach( () => { server.close(); } );
