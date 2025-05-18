@@ -1,10 +1,10 @@
 const {authenticateToken} = require('../middleware/authorization');
-const Nameday = require('../models/Nameday'); 
+const NamedayService = require('../services/namedays_service'); 
 const express = require('express');
 const router = express.Router();
 
 router.get('/upcoming', authenticateToken, async (req, res) => {
-    const contacts = await Nameday.getUpcomingNamedays();
+    const contacts = await NamedayService.getUpcomingNamedays();
     res.json(contacts);
 });
 

@@ -41,7 +41,7 @@ class CelebrationService {
         }));
     
         return [...formattedBirthdays, ...formattedNamedays];
-      }
+  }
 }
 
 module.exports = CelebrationService;

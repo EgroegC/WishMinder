@@ -1,7 +1,7 @@
 require("dotenv").config();
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
-const Nameday = require('../../../src/models/Nameday');
+const NamedayService = require('../../../src/services/namedays_service');
 const User = require('../../../src/models/user');
 const {itShouldRequireAuth} = require('../../helpers/auth_test_helper');
 const { insertTestNameday, clearNamedaysAndNames } = require('../../helpers/namedays_helper');
@@ -43,7 +43,7 @@ describe('/api/namedays', () => {
         });
     
         it('should return an empty array if no namedays found', async () => {
-            jest.spyOn(Nameday, 'getUpcomingNamedays').mockResolvedValue([]);
+            jest.spyOn(NamedayService, 'getUpcomingNamedays').mockResolvedValue([]);
     
             const res = await request(server)
                 .get('/api/namedays/upcoming')
