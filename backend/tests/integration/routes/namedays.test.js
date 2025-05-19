@@ -13,14 +13,18 @@ describe('/api/namedays', () => {
     describe('GET /upcomming', () => {
 
         let token, user;
-        
+        const fiveDaysLater = new Date();
+        const twoDaysLater = new Date();
+        fiveDaysLater.setDate(fiveDaysLater.getDate() + 5);
+        twoDaysLater.setDate(twoDaysLater.getDate() + 2);
+
         beforeEach(async () => {
             user = new User({ name: 'TestUser', email: 'test_user@gmail.com', password: 'hashed' });
             await user.save();
             token = jwt.sign({ id: user.id }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '1h' });
 
-            await insertTestNameday('Γιώργος', '2025-05-22');
-            await insertTestNameday('Μαρία', '2025-05-23');
+            await insertTestNameday('Γιώργος', twoDaysLater);
+            await insertTestNameday('Μαρία', fiveDaysLater);
         });
     
         afterEach(async () => {
