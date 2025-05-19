@@ -43,7 +43,7 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
 
   const buttons: ButtonConfig[] = [
     { label: "Edit", variant: "info", onClick: handleEdit },
-    { label: "Delete", variant: "danger", onClick: handleDelete },
+    { label: "Delete Contact", variant: "danger", onClick: handleDelete },
   ];
 
   const filteredContacts = useMemo(
