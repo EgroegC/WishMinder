@@ -91,7 +91,7 @@ function TodaysCelebrations() {
               maxW="800px"
               mt={4}
             >
-              <p>🎈 No birthdays today</p>
+              <p style={{ color: "black" }}>🎈 No birthdays today</p>
             </Box>
           )}
           {namedayContacts && namedayContacts.length > 0 ? (
@@ -119,7 +119,7 @@ function TodaysCelebrations() {
               maxW="800px"
               mt={4}
             >
-              <p>🎈 No namedays today</p>
+              <p style={{ color: "black" }}>🎈 No namedays today</p>
             </Box>
           )}
         </>
