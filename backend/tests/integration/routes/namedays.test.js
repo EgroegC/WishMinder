@@ -26,7 +26,6 @@ describe('/api/namedays', () => {
         afterEach(async () => {
             await User.delete(user.email);
             await clearNamedaysAndNames();
-            await server.close();
         });
 
         itShouldRequireAuth(() => server, '/api/namedays/upcoming', 'get');
