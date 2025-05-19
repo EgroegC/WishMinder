@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import CelebrationBox from "@/components/Celebrations/CelebrationBox";
 import ListRow from "@/components/Celebrations/ListRow";
@@ -68,9 +68,8 @@ function TodaysCelebrations() {
         <p style={{ color: "red" }}>{error}</p>
       ) : (
         <>
-          <CelebrationBox
-            heading="🎉 Todyay's Birthdays"
-            children={
+          {birthdayContacts && birthdayContacts.length > 0 ? (
+            <CelebrationBox heading="🎉 Today's Birthdays">
               <ListRow
                 key={today.getMonth() + 1}
                 month={today.getMonth() + 1}
@@ -80,11 +79,23 @@ function TodaysCelebrations() {
                 currentYear={today.getFullYear()}
                 buttons={buttons("birthday")}
               />
-            }
-          />
-          <CelebrationBox
-            heading="🎉 Todyay's Namedays"
-            children={
+            </CelebrationBox>
+          ) : (
+            <Box
+              bg="white"
+              p={6}
+              borderRadius="lg"
+              boxShadow="md"
+              textAlign="center"
+              w="100%"
+              maxW="800px"
+              mt={4}
+            >
+              <p>🎈 No birthdays today</p>
+            </Box>
+          )}
+          {namedayContacts && namedayContacts.length > 0 ? (
+            <CelebrationBox heading="🎉 Today's Namedays">
               <ListRow
                 key={today.getMonth() + 1}
                 month={today.getMonth() + 1}
@@ -96,8 +107,21 @@ function TodaysCelebrations() {
                 currentYear={today.getFullYear()}
                 buttons={buttons("nameday")}
               />
-            }
-          />
+            </CelebrationBox>
+          ) : (
+            <Box
+              bg="white"
+              p={6}
+              borderRadius="lg"
+              boxShadow="md"
+              textAlign="center"
+              w="100%"
+              maxW="800px"
+              mt={4}
+            >
+              <p>🎈 No namedays today</p>
+            </Box>
+          )}
         </>
       )}
     </Flex>

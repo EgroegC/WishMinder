@@ -17,7 +17,7 @@ const HomePage = () => {
   const axiosPrivate = useAxiosPrivate();
   usePushNotifications(axiosPrivate);
 
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   return (
     <Grid
@@ -95,18 +95,30 @@ const HomePage = () => {
             </LinkBox>
           </Flex>
 
-          {/* Next Celebration */}
+          {/* Today's Celebrations Card */}
           <Box
-            bg="white"
+            bgGradient="linear(to-r, teal.100, blue.100)"
             p={6}
-            borderRadius="lg"
-            boxShadow="md"
-            textAlign="center"
+            borderRadius="2xl"
+            boxShadow="lg"
             w="80%"
             maxW="600px"
+            textAlign="center"
+            mb={10}
+            cursor="pointer"
+            transition="all 0.2s ease-in-out"
+            _hover={{
+              transform: "scale(1.03)",
+              boxShadow: "xl",
+              bgGradient: "linear(to-r, teal.200, blue.200)",
+            }}
+            onClick={() => navigate("/send-wish")}
           >
-            <Text fontSize="xl" fontWeight="bold" color="blue.600">
-              🔜 Next Celebration: 🎂 John Doe - Turns 30!
+            <Heading size="lg" color="blue.800" mb={2}>
+              🎊 Today's Celebrations
+            </Heading>
+            <Text fontSize="md" color="gray.700">
+              Tap to see who’s celebrating today!
             </Text>
           </Box>
 
