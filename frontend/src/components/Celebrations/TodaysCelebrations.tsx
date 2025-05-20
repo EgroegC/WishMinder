@@ -115,7 +115,7 @@ function TodaysCelebrations() {
               borderRadius="lg"
               boxShadow="md"
               textAlign="center"
-              w="100%"
+              w="120%"
               maxW="800px"
               mt={4}
             >
