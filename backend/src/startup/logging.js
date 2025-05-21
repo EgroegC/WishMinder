@@ -7,7 +7,7 @@ module.exports = function(){
 });
   
   process.on("unhandledRejection", (reason) => {
-    logger.error(`Unhandled Promise Rejection: ${reason.message}`, { stack: err.stack });
+    logger.error(`Unhandled Promise Rejection: ${reason.message}`, { stack: reason.stack });
     console.error(reason.stack);
 });
 }
