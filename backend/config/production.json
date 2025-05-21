@@ -1,6 +1,6 @@
 {
   "database": {
     "host": "localhost",
-    "name": "job_tracker"
+    "name": "wish_minder"
   }
 }
