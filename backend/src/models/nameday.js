@@ -1,5 +1,3 @@
-const pool = require("../config/db")();
-
 class Nameday {
   constructor(id, name, nameday_date) {
     this.id = id;

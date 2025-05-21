@@ -1,5 +1,5 @@
 const pool = require("../config/db")();
-const Nameday = require('../models/Nameday');
+const Nameday = require('../models/nameday');
 
 class NamedayService {
     static async getUpcomingNamedays() {
