@@ -14,6 +14,7 @@ require('./startup/routes')(app);
 require('./startup/db')();
 require('./config/jwt')();
 require('./startup/prod')(app);
+require('./startup/swagger')(app);
 
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => logger.info(`Listening on port ${port}...`));

@@ -15,6 +15,30 @@ const generateRefreshToken = (user) => {
     return jwt.sign({ id: user.id }, process.env.JWT_REFRESH_TOKEN, { expiresIn: '3d' });
 };
 
+/**
+ * @swagger
+ * /api/auth:
+ *   post:
+ *     summary: Authenticate user and return access token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AuthRequest'
+ *     responses:
+ *       200:
+ *         description: Successful authentication
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthResponse'
+ *       400:
+ *         description: Invalid credentials
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/', async (req, res) => {
     const { error } = validate(req.body); 
     if (error) return res.status(400).send(error.details[0].message);
@@ -39,6 +63,18 @@ router.post('/', async (req, res) => {
     res.json({ accessToken });
 });
 
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Logs out user by clearing the refresh token cookie
+ *     tags: [Auth]
+ *     responses:
+ *       204:
+ *         description: Successfully logged out
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/logout', (req, res) => {
     res.clearCookie('refreshToken', {
         httpOnly: true,
@@ -50,6 +86,24 @@ router.post('/logout', (req, res) => {
     return res.sendStatus(204);
 });
 
+/**
+ * @swagger
+ * /api/auth/refresh:
+ *   post:
+ *     summary: Refreshes access token using refresh token
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Returns new access token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthResponse'
+ *       403:
+ *         description: Invalid refresh token
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/refresh', authenticateRefreshToken, (req, res) => {
     const accessToken = generateAccessToken(req.user);
     res.json({ accessToken });
