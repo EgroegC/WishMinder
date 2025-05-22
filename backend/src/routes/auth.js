@@ -56,7 +56,7 @@ router.post('/', async (req, res) => {
     res.cookie('refreshToken', refreshToken, {
         httpOnly: true, // Prevent access via JavaScript
         secure: true,   // Only send over HTTPS
-        sameSite: 'Strict', // Prevent CSRF attacks
+        sameSite: 'None', // Prevent CSRF attacks
         path: '/' 
     });
 
