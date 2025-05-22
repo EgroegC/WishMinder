@@ -58,7 +58,7 @@ function TodaysCelebrations() {
   return (
     <Flex
       justifyContent="center"
-      direction={"column"}
+      direction="column"
       gap={6}
       flexWrap="wrap"
       maxW="48%"
@@ -66,12 +66,25 @@ function TodaysCelebrations() {
     >
       {error ? (
         <p style={{ color: "red" }}>{error}</p>
+      ) : birthdayContacts.length === 0 && namedayContacts.length === 0 ? (
+        <Box
+          bg="white"
+          p={6}
+          borderRadius="lg"
+          boxShadow="md"
+          textAlign="center"
+          w="100%"
+          maxW="800px"
+          mt={4}
+        >
+          <p style={{ color: "black" }}>🎈 No birthdays or namedays today</p>
+        </Box>
       ) : (
         <>
-          {birthdayContacts && birthdayContacts.length > 0 ? (
+          {birthdayContacts.length > 0 && (
             <CelebrationBox heading="🎉 Today's Birthdays">
               <ListRow
-                key={today.getMonth() + 1}
+                key={`birthdays-${today.getMonth() + 1}`}
                 month={today.getMonth() + 1}
                 contacts={birthdayContacts}
                 namedayDateByMonth={{}}
@@ -80,24 +93,12 @@ function TodaysCelebrations() {
                 buttons={buttons("birthday")}
               />
             </CelebrationBox>
-          ) : (
-            <Box
-              bg="white"
-              p={6}
-              borderRadius="lg"
-              boxShadow="md"
-              textAlign="center"
-              w="100%"
-              maxW="800px"
-              mt={4}
-            >
-              <p style={{ color: "black" }}>🎈 No birthdays today</p>
-            </Box>
           )}
-          {namedayContacts && namedayContacts.length > 0 ? (
+
+          {namedayContacts.length > 0 && (
             <CelebrationBox heading="🎉 Today's Namedays">
               <ListRow
-                key={today.getMonth() + 1}
+                key={`namedays-${today.getMonth() + 1}`}
                 month={today.getMonth() + 1}
                 contacts={namedayContacts}
                 namedayDateByMonth={{
@@ -108,19 +109,6 @@ function TodaysCelebrations() {
                 buttons={buttons("nameday")}
               />
             </CelebrationBox>
-          ) : (
-            <Box
-              bg="white"
-              p={6}
-              borderRadius="lg"
-              boxShadow="md"
-              textAlign="center"
-              w="120%"
-              maxW="800px"
-              mt={4}
-            >
-              <p style={{ color: "black" }}>🎈 No namedays today</p>
-            </Box>
           )}
         </>
       )}
