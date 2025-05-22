@@ -1,8 +1,8 @@
 {
   "database": {
-    "host": "aws-0-eu-central-1.pooler.supabase.com",
+    "host": "aws-0-us-east-2.pooler.supabase.com",
     "port": 6543,
-    "user": "postgres.tlxrlympabbnavxvrtdm",
+    "user": "postgres.pmwzwlrxbhicijqmskbg",
     "name": "postgres"
   }
 }
