@@ -82,7 +82,7 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
   }
 
   if (contactsLoading) return <LoadingIndicator />;
-  if (namedLoading) return <LoadingIndicator />;
+  if (namedLoading && !isBirthday) return <LoadingIndicator />;
 
   if (contactsError || upcNamedaysError)
     return <ErrorMessage message="Failed to load data." />;
