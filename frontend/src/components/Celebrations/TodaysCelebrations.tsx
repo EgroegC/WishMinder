@@ -15,12 +15,14 @@ type Celebration = Contact & {
 function TodaysCelebrations() {
   const [celebrations, setCelebrations] = useState<Celebration[]>([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const today = new Date();
 
   useEffect(() => {
     const controller = new AbortController();
+    setLoading(true);
 
     axiosPrivate
       .get<Celebration[]>("/api/celebrations/today", {
@@ -30,7 +32,8 @@ function TodaysCelebrations() {
       .catch((err) => {
         if (err instanceof CanceledError) return;
         setError(err.message);
-      });
+      })
+      .finally(() => setLoading(false));
 
     return () => controller.abort();
   }, [axiosPrivate]);
@@ -66,6 +69,10 @@ function TodaysCelebrations() {
     >
       {error ? (
         <p style={{ color: "red" }}>{error}</p>
+      ) : loading ? (
+        <Box textAlign="center" mt={4}>
+          <p style={{ color: "gray" }}>Loading today’s celebrations...</p>
+        </Box>
       ) : birthdayContacts.length === 0 && namedayContacts.length === 0 ? (
         <Box
           bg="white"
