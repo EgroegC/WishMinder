@@ -36,7 +36,7 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
   const {
     upcNamedays,
     error: upcNamedaysError,
-    loading: NamedLoading,
+    loading: namedLoading,
   } = useUpcomingNamedays(!isBirthday);
 
   const currentYear = new Date().getFullYear();
@@ -82,7 +82,7 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
   }
 
   if (contactsLoading) return <LoadingIndicator />;
-  if (NamedLoading) return <LoadingIndicator />;
+  if (namedLoading) return <LoadingIndicator />;
 
   if (contactsError || upcNamedaysError)
     return <ErrorMessage message="Failed to load data." />;
