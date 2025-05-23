@@ -81,8 +81,21 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
     );
   }
 
-  if (theContactsNamedaysPassedForFilteredContacts(celebrationByMonth))
+  if (
+    !isBirthday &&
+    theContactsCelebrationsPassedForFilteredContacts(celebrationByMonth)
+  )
     return <NamedaysPassedSection filteredContacts={filteredContacts} />;
+
+  if (
+    isBirthday &&
+    theContactsCelebrationsPassedForFilteredContacts(celebrationByMonth)
+  )
+    return (
+      <Text textAlign="center" fontSize="lg" color="gray.600" mt={4}>
+        No upcoming birthdays found
+      </Text>
+    );
 
   return (
     <Box className="birthday-list-container">
@@ -101,7 +114,7 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
   );
 };
 
-const theContactsNamedaysPassedForFilteredContacts = (
+const theContactsCelebrationsPassedForFilteredContacts = (
   celebrationByMonth: Record<number, Contact[]>
 ) => {
   return Object.keys(celebrationByMonth).length === 0;

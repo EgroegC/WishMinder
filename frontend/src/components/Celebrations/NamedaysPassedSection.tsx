@@ -9,12 +9,14 @@ const NamedaysPassedSection = ({
   <Box textAlign="center" mt={4}>
     <Text color="black">
       Namedays have passed or do not exist for:{" "}
-      {filteredContacts.map((contact, index) => (
-        <span key={contact.id} style={{ fontWeight: "bold" }}>
-          {contact.name}
-          {index < filteredContacts.length - 1 && ", "}
-        </span>
-      ))}
+      {[...new Set(filteredContacts.map((contact) => contact.name))].map(
+        (name, index, arr) => (
+          <span key={name} style={{ fontWeight: "bold" }}>
+            {name}
+            {index < arr.length - 1 && ", "}
+          </span>
+        )
+      )}
     </Text>
   </Box>
 );
