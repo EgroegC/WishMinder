@@ -7,6 +7,7 @@ import { Contact } from "../../hooks/useContacts";
 import { useEffect, useState } from "react";
 import { CanceledError } from "axios";
 import { ButtonConfig } from "./ContactCard";
+import LoadingIndicator from "../Loading/LoadingIndicator";
 
 type Celebration = Contact & {
   type: "birthday" | "nameday";
@@ -70,9 +71,7 @@ function TodaysCelebrations() {
       {error ? (
         <p style={{ color: "red" }}>{error}</p>
       ) : loading ? (
-        <Box textAlign="center" mt={4}>
-          <p style={{ color: "gray" }}>Loading today’s celebrations...</p>
-        </Box>
+        <LoadingIndicator />
       ) : birthdayContacts.length === 0 && namedayContacts.length === 0 ? (
         <Box
           bg="white"

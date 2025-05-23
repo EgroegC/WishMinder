@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Box, Text } from "@chakra-ui/react";
 import { Contact } from "../../hooks/useContacts";
 import useContacts from "@/hooks/useContacts";
-import useUpcomingNamedays from "@/hooks/useUpcommingNamedays";
+import useUpcomingNamedays from "@/hooks/useUpcNamedaysConditionally";
 import ListRow from "./ListRow";
 import NamedaysPassedSection from "./NamedaysPassedSection";
 import NoContactFoundSection from "./NoContactFoundSection";
@@ -13,6 +13,8 @@ import {
 } from "./MemoHelpers";
 import EditContact from "./EditContact";
 import { ButtonConfig } from "./ContactCard";
+import LoadingIndicator from "../Loading/LoadingIndicator";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 interface Props {
   isBirthday: boolean;
@@ -25,8 +27,18 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
   const [contactBeingEdited, setContactBeingEdited] = useState<Contact | null>(
     null
   );
-  const { contacts, error: contactsError } = useContacts(refreshTrigger);
-  const { upcNamedays, error: upcNamedaysError } = useUpcomingNamedays();
+  const {
+    contacts,
+    error: contactsError,
+    loading: contactsLoading,
+  } = useContacts(refreshTrigger);
+
+  const {
+    upcNamedays,
+    error: upcNamedaysError,
+    loading: NamedLoading,
+  } = useUpcomingNamedays(!isBirthday);
+
   const currentYear = new Date().getFullYear();
   const axiosPrivate = useAxiosPrivate();
 
@@ -57,18 +69,6 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
     [filteredContacts, isBirthday, upcNamedays]
   );
 
-  if (contactsError || upcNamedaysError)
-    return <Text color="red.500">Failed to load data.</Text>;
-  if (buttonsError)
-    return <Text color="red.500">Failed to delete contact</Text>;
-
-  if (filteredContacts.length === 0)
-    return (
-      <NoContactFoundSection
-        onContactAdded={() => setRefreshTrigger((prev) => prev + 1)}
-      />
-    );
-
   if (contactBeingEdited) {
     return (
       <EditContact
@@ -81,21 +81,30 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
     );
   }
 
-  if (
-    !isBirthday &&
-    theContactsCelebrationsPassedForFilteredContacts(celebrationByMonth)
-  )
-    return <NamedaysPassedSection filteredContacts={filteredContacts} />;
+  if (contactsLoading) return <LoadingIndicator />;
+  if (NamedLoading) return <LoadingIndicator />;
 
-  if (
-    isBirthday &&
-    theContactsCelebrationsPassedForFilteredContacts(celebrationByMonth)
-  )
+  if (contactsError || upcNamedaysError)
+    return <ErrorMessage message="Failed to load data." />;
+
+  if (buttonsError) return <ErrorMessage message="Failed to delete contact." />;
+
+  if (filteredContacts.length === 0)
     return (
+      <NoContactFoundSection
+        onContactAdded={() => setRefreshTrigger((prev) => prev + 1)}
+      />
+    );
+
+  if (noUpcomingCelebrations(celebrationByMonth)) {
+    return isBirthday ? (
       <Text textAlign="center" fontSize="lg" color="gray.600" mt={4}>
         No upcoming birthdays found
       </Text>
+    ) : (
+      <NamedaysPassedSection filteredContacts={filteredContacts} />
     );
+  }
 
   return (
     <Box className="birthday-list-container">
@@ -114,7 +123,7 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
   );
 };
 
-const theContactsCelebrationsPassedForFilteredContacts = (
+const noUpcomingCelebrations = (
   celebrationByMonth: Record<number, Contact[]>
 ) => {
   return Object.keys(celebrationByMonth).length === 0;

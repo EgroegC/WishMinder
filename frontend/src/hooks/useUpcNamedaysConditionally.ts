@@ -8,12 +8,16 @@ export interface Nameday {
   nameday_date: Date;
 }
 
-const useUpcomingNamedays = () => {
+const useUpcomingNamedays = (enabled: boolean = true) => {
   const [upcNamedays, setUpcNamedays] = useState<Nameday[]>([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
+    if (!enabled) return;
+
+    setLoading(true);
     const controller = new AbortController(); 
 
     axiosPrivate
@@ -24,12 +28,13 @@ const useUpcomingNamedays = () => {
       .catch((err) => {
         if(err instanceof CanceledError) return;
         setError(err.message);
-    });
+      })
+      .finally(() => setLoading(false));
 
       return () => controller.abort(); 
-  }, [axiosPrivate]);
+  }, [axiosPrivate, enabled]);
 
-  return {upcNamedays, error}
+  return {upcNamedays, error, loading}
 }
 
 export default useUpcomingNamedays

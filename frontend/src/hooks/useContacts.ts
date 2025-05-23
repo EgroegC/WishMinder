@@ -16,9 +16,11 @@ export interface Contact {
 const useContacts = (refreshTrigger = 0) => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
+    setLoading(true);
     const controller = new AbortController(); 
 
     axiosPrivate
@@ -29,12 +31,13 @@ const useContacts = (refreshTrigger = 0) => {
       .catch((err) => {
         if(err instanceof CanceledError) return;
         setError(err.message);
-    });
+      })
+      .finally(() => setLoading(false));
 
       return () => controller.abort(); 
   }, [axiosPrivate, refreshTrigger]);
 
-  return {contacts, error}
+  return {contacts, error, loading}
 }
 
 export default useContacts

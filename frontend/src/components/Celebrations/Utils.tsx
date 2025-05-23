@@ -1,5 +1,5 @@
 import { Contact } from "@/hooks/useContacts";
-import { Nameday } from "@/hooks/useUpcommingNamedays";
+import { Nameday } from "@/hooks/useUpcNamedaysConditionally";
 
 export const getBirthdaysByMonth = (contacts: Contact[]) => {
   const contactsByBirthdayMonth = getContactsByBirthdayMonth(contacts);

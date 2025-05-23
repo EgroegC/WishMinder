@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Box, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { FieldValues } from "react-hook-form";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import "./NoContactFoundSection.css";
 import ContactForm from "./ContactForm";
 import { Contact } from "@/hooks/useContacts";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 const NoContactFoundSection = ({
   onContactUpdated,
@@ -44,7 +45,7 @@ const NoContactFoundSection = ({
   };
 
   if (error)
-    return <Text color="red.500">Failed to edit contact, {error}.</Text>;
+    return <ErrorMessage message={`Failed to edit contact, ${error}`} />;
 
   return (
     <Box textAlign="center" mt={4}>

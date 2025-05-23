@@ -1,6 +1,6 @@
 import { Contact } from "@/hooks/useContacts";
 import { getBirthdaysByMonth, getUpcomingContactsNamedays } from "./Utils";
-import { Nameday } from "@/hooks/useUpcommingNamedays";
+import { Nameday } from "@/hooks/useUpcNamedaysConditionally";
 
 export function filterContactsBySearchTerm(
   contacts: Contact[],
