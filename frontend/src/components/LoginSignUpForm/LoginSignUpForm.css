@@ -77,7 +77,20 @@
 }
 
 .input-box p {
-    font-size: 14px; /* Adjust size as needed */
+    font-size: 14px; 
     text-align: center;
     margin-top: 8px;
 }
+
+.text-danger {
+    color: #E53E3E; 
+    font-weight: 500;
+}
+
+.invalid-input {
+    color: #E53E3E;
+    font-size: 0.875rem;
+    text-align: center;
+}
+  
+

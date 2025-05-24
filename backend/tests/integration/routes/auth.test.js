@@ -54,12 +54,12 @@ describe('/api/auth', () => {
             expect(decodedToken.id).toBe(user.id);
         });
 
-        it('should return a 400 response if email or password are invalid', async () => {
+        it('should return a 422 response if email or password are invalid', async () => {
             email = 'invalid@';
 
             const res = await exec();
 
-            expect(res.status).toBe(400);
+            expect(res.status).toBe(422);
             expect(res.text).toMatch(/at least 12/i);
         });
 
@@ -95,7 +95,7 @@ describe('/api/auth', () => {
         
             expect(refreshTokenCookie).toMatch(/HttpOnly/i);
             expect(refreshTokenCookie).toMatch(/Secure/i);
-            expect(refreshTokenCookie).toMatch(/SameSite=Strict/i);
+            expect(refreshTokenCookie).toMatch(/SameSite=None/i);
         });
     });
 

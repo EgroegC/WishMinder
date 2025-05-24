@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 interface AuthFormProps {
   isSignup: boolean;
   onSubmit: (email: string, password: string, name?: string) => void;
+  authError?: string;
 }
 
 const schema = z.object({
@@ -25,7 +26,7 @@ const schema = z.object({
     .min(5, { message: "Password must be at least 5 characters." }),
 });
 
-function AuthForm({ isSignup, onSubmit }: AuthFormProps) {
+function AuthForm({ isSignup, onSubmit, authError }: AuthFormProps) {
   const {
     register,
     handleSubmit,
@@ -39,7 +40,6 @@ function AuthForm({ isSignup, onSubmit }: AuthFormProps) {
   return (
     <div className="wrapper">
       <h1 className="header">{isSignup ? "Sign Up" : "Login"}</h1>
-
       <form onSubmit={handleSubmit(onFormSubmit)}>
         {isSignup && (
           <div className="input-box">
@@ -86,6 +86,7 @@ function AuthForm({ isSignup, onSubmit }: AuthFormProps) {
           {errors.password && (
             <p className="text-danger">{errors.password.message}</p>
           )}
+          {authError && <p className="invalid-input">{authError}</p>}
         </div>
 
         <button type="submit">{isSignup ? "Sign Up" : "Login"}</button>
