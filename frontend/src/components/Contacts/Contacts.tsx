@@ -86,13 +86,17 @@ const Contacts = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="contacts-search-input"
       />
-      <Box maxH="200px" overflowY="auto">
-        <ContactList
-          searchTerm={searchTerm}
-          contacts={contacts}
-          buttons={buttons}
-        />
-      </Box>
+      {loading ? (
+        <LoadingIndicator />
+      ) : (
+        <Box maxH="200px" overflowY="auto">
+          <ContactList
+            searchTerm={searchTerm}
+            contacts={contacts}
+            buttons={buttons}
+          />
+        </Box>
+      )}
     </Box>
   );
 };
