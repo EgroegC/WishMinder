@@ -41,9 +41,12 @@ const ContactCard = ({
 
   return (
     <Box className="birthday-card">
-      <Flex className="birthday-card-content">
-        {/* Avatar & Name */}
-        <HStack flex="1" minW="250px" gap={4}>
+      <Flex
+        className="birthday-card-content"
+        justify="space-between"
+        align="center"
+      >
+        <HStack minW="250px" gap={4} align="center">
           <Box className="avatar-container">
             <FaUserCircle size="50px" color="gray" />
           </Box>
@@ -52,13 +55,11 @@ const ContactCard = ({
           </Text>
         </HStack>
 
-        {/* Date */}
         <Flex direction="column" align="center" minW="100px">
           <Text className="date-label">Date</Text>
           <Text className="date-value">{formattedDate}</Text>
         </Flex>
 
-        {/* Age (Only for birthdays) */}
         {isBirthday && (
           <Flex direction="column" align="center" minW="100px" mx={10}>
             <Text className="age-label">Turns</Text>
@@ -66,29 +67,18 @@ const ContactCard = ({
           </Flex>
         )}
 
-        {/* Actions */}
         <HStack gap={6}>
-          <Button
-            borderColor={colorStyles[buttons[0].variant]}
-            _hover={{
-              backgroundColor: colorStyles[buttons[0].variant],
-            }}
-            className="listrow_first_button"
-            onClick={() => buttons[0].onClick(contact)}
-          >
-            {buttons[0].label}
-          </Button>
-
-          <Button
-            borderColor={colorStyles[buttons[1].variant]}
-            _hover={{
-              backgroundColor: colorStyles[buttons[1].variant],
-            }}
-            className="listrow_second_button"
-            onClick={() => buttons[1].onClick(contact)}
-          >
-            {buttons[1].label}
-          </Button>
+          {buttons.map((btn, idx) => (
+            <Button
+              key={idx}
+              borderColor={colorStyles[btn.variant]}
+              _hover={{ backgroundColor: colorStyles[btn.variant] }}
+              className={`listrow_button_${idx}`}
+              onClick={() => btn.onClick(contact)}
+            >
+              {btn.label}
+            </Button>
+          ))}
         </HStack>
       </Flex>
     </Box>

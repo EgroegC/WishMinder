@@ -5,8 +5,6 @@ import useContacts from "@/hooks/useContacts";
 import useUpcomingNamedays from "@/hooks/useUpcNamedaysConditionally";
 import ListRow from "./ListRow";
 import NamedaysPassedSection from "./NamedaysPassedSection";
-import NoContactFoundSection from "./NoContactFoundSection";
-import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import {
   filterContactsBySearchTerm,
   findCelebrationsForEachMonth,
@@ -23,7 +21,6 @@ interface Props {
 
 const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [buttonsError, setButtonsError] = useState("");
   const [contactBeingEdited, setContactBeingEdited] = useState<Contact | null>(
     null
   );
@@ -40,22 +37,13 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
   } = useUpcomingNamedays(!isBirthday);
 
   const currentYear = new Date().getFullYear();
-  const axiosPrivate = useAxiosPrivate();
-
-  const handleDelete = (contact: Contact) => {
-    axiosPrivate
-      .delete(`/api/contacts/${contact.id}`)
-      .then(() => setRefreshTrigger((prev) => prev + 1))
-      .catch((err) => setButtonsError(err));
-  };
 
   const handleEdit = (contact: Contact) => {
     setContactBeingEdited(contact);
   };
 
   const buttons: ButtonConfig[] = [
-    { label: "Edit", variant: "info", onClick: handleEdit },
-    { label: "Delete Contact", variant: "danger", onClick: handleDelete },
+    { label: "Edit Contact", variant: "info", onClick: handleEdit },
   ];
 
   const filteredContacts = useMemo(
@@ -87,13 +75,11 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
   if (contactsError || upcNamedaysError)
     return <ErrorMessage message="Failed to load data." />;
 
-  if (buttonsError) return <ErrorMessage message="Failed to delete contact." />;
-
   if (filteredContacts.length === 0)
     return (
-      <NoContactFoundSection
-        onContactAdded={() => setRefreshTrigger((prev) => prev + 1)}
-      />
+      <Text color="black" textAlign={"center"}>
+        No contact found.
+      </Text>
     );
 
   if (noUpcomingCelebrations(celebrationByMonth)) {

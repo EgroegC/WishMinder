@@ -12,6 +12,7 @@ import { FaBirthdayCake, FaCalendarAlt, FaQuoteLeft } from "react-icons/fa";
 import NavBar from "../components/NavBar/NavBar";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
+import ContactsList from "@/components/Contacts/Contacts";
 
 const HomePage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -32,6 +33,8 @@ const HomePage = () => {
       <GridItem area="nav" p={-1} bg="white" boxShadow="sm">
         <NavBar />
       </GridItem>
+
+      <ContactsList />
 
       {/* Main Content Section */}
       <GridItem area="main">

@@ -1,4 +1,4 @@
-.birthday-list-container {
+  .birthday-list-container {
     width: 100%;
     max-width: 1100px;
     margin: 0 auto;
@@ -80,8 +80,8 @@
     margin-top: 12px; /* Added space between age info and buttons */
   }
   
-  .listrow_first_button,
-  .listrow_second_button {
+  .listrow_button_0,
+  .listrow_button_1 {
     font-size: 0.75rem; /* Reduced font size */
     color: black;
     background-color: white;
@@ -90,15 +90,15 @@
     transition: all 0.2s ease;
   }
   
-  .listrow_first_button:hover {
+  .listrow_button_0:hover {
     color: white;
   }
   
-  .listrow_second_button {
+  .listrow_button_1 {
     background-color: white;
   }
   
-  .listrow_second_button:hover {
+  .listrow_button_1:hover {
     color: white;
   }
   

@@ -2,12 +2,11 @@ import { useState } from "react";
 import { Box } from "@chakra-ui/react";
 import { FieldValues } from "react-hook-form";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import "./NoContactFoundSection.css";
-import ContactForm from "./ContactForm";
+import ContactForm from "../Contacts/ContactForm";
 import { Contact } from "@/hooks/useContacts";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
-const NoContactFoundSection = ({
+const EditContact = ({
   onContactUpdated,
   contact,
 }: {
@@ -58,4 +57,4 @@ const NoContactFoundSection = ({
   );
 };
 
-export default NoContactFoundSection;
+export default EditContact;

@@ -60,4 +60,29 @@
     background-color: #1e40af; /* blue.800 */
     transform: scale(0.98);
   }
+
+.contacts-container {
+    position: absolute;
+    left: 40px;
+    top: 120px;
+    width: 280px;
+    background: white;
+    box-shadow: var(--chakra-shadows-md);
+    border-radius: var(--chakra-radii-md);
+    padding: 16px;
+    z-index: 1;
+}
+
+.cancel-btn {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background: none;
+  border: none;
+  color: #4a5568; 
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
   
