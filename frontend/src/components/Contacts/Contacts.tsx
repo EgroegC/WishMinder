@@ -62,7 +62,6 @@ const Contacts = () => {
       ></AddContact>
     );
 
-  if (loading) return <LoadingIndicator />;
   if (btnError) return <ErrorMessage message="Failed to delete contact." />;
   if (error) return <ErrorMessage message="Failed to load Contacts." />;
 
