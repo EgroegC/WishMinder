@@ -5,7 +5,16 @@ const { sendNotification } = require('../../routes/web_push');
 const logger = require('../../config/logger')();
 const rollbar = require('../../config/rollbar')();
 
+const isProd = process.env.NODE_ENV === 'production';
+
+const clientUrl = isProd
+  ? 'https://lovely-puffpuff-4a6e3e.netlify.app'
+  : 'http://localhost:5173';
+
 async function notifyForTodaysNamedaysAndBirthdays() {
+
+  logger.error('[INFO] Cron job started');
+
   try {
     const { rows } = await pool.query(`
       SELECT DISTINCT ps.user_id, c.name, c.surname, c.birthdate AS celebration_date, 'birthday' AS type
@@ -42,7 +51,7 @@ async function notifyForTodaysNamedaysAndBirthdays() {
         title: 'Hey!',
         body: message,
         data: {
-          url: 'http://localhost:5173/send-wish'
+          url: `${clientUrl}/send-wish`
         }
       });
 
