@@ -36,6 +36,8 @@ async function notifyForTodaysNamedaysAndBirthdays() {
 
     const notificationsMap = {};
 
+    logger.error('[INFO] query: ', rows);
+
     for (const row of rows) {
       if (!notificationsMap[row.user_id]) {
         notificationsMap[row.user_id] = [];
@@ -56,7 +58,7 @@ async function notifyForTodaysNamedaysAndBirthdays() {
       });
 
       try {
-        await sendNotification(userId, payload);
+        await sendNotification(userId, payload);x
       } catch (err) {
         logger.error(`Failed to send notification to user ${userId}: ${err.message}`, {
           stack: err.stack
