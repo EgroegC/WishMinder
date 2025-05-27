@@ -36,7 +36,7 @@ async function notifyForTodaysNamedaysAndBirthdays() {
 
     const notificationsMap = {};
 
-    logger.error('[INFO] query: ', rows);
+    logger.error('[INFO] pool: ', pool);
 
     for (const row of rows) {
       if (!notificationsMap[row.user_id]) {
