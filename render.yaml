@@ -10,3 +10,15 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+
+  - type: cron
+    name: daily-job
+    env: node
+    plan: free
+    branch: main
+    rootDir: backend
+    schedule: "*/15 * * * *" # every 15 mins
+    command: node src/scripts/notifications/celebrate_notification.js
+    envVars:
+      - key: NODE_ENV
+        value: production
