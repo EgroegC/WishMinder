@@ -13,8 +13,6 @@ const clientUrl = isProd
 
 async function notifyForTodaysNamedaysAndBirthdays() {
 
-  logger.error('[INFO] Cron job started');
-
   try {
     const { rows } = await pool.query(`
       SELECT DISTINCT ps.user_id, c.name, c.surname, c.birthdate AS celebration_date, 'birthday' AS type
