@@ -11,9 +11,17 @@ const schema = z.object({
 
   email: z
     .string()
-    .min(12, { message: "Email must be at least 12 characters." })
-    .max(255, { message: "Email must be no more than 255 characters." })
-    .email({ message: "Must be a valid email." }),
+    .transform((val) => (val === "" ? undefined : val))
+    .optional()
+    .refine((val) => !val || val.length >= 12, {
+      message: "Email must be at least 12 characters.",
+    })
+    .refine((val) => !val || val.length <= 255, {
+      message: "Email must be no more than 255 characters.",
+    })
+    .refine((val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
+      message: "Must be a valid email.",
+    }),
 
   phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, {
     message:
@@ -55,7 +63,7 @@ const ContactForm = ({
     <VStack gap={3} mt={4}>
       <Box w="100%">
         <Input
-          placeholder="Name"
+          placeholder="Name *"
           {...register("name")}
           className="custom-input"
         />
@@ -68,7 +76,7 @@ const ContactForm = ({
 
       <Box w="100%">
         <Input
-          placeholder="Surname"
+          placeholder="Surname *"
           {...register("surname")}
           className="custom-input"
         />
@@ -81,7 +89,7 @@ const ContactForm = ({
 
       <Box w="100%">
         <Input
-          placeholder="Phone"
+          placeholder="Phone *"
           {...register("phone")}
           className="custom-input"
         />

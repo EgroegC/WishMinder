@@ -1,0 +1,121 @@
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { Button } from "@chakra-ui/react";
+import { useRef, useState } from "react";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+
+interface PartialContact {
+  name: string;
+  surname: string;
+  phone: string;
+  email?: string;
+  birthdate?: Date;
+}
+
+const AddContactCard = ({ onContactAdded }: { onContactAdded: () => void }) => {
+  const axiosPrivate = useAxiosPrivate();
+  const [error, setError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleVcfUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleVcfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const text = await file.text();
+    const contacts = parseVcfToContacts(text);
+
+    axiosPrivate
+      .post("/api/contacts/import/vcf", {
+        contacts,
+      })
+      .then(() => onContactAdded())
+      .catch((err) => {
+        setError(err.message);
+      });
+  };
+
+  if (error)
+    return <ErrorMessage message={`Failed to store contact: ${error}`} />;
+
+  return (
+    <>
+      <Button
+        colorScheme="teal"
+        size="sm"
+        mx="auto"
+        display="block"
+        onClick={handleVcfUploadClick}
+        _hover={{ textDecoration: "underline" }}
+      >
+        Import Contact Card (.vcf)
+      </Button>
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept=".vcf"
+        onChange={handleVcfUpload}
+        style={{ display: "none" }}
+      />
+    </>
+  );
+};
+
+const parseVcfToContacts = (vcfText: string): PartialContact[] => {
+  const contacts: PartialContact[] = [];
+  const cards = vcfText.split("BEGIN:VCARD").slice(1);
+
+  for (const card of cards) {
+    let name = "";
+    let surname = "";
+    let phone = "";
+    let email: string | undefined;
+    let birthdate: Date | undefined;
+
+    const lines = card.split("\n").map((line) => line.trim());
+
+    for (const line of lines) {
+      if (line.startsWith("FN:")) {
+        const fullName = line.replace("FN:", "").trim();
+        const parts = fullName.split(" ");
+        name = parts[0];
+        surname = parts.slice(1).join(" ");
+      }
+
+      if (line.startsWith("TEL")) {
+        const telParts = line.split(":");
+        if (telParts.length > 1) {
+          phone = telParts[1].trim();
+        }
+      }
+
+      if (line.startsWith("EMAIL:")) {
+        email = line.replace("EMAIL:", "").trim();
+      }
+
+      if (line.startsWith("BDAY:")) {
+        const rawDate = line.replace("BDAY:", "").trim();
+        const parsedDate = new Date(rawDate);
+        if (!isNaN(parsedDate.getTime())) {
+          birthdate = parsedDate;
+        }
+      }
+    }
+
+    if (name && surname && phone) {
+      contacts.push({
+        name,
+        surname,
+        phone,
+        email,
+        birthdate,
+      });
+    }
+  }
+
+  return contacts;
+};
+
+export default AddContactCard;

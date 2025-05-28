@@ -5,6 +5,7 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import "./AddContact.css";
 import ContactForm from "./ContactForm";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import AddContactCard from "./AddContactCard";
 
 const AddContact = ({
   onContactAdded,
@@ -36,6 +37,7 @@ const AddContact = ({
 
   return (
     <Box className="contacts-container" mt={4}>
+      <AddContactCard onContactAdded={onContactAdded} />
       <ContactForm
         onFormSubmit={onFormSubmit}
         submitButtonText="Save Contact"

@@ -1,9 +1,64 @@
 const {authenticateToken} = require('../middleware/authorization');
 const _ = require('lodash');
-const validate = require('./validation/contact_validation');
+const { validate, validateContactsBatch} = require('./validation/contact_validation');
 const Contact = require('../models/contact'); 
+const ContactService = require('../services/contact_service');
+const NamedayService = require('../services/namedays_service'); 
 const express = require('express');
 const router = express.Router();
+
+let contactService;
+
+// Preload names on startup
+(async () => {
+  const greekNames = await NamedayService.getAllNames();
+  contactService = new ContactService(greekNames);
+})();
+
+/**
+ * @swagger
+ * /api/contacts/import/vcf:
+ *   post:
+ *     summary: Import multiple contacts using contact card (.vcf file)
+ *     tags: [Contacts]
+ *     security: [ { bearerAuth: [] } ]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - contacts
+ *             properties:
+ *               contacts:
+ *                 type: array
+ *                 items:
+ *                   $ref: '#/components/schemas/ContactRequest'
+ *     responses:
+ *       201:
+ *         description: Contacts imported successfully
+ *       400:
+ *         description: Invalid request body
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/import/vcf', authenticateToken, async (req, res) => {
+    const contacts = req.body.contacts;
+    const userId = req.user.id;
+
+    if (!Array.isArray(contacts) || contacts.length === 0) 
+      return res.status(400).json({ message: 'Invalid request: contacts must be a non-empty array.' });
+    
+
+    if (validateContactsBatch(contacts)) 
+      return res.status(400).json({message: 'One or more contacts failed validation.'});
+    
+    await contactService.importContacts(contacts, userId);
+    res.status(201).json({ message: 'Contacts imported successfully' });
+});
 
 /**
  * @swagger

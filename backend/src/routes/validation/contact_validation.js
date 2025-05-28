@@ -7,7 +7,7 @@ function validateContact(contact) {
     const contactSchema = Joi.object({
         name: Joi.string().min(3).max(50).required(),
         surname: Joi.string().min(3).max(50).required(),
-        email: Joi.string().min(12).max(255).required().email(),
+        email: Joi.string().min(12).max(255).email(),
         phone: Joi.string()
             .pattern(/^\+?[1-9]\d{1,14}$/)
             .required()
@@ -25,4 +25,12 @@ function validateContact(contact) {
     return contactSchema.validate(contact);
 }
 
-module.exports = validateContact;
+function validateContactsBatch(contacts) {
+    for (const contact of contacts) {
+      const { error } = validateContact(contact);
+      if (error) return false; 
+    }
+    return true;
+}
+
+module.exports = {validateContact, validateContactsBatch};

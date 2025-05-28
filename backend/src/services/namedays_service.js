@@ -19,6 +19,13 @@ class NamedayService {
           row => new Nameday(row.id, row.name, row.nameday_date)
         );
     }
+
+    static async getAllNames() {
+      const query = `SELECT name FROM names`;
+      const result = await pool.query(query);
+      return result.rows.map(row => row.name);
+    }
+    
 }
 
 module.exports = NamedayService;
