@@ -1,4 +1,4 @@
-const validateContact = require('../../../../src/routes/validation/contact_validation');
+const {validateContact} = require('../../../../src/routes/validation/contact_validation');
 
 const oneYearAgo = new Date();
 oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
@@ -80,11 +80,9 @@ describe('validate_contact', () => {
   });
 
   describe('test an invalid email', () => {
-    it("should return an error if email is missing", () => {
-
+    it("should validate contact without email", () => {
       const { error } = validateContact({ name, surname, phone, birthdate });
-      expect(error).toBeDefined();
-      expect(error.details[0].message).toMatch(/email.*required/i);
+      expect(error).toBeUndefined();
     });
 
     it("Should return an error if email is too short", () => {

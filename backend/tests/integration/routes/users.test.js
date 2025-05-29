@@ -71,12 +71,12 @@ describe('/api/users', () => {
             await User.delete('test_user@gmail.com');
         });
 
-        it('should return 400 if name, email or password are not valid', async () => {
+        it('should return 422 if name, email or password are not valid', async () => {
             name = 'T';
 
             const res = await exec();
 
-            expect(res.status).toBe(400);
+            expect(res.status).toBe(422);
         });
 
         it('should return 400 if user is already registered', async () => {

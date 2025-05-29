@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { sendNotification } = require('../../../src/routes/web_push');
+const sendNotification = require('../../../src/utils/sendNotification');
 const PushSubscription = require('../../../src/models/push_subscription');
 const webpush = require('web-push');
 
