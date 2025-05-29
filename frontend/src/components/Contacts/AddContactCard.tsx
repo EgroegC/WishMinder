@@ -22,10 +22,19 @@ const AddContactCard = ({ onContactAdded }: { onContactAdded: () => void }) => {
 
   const handleVcfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+
+    if (!file) {
+      setError("No file selected. Please choose a contact card (.vcf) file.");
+      return;
+    }
 
     const text = await file.text();
     const contacts = parseVcfToContacts(text);
+
+    if (!contacts || contacts.length === 0) {
+      setError("The uploaded file does not contain any valid contacts.");
+      return;
+    }
 
     axiosPrivate
       .post("/api/contacts/import/vcf", {
@@ -33,7 +42,7 @@ const AddContactCard = ({ onContactAdded }: { onContactAdded: () => void }) => {
       })
       .then(() => onContactAdded())
       .catch((err) => {
-        setError(err.message);
+        setError(err.response.data);
       });
   };
 
