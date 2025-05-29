@@ -4,7 +4,7 @@ const users = require('../routes/users');
 const auth = require('../routes/auth');
 const contacts = require('../routes/contacts');
 const namedays = require('../routes/namedays');
-const {router: webpush} = require('../routes/web_push');
+const webpush = require('../routes/web_push');
 const todays_celebrations = require('../routes/todays_celebrations');
 const messages = require('../routes/messages');
 

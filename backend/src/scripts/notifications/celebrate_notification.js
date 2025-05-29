@@ -1,7 +1,7 @@
 require("dotenv").config();
 require('../../config/web_push')();
 const pool = require('../../config/db')();
-const { sendNotification } = require('../../routes/web_push');
+const sendNotification = require('../../utils/sendNotification');
 const logger = require('../../config/logger')();
 const rollbar = require('../../config/rollbar')();
 
@@ -34,8 +34,6 @@ async function notifyForTodaysNamedaysAndBirthdays() {
 
     const notificationsMap = {};
 
-    logger.error('[INFO] pool: ', pool);
-
     for (const row of rows) {
       if (!notificationsMap[row.user_id]) {
         notificationsMap[row.user_id] = [];
@@ -56,7 +54,7 @@ async function notifyForTodaysNamedaysAndBirthdays() {
       });
 
       try {
-        await sendNotification(userId, payload);x
+        await sendNotification(userId, payload);
       } catch (err) {
         logger.error(`Failed to send notification to user ${userId}: ${err.message}`, {
           stack: err.stack

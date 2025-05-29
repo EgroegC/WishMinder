@@ -1,6 +1,6 @@
 const {authenticateToken} = require('../middleware/authorization');
 const _ = require('lodash');
-const { validate, validateContactsBatch} = require('./validation/contact_validation');
+const { validateContact, validateContactsBatch} = require('./validation/contact_validation');
 const Contact = require('../models/contact'); 
 const ContactService = require('../services/contact_service');
 const NamedayService = require('../services/namedays_service'); 
@@ -84,7 +84,7 @@ router.post('/import/vcf', authenticateToken, async (req, res) => {
  *         description: Internal server error
  */
 router.post('/', authenticateToken, async (req, res) => {
-    const { error } = validate(req.body); 
+    const { error } = validateContact(req.body); 
     if (error) return res.status(400).send(error.details[0].message);
     
     let user = await Contact.findByPhoneNumber(req.user.id, req.body.phone);
