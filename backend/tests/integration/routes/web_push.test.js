@@ -148,11 +148,11 @@ describe('/api/notification', () => {
           );
         });
       
-        it('should return 400 if payload is invalid', async () => {
+        it('should return 422 if payload is invalid', async () => {
           payload = {}
           const res = await exec();
       
-          expect(res.status).toBe(400);
+          expect(res.status).toBe(422);
           expect(res.body.message).toMatch(/required/i);
         });
       

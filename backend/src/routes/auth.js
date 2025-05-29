@@ -35,7 +35,9 @@ const generateRefreshToken = (user) => {
  *             schema:
  *               $ref: '#/components/schemas/AuthResponse'
  *       400:
- *         description: Invalid credentials
+ *         description: Invalid email or password
+ *       422:
+ *         description: Validation error
  *       500:
  *         description: Internal server error
  */

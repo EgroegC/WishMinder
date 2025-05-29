@@ -54,7 +54,9 @@ router.get('/me', authenticateToken, async (req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/UserResponse'
  *       400:
- *         description: Validation error or user already exists
+ *         description: User already exists
+ *       422:
+ *         description: Validation error
  *       500:
  *         description: Internal server error
  */

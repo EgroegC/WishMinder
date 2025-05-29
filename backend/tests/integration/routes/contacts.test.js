@@ -63,9 +63,9 @@ describe('/api/contacts', () => {
     describe('POST /', () => {
         itShouldRequireAuth(() => server, '/api/contacts', 'post', {...contactPayload});
 
-        it('should return 400 if validation fails', async () => {
+        it('should return 422 if validation fails', async () => {
             const res = await execPost({ name: '', phone: 'abc' });
-            expect(res.status).toBe(400);
+            expect(res.status).toBe(422);
         });
 
         it('should return 400 if contact already exists', async () => {
@@ -148,6 +148,16 @@ describe('/api/contacts', () => {
                     ...contactPayload, name: 'updated'
                 });
             expect(res.status).toBe(404);
+        });
+
+        it('should return 422 if validation fails', async () => {
+            const res = await request(server)
+                .put('/api/contacts/-1')
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    ...contactPayload, name: 'u'
+                });
+            expect(res.status).toBe(422);
         });
 
         it('should update the contact if it exists', async () => {

@@ -50,11 +50,11 @@ router.post('/import/vcf', authenticateToken, async (req, res) => {
     const userId = req.user.id;
 
     if (!Array.isArray(contacts) || contacts.length === 0) 
-      return res.status(400).json({ message: 'Invalid request: contacts must be a non-empty array.' });
+      return res.status(422).json({ message: 'Invalid request: contacts must be a non-empty array.' });
     
 
     if (validateContactsBatch(contacts)) 
-      return res.status(400).json({message: 'One or more contacts failed validation.'});
+      return res.status(422).json({message: 'One or more contacts failed validation.'});
     
     await contactService.importContacts(contacts, userId);
     res.status(201).json({ message: 'Contacts imported successfully' });
@@ -77,15 +77,17 @@ router.post('/import/vcf', authenticateToken, async (req, res) => {
  *       200:
  *         description: Contact created successfully
  *       400:
- *         description: Bad request or duplicate contact
+ *         description: The contact already exists
  *       401:
  *         description: Unauthorized
+ *       422:
+ *         description: Validation error
  *       500:
  *         description: Internal server error
  */
 router.post('/', authenticateToken, async (req, res) => {
     const { error, value } = validateContact(req.body); 
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(422).send(error.details[0].message);
     
     let user = await Contact.findByPhoneNumber(req.user.id, value.phone);
     if (user) return res.status(400).send('The Contact Already Exists.');
@@ -184,10 +186,12 @@ router.delete('/:id', authenticateToken, async (req, res) => {
  *     responses:
  *       200:
  *         description: Contact updated
- *       404:
- *         description: Contact not found or not updated
  *       401:
  *         description: Unauthorized
+ *       404:
+ *         description: Contact not found or not updated
+ *       422:
+ *         description: Validation error
  *       500:
  *         description: Internal server error
  */
@@ -195,7 +199,10 @@ router.put("/:id", authenticateToken, async (req, res) => {
   const contactId = parseInt(req.params.id);
   const userId = req.user.id; 
 
-  const { name, surname, phone, email, birthdate } = req.body;
+  const { error, value } = validateContact(req.body); 
+    if (error) return res.status(422).send(error.details[0].message);
+
+  const { name, surname, phone, email, birthdate } = value;
 
   const contact = new Contact({
     id: contactId,

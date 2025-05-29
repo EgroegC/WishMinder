@@ -70,17 +70,17 @@ router.post('/subscribe', authenticateToken, express.json(), async (req, res) =>
  *     responses:
  *       200:
  *         description: Notification process completed
- *       400:
- *         description: Invalid notification payload
  *       401:
  *         description: Unauthorized
+ *       422:
+ *         description: Invalid notification payload
  *       500:
  *         description: Something went wrong
  */
 router.post('/send', authenticateToken, express.json(), async (req, res) => {
   
   const { error } = validateNotificationPayload(req.body);
-  if (error) return res.status(400).send({ message: error.details[0].message });
+  if (error) return res.status(422).send({ message: error.details[0].message });
   
   const user_id = req.user.id;
   const payload = JSON.stringify(req.body);
