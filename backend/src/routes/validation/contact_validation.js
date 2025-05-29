@@ -16,13 +16,18 @@ function validateContact(contact) {
                 "any.required": "Phone number is required."
             }), 
         birthdate: Joi.date().iso()
-            .max(oneYearAgo).optional()
-            .messages({'date.base': 'Birthdate must be a valid date.',
-                'date.format': 'Birthdate must be in ISO format (YYYY-MM-DD).',
-                'date.max': `Birthdate must be at least one year before today.`,}),
+            .max(oneYearAgo)
+            .empty('')
+            .default(null)
+            .optional()
+            .messages({
+              'date.base': 'Birthdate must be a valid date.',
+              'date.format': 'Birthdate must be in ISO format (YYYY-MM-DD).',
+              'date.max': 'Birthdate must be at least one year before today.',
+            }),
     });
 
-    return contactSchema.validate(contact);
+    return contactSchema.validate(contact, { stripUnknown: true });
 }
 
 function validateContactsBatch(contacts) {

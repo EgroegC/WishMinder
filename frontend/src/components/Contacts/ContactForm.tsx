@@ -30,10 +30,10 @@ const schema = z.object({
 
   birthdate: z
     .string()
-    .refine((date) => new Date(date) <= new Date(), {
+    .optional()
+    .refine((date) => !date || new Date(date) <= new Date(), {
       message: "Birthdate cannot be in the future.",
-    })
-    .optional(),
+    }),
 });
 
 interface Props {

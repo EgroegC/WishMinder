@@ -17,7 +17,7 @@ describe('/api/contacts', () => {
         surname: 'ContactSurname',
         phone: '+30748374',
         email: 'email@gmail.com',
-        birthdate: '2002-05-12'
+        birthdate: new Date('2002-05-12').toISOString()
     };
 
     const createTokenAndUser = async () => {
