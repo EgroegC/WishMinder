@@ -52,12 +52,19 @@ const AddContactCard = ({ onContactAdded }: { onContactAdded: () => void }) => {
   return (
     <>
       <Button
-        colorScheme="teal"
-        size="sm"
+        variant="ghost"
+        color="gray.700"
+        fontWeight="medium"
+        size="md"
         mx="auto"
         display="block"
         onClick={handleVcfUploadClick}
-        _hover={{ textDecoration: "underline" }}
+        _hover={{
+          textDecoration: "underline",
+        }}
+        _active={{
+          bg: "gray.200",
+        }}
       >
         Import Contact Card (.vcf)
       </Button>
