@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Image, Text, Button } from "@chakra-ui/react";
+import { Image, Text, Button, AvatarGroup, Avatar } from "@chakra-ui/react";
 import logo from "../../assets/openart-raw.jpg";
-import profileImage from "../../assets/profile_image.jpg";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import "./NavBar.css";
@@ -32,7 +31,12 @@ const NavBar = () => {
 
       {/* Profile & Dropdown */}
       <div className="profile-container" onClick={toggleDropdown}>
-        <Image src={profileImage} className="profile-image" />
+        <AvatarGroup>
+          <Avatar.Root>
+            <Avatar.Fallback />
+            <Avatar.Image />
+          </Avatar.Root>
+        </AvatarGroup>
       </div>
 
       {isDropdownOpen && (
