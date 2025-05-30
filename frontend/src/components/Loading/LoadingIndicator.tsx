@@ -4,7 +4,7 @@ const LoadingIndicator = () => {
   return (
     <div>
       <Box textAlign="center" mt={4}>
-        <Spinner size="xl" color="blue.500" />
+        <Spinner size="lg" color="blue.500" />
         <Text mt={2}>Loading data...</Text>
       </Box>
     </div>
