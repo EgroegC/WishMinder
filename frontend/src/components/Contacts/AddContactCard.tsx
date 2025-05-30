@@ -46,9 +46,6 @@ const AddContactCard = ({ onContactAdded }: { onContactAdded: () => void }) => {
       });
   };
 
-  if (error)
-    return <ErrorMessage message={`Failed to store contact: ${error}`} />;
-
   return (
     <>
       <Button
@@ -68,6 +65,9 @@ const AddContactCard = ({ onContactAdded }: { onContactAdded: () => void }) => {
       >
         Import Contact Card (.vcf)
       </Button>
+
+      {error && <ErrorMessage message={`Failed to store contacts: ${error}`} />}
+
       <input
         type="file"
         ref={fileInputRef}

@@ -29,7 +29,7 @@ const EditContact = ({
       .put(`/api/contacts/${contact.id}`, updatedContactData)
       .then(() => onContactUpdated())
       .catch((err) => {
-        setError(err.message);
+        setError(err.response.data);
       });
   };
 
@@ -43,11 +43,9 @@ const EditContact = ({
       : undefined,
   };
 
-  if (error)
-    return <ErrorMessage message={`Failed to edit contact, ${error}`} />;
-
   return (
     <Box textAlign="center" mt={4}>
+      {error && <ErrorMessage message={`Failed to edit contact, ${error}`} />}
       <ContactForm
         onFormSubmit={onFormSubmit}
         submitButtonText="Edit Contact"

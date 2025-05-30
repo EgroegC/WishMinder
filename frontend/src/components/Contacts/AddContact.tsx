@@ -34,20 +34,15 @@ const AddContact = ({
 
   return (
     <Box className="contacts-container" mt={4}>
-      {error ? (
-        <ErrorMessage message={`Failed to store contact: ${error}`} />
-      ) : (
-        <>
-          <AddContactCard onContactAdded={onContactAdded} />
-          <ContactForm
-            onFormSubmit={onFormSubmit}
-            submitButtonText="Save Contact"
-          />
-          <Button className="cancel-btn" onClick={() => onCancel()}>
-            Cancel
-          </Button>
-        </>
-      )}
+      {error && <ErrorMessage message={`Failed to store contact: ${error}`} />}
+      <AddContactCard onContactAdded={onContactAdded} />
+      <ContactForm
+        onFormSubmit={onFormSubmit}
+        submitButtonText="Save Contact"
+      />
+      <Button className="cancel-btn" onClick={() => onCancel()}>
+        Cancel
+      </Button>
     </Box>
   );
 };

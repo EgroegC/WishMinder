@@ -1,11 +1,21 @@
-import { Text } from "@chakra-ui/react";
+import { Alert } from "@chakra-ui/react";
 
-const ErrorMessage = ({ message }: { message: string }) => {
+const ErrorMessage = ({
+  title,
+  message,
+}: {
+  title?: string;
+  message: string;
+}) => {
   return (
     <div>
-      <Text color="red.500" textAlign="center" mt={4}>
-        {message}
-      </Text>
+      <Alert.Root status="error">
+        <Alert.Indicator />
+        <Alert.Content>
+          <Alert.Title>{title}</Alert.Title>
+          <Alert.Description>{message}</Alert.Description>
+        </Alert.Content>
+      </Alert.Root>
     </div>
   );
 };

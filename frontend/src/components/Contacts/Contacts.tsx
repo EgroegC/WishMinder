@@ -62,9 +62,6 @@ const Contacts = () => {
       ></AddContact>
     );
 
-  if (btnError) return <ErrorMessage message="Failed to delete contact." />;
-  if (error) return <ErrorMessage message="Failed to load Contacts." />;
-
   return (
     <Box className="contacts-container">
       <Flex justify="space-between" align="center" mb={3}>
@@ -87,6 +84,10 @@ const Contacts = () => {
       />
       {loading ? (
         <LoadingIndicator />
+      ) : error ? (
+        <ErrorMessage message="Failed to load contacts." />
+      ) : btnError ? (
+        <ErrorMessage message="Failed to delete contact." />
       ) : (
         <Box maxH="200px" overflowY="auto">
           <ContactList
