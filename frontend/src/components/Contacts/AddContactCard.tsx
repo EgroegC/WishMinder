@@ -1,6 +1,7 @@
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { Button } from "@chakra-ui/react";
+import { Button, Flex, Icon, Text } from "@chakra-ui/react";
 import { useRef, useState } from "react";
+import { HiUpload } from "react-icons/hi";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 interface PartialContact {
@@ -63,7 +64,10 @@ const AddContactCard = ({ onContactAdded }: { onContactAdded: () => void }) => {
           bg: "gray.200",
         }}
       >
-        Import Contact Card (.vcf)
+        <Flex align="center" gap={2}>
+          <Icon as={HiUpload} boxSize={5} />
+          <Text>Upload Contact Card (.vcf)</Text>
+        </Flex>
       </Button>
 
       {error && <ErrorMessage message={`Failed to store contacts: ${error}`} />}
