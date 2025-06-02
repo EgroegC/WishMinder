@@ -1,11 +1,11 @@
-import { Box, Button, Flex, Heading } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Stack } from "@chakra-ui/react";
 import { useState } from "react";
 import ContactList from "./ContactList";
 import { ButtonConfig } from "../Celebrations/ContactCard";
 import useContacts, { Contact } from "@/hooks/useContacts";
 import EditContact from "../Celebrations/EditContact";
 import LoadingIndicator from "../Loading/LoadingIndicator";
-import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import AlertMessage from "../Alert/AlertMessage";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import "./Contacts.css";
 import AddContact from "./AddContact";
@@ -16,6 +16,7 @@ const Contacts = () => {
   const [btnError, setBtnError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [contactCardMess, setContactCardMess] = useState<string | null>(null);
   const [contactBeingEdited, setContactBeingEdited] = useState<Contact | null>(
     null
   );
@@ -54,9 +55,10 @@ const Contacts = () => {
   if (showForm)
     return (
       <AddContact
-        onContactAdded={() => {
+        onContactAdded={(message?: string) => {
           setRefreshTrigger((prev) => prev + 1);
           setShowForm(false);
+          if (message) setContactCardMess(message);
         }}
         onCancel={() => setShowForm(false)}
       ></AddContact>
@@ -64,39 +66,49 @@ const Contacts = () => {
 
   return (
     <Box className="contacts-container">
-      <Flex justify="space-between" align="center" mb={3}>
-        <Heading size="sm" color="gray.700">
-          Contacts
-        </Heading>
-        <Button
-          className="add-contact"
-          size={"xs"}
-          onClick={() => setShowForm(true)}
-        >
-          Add Contact
-        </Button>
-      </Flex>
-      <input
-        type="text"
-        placeholder="Search..."
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="contacts-search-input"
-      />
-      {loading ? (
-        <LoadingIndicator />
-      ) : error ? (
-        <ErrorMessage message="Failed to load contacts." />
-      ) : btnError ? (
-        <ErrorMessage message="Failed to delete contact." />
-      ) : (
-        <Box maxH="200px" overflowY="auto">
-          <ContactList
-            searchTerm={searchTerm}
-            contacts={contacts}
-            buttons={buttons}
-          />
+      {contactCardMess && (
+        <Box mb={4}>
+          <AlertMessage status="info" message={contactCardMess} />
         </Box>
       )}
+
+      <Stack gap={3}>
+        <Flex justify="space-between" align="center">
+          <Heading size="sm" color="gray.700">
+            Contacts
+          </Heading>
+          <Button
+            className="add-contact"
+            size="xs"
+            onClick={() => setShowForm(true)}
+          >
+            Add Contact
+          </Button>
+        </Flex>
+
+        <input
+          type="text"
+          placeholder="Search..."
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="contacts-search-input"
+        />
+
+        {loading ? (
+          <LoadingIndicator />
+        ) : error ? (
+          <AlertMessage status="error" message="Failed to load contacts." />
+        ) : btnError ? (
+          <AlertMessage status="error" message="Failed to delete contact." />
+        ) : (
+          <Box maxH="200px" overflowY="auto">
+            <ContactList
+              searchTerm={searchTerm}
+              contacts={contacts}
+              buttons={buttons}
+            />
+          </Box>
+        )}
+      </Stack>
     </Box>
   );
 };

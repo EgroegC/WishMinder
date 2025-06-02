@@ -2,7 +2,12 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { Button, Flex, Icon, Text } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { HiUpload } from "react-icons/hi";
-import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import AlertMessage from "../Alert/AlertMessage";
+
+interface Duplicates {
+  name: string;
+  surname: string;
+}
 
 interface PartialContact {
   name: string;
@@ -12,7 +17,11 @@ interface PartialContact {
   birthdate?: Date;
 }
 
-const AddContactCard = ({ onContactAdded }: { onContactAdded: () => void }) => {
+const AddContactCard = ({
+  onContactAdded,
+}: {
+  onContactAdded: (mess?: string) => void;
+}) => {
   const axiosPrivate = useAxiosPrivate();
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -41,7 +50,15 @@ const AddContactCard = ({ onContactAdded }: { onContactAdded: () => void }) => {
       .post("/api/contacts/import/vcf", {
         contacts,
       })
-      .then(() => onContactAdded())
+      .then((res) => {
+        const updatedContacts = (res.data.updated as Duplicates[])
+          .map((c) => `${c.name} ${c.surname}`)
+          .join(", ");
+
+        onContactAdded(
+          `${res.data.insertedCount} new contacts imported, ${res.data.updatedCount} replaced: ${updatedContacts}`
+        );
+      })
       .catch((err) => {
         setError(err.response.data);
       });
@@ -70,7 +87,12 @@ const AddContactCard = ({ onContactAdded }: { onContactAdded: () => void }) => {
         </Flex>
       </Button>
 
-      {error && <ErrorMessage message={`Failed to store contacts: ${error}`} />}
+      {error && (
+        <AlertMessage
+          status="error"
+          message={`Failed to store contacts: ${error}`}
+        />
+      )}
 
       <input
         type="file"

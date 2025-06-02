@@ -1,15 +1,17 @@
 import { Alert } from "@chakra-ui/react";
 
-const ErrorMessage = ({
+const AlertMessage = ({
+  status,
   title,
   message,
 }: {
+  status: "info" | "warning" | "success" | "error";
   title?: string;
   message: string;
 }) => {
   return (
     <div>
-      <Alert.Root status="error">
+      <Alert.Root status={status}>
         <Alert.Indicator />
         <Alert.Content>
           <Alert.Title>{title}</Alert.Title>
@@ -20,4 +22,4 @@ const ErrorMessage = ({
   );
 };
 
-export default ErrorMessage;
+export default AlertMessage;

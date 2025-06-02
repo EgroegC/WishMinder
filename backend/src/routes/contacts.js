@@ -56,8 +56,14 @@ router.post('/import/vcf', authenticateToken, async (req, res) => {
     if (validateContactsBatch(contacts)) 
       return res.status(422).json({message: 'One or more contacts failed validation.'});
     
-    await contactService.importContacts(contacts, userId);
-    res.status(201).json({ message: 'Contacts imported successfully' });
+    const { inserted, updated } = await contactService.importContacts(contacts, userId);
+    
+    res.status(201).json({
+      message: 'Contacts imported successfully.',
+      insertedCount: inserted.length,
+      updatedCount: updated.length,
+      updated,
+    });
 });
 
 /**

@@ -12,7 +12,7 @@ import {
 import EditContact from "./EditContact";
 import { ButtonConfig } from "./ContactCard";
 import LoadingIndicator from "../Loading/LoadingIndicator";
-import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import AlertMessage from "../Alert/AlertMessage";
 
 interface Props {
   isBirthday: boolean;
@@ -73,7 +73,7 @@ const CelebrationList = ({ isBirthday, searchTerm }: Props) => {
   if (namedLoading && !isBirthday) return <LoadingIndicator />;
 
   if (contactsError || upcNamedaysError)
-    return <ErrorMessage message="Failed to load data." />;
+    return <AlertMessage status="error" message="Failed to load data." />;
 
   if (filteredContacts.length === 0)
     return (

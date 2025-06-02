@@ -4,7 +4,7 @@ import { FieldValues } from "react-hook-form";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import ContactForm from "../Contacts/ContactForm";
 import { Contact } from "@/hooks/useContacts";
-import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import AlertMessage from "../Alert/AlertMessage";
 
 const EditContact = ({
   onContactUpdated,
@@ -45,7 +45,12 @@ const EditContact = ({
 
   return (
     <Box textAlign="center" mt={4}>
-      {error && <ErrorMessage message={`Failed to edit contact, ${error}`} />}
+      {error && (
+        <AlertMessage
+          status="error"
+          message={`Failed to edit contact, ${error}`}
+        />
+      )}
       <ContactForm
         onFormSubmit={onFormSubmit}
         submitButtonText="Edit Contact"

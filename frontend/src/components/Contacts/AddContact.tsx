@@ -4,7 +4,7 @@ import { FieldValues } from "react-hook-form";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import "./AddContact.css";
 import ContactForm from "./ContactForm";
-import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import AlertMessage from "../Alert/AlertMessage";
 import AddContactCard from "./AddContactCard";
 
 const AddContact = ({
@@ -34,7 +34,12 @@ const AddContact = ({
 
   return (
     <Box className="contacts-container" mt={4}>
-      {error && <ErrorMessage message={`Failed to store contact: ${error}`} />}
+      {error && (
+        <AlertMessage
+          status="error"
+          message={`Failed to store contact: ${error}`}
+        />
+      )}
       <AddContactCard onContactAdded={onContactAdded} />
       <ContactForm
         onFormSubmit={onFormSubmit}

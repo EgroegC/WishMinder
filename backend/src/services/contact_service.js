@@ -45,10 +45,10 @@ class ContactService {
       };
     });
 
-    if (corrected.length === 0) return [];
+    const deduped = this.deduplicateByUserAndPhone(corrected);
+    if (deduped.length === 0) return { inserted: [], updated: [] };
 
-    this.bulkInsertContacts(corrected);
-   
+    return await this.bulkInsertContacts(deduped);
   }
 
   async bulkInsertContacts(contacts) {
@@ -71,12 +71,32 @@ class ContactService {
     const query = `
       INSERT INTO contacts (user_id, name, surname, phone, email, birthdate)
       VALUES ${placeholders}
-      RETURNING *;
+      ON CONFLICT (user_id, phone) DO UPDATE SET
+        name = EXCLUDED.name,
+        surname = EXCLUDED.surname,
+        email = EXCLUDED.email,
+        birthdate = EXCLUDED.birthdate
+      RETURNING *, (xmax = 0) AS inserted;
     `;
 
     const result = await pool.query(query, values);
-    return result.rows;
+
+    const inserted = result.rows.filter(row => row.inserted).map(({ name, surname }) => ({ name, surname }));
+    const updated = result.rows.filter(row => !row.inserted).map(({ name, surname }) => ({ name, surname }));
+
+    return { inserted, updated };
   }
+
+  deduplicateByUserAndPhone = (contacts) => {
+    const seen = new Set();
+    return contacts.filter(contact => {
+      const key = `${contact.user_id}-${contact.phone}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  };
+  
 }
 
 module.exports = ContactService;
