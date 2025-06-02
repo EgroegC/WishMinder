@@ -81,6 +81,18 @@ describe('/api/auth', () => {
             expect(res.text).toMatch(/invalid.*password/i);
         });
 
+        it('should return 500 if something fails unexpectedly', async () => {
+            jest.spyOn(User, 'findByEmail').mockImplementation(() => {
+              throw new Error('Unexpected failure');
+            });
+        
+            const res = await exec();
+        
+            expect(res.status).toBe(500);
+
+            User.findByEmail.mockRestore();
+          });
+
         it('should create the refreshToken cookie', async () => {
             const res = await exec();
         
@@ -157,6 +169,18 @@ describe('/api/auth', () => {
     
             const decoded = jwt.decode(res.body.accessToken);
             expect(decoded).toHaveProperty('id', user.id);
+        });
+
+        it('should return 500 if jwt.sign throws', async () => {
+            jest.spyOn(jwt, 'sign').mockImplementation(() => {
+              throw new Error('Failed');
+            });
+          
+            const res = await exec(refreshToken);
+          
+            expect(res.status).toBe(500);
+          
+            jwt.sign.mockRestore();
         });
     });
 });
