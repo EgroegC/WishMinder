@@ -36,7 +36,7 @@ class ContactService {
     };
   }
   
-  correctContacts(contacts, userId) {
+  correctContacts(contacts) {
     return contacts.map((c) => {
       if (!c.name || !c.surname || !c.phone) 
         return c;
@@ -45,7 +45,6 @@ class ContactService {
       const { name, surname } = this.correctNameAndSurname(c.name, c.surname);
   
       const corrected = {
-        user_id: userId,
         name,
         surname,
         phone,
@@ -66,11 +65,16 @@ class ContactService {
     });
   }
 
-  async importContacts(corrected) {
+  async importContacts(corrected, userId) {
     const deduped = this.deduplicateByUserAndPhone(corrected);
     if (deduped.length === 0) return { inserted: [], updated: [] };
 
-    return await this.bulkInsertContacts(deduped);
+    const contacts = deduped.map(contact => ({
+      user_id: userId,
+      ...contact,
+    }));
+
+    return await this.bulkInsertContacts(contacts);
   }
 
   async bulkInsertContacts(contacts) {

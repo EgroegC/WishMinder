@@ -263,7 +263,7 @@ describe('/api/contacts', () => {
             expect(res.body.message).toBe('Contacts imported successfully.');
             expect(res.body.insertedCount).toBeGreaterThanOrEqual(1);
             expect(res.body.updatedCount).toBe(0);
-
+            
             const savedContacts = await Contact.getAllContacts(user.id);
             expect(savedContacts.length).toBeGreaterThanOrEqual(1);
             const saved = savedContacts[0];
@@ -289,7 +289,8 @@ describe('/api/contacts', () => {
         });
 
         it('should return 500 when an unhandled error occurs', async () => {
-            jest.spyOn(getContactService(), 'importContacts').mockImplementation(() => {
+            const contactService = getContactService();
+            jest.spyOn(contactService , 'importContacts').mockImplementation(() => {
               throw new Error('Unexpected failure');
             });
 
@@ -297,6 +298,7 @@ describe('/api/contacts', () => {
           
             const res = await execImport(newContact);
             expect(res.status).toBe(500);
+            contactService.importContacts.mockRestore();
         });
     });
 
