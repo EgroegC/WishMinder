@@ -60,7 +60,7 @@ const AddContactCard = ({
         );
       })
       .catch((err) => {
-        setError(err.response.data);
+        setError(err.request.response);
       });
   };
 
