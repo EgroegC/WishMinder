@@ -75,7 +75,7 @@ describe('/api/messages', () => {
             expect(res.body).toEqual([{ id: 2, text: 'Happy Nameday!' }]);
         });
     
-        it('should throw if Messages.getAllMessages returns null', async () => {
+        it('should return 500 when an unhandled error occurs', async () => {
             Messages.getAllMessages.mockResolvedValue(null);
             const res = await exec('birthday');
             expect(res.status).toBe(500);

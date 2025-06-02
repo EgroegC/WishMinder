@@ -54,6 +54,21 @@ describe('/api/namedays', () => {
     
             expect(res.status).toBe(200);
             expect(res.body).toEqual([]);
+
+            NamedayService.getUpcomingNamedays.mockRestore();
+        });
+
+        it('should return 500 when an unhandled error occurs', async () => {
+            jest.spyOn(NamedayService, 'getUpcomingNamedays').mockRejectedValue(
+                new Error('Unexpected failure')
+            );
+
+            const res = await request(server)
+                .get('/api/namedays/upcoming')
+                .set('Authorization', `Bearer ${token}`);
+    
+            expect(res.status).toBe(500);
+            NamedayService.getUpcomingNamedays.mockRestore();
         });
     });
 });

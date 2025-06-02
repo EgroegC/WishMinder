@@ -90,6 +90,26 @@ describe('/api/notification', () => {
             const subs = await PushSubscription.getByUser(user.id);
             expect(subs.some(s => s.endpoint === payload.endpoint)).toBe(true);
         });
+
+        it('should return 500 when an unhandled error occurs', async () => {
+          const payload = {
+              endpoint: 'https://example.com/endpoint',
+              expirationTime: null,
+              keys: {
+                p256dh: 'p256dh-test-key',
+                auth: 'auth-test-key'
+              }
+          };
+
+          jest.spyOn(PushSubscription, 'createOrUpdate').mockRejectedValue(
+            new Error('Unexpected failure')
+          );
+          
+          const res = await exec(payload);
+        
+          expect(res.status).toBe(500);
+          PushSubscription.createOrUpdate.mockRestore();
+        });
     });
 
     describe('POST /notification/send', () => {

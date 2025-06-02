@@ -49,6 +49,16 @@ describe('/api/users', () => {
             expect(res.body).toHaveProperty('name', user.name);
             expect(res.body).toHaveProperty('email', user.email);
         });
+
+        it('should return 500 when an unhandled error occurs', async () => {
+            jest.spyOn(User, 'findById').mockRejectedValue(
+                new Error('Unexpected failure')
+            );
+            
+            const res = await exec();
+            expect(res.status).toBe(500);
+            User.findById.mockRestore();
+        });
     });
 
     describe('POST /', () => {
@@ -97,6 +107,16 @@ describe('/api/users', () => {
             expect(res.body).toHaveProperty('id');
             expect(res.body).toHaveProperty('name', name);
             expect(res.body).toHaveProperty('email', email);
+        });
+
+        it('should return 500 when an unhandled error occurs', async () => {
+            jest.spyOn(User, 'findByEmail').mockRejectedValue(
+                new Error('Unexpected failure')
+            );
+            
+            const res = await exec();
+            expect(res.status).toBe(500);
+            User.findByEmail.mockRestore();
         });
     });
 });
