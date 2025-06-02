@@ -4,15 +4,14 @@ const { validateContact, validateContactsBatch} = require('./validation/contact_
 const Contact = require('../models/contact'); 
 const ContactService = require('../services/contact_service');
 const NamedayService = require('../services/namedays_service'); 
+const { getContactService, setContactService } = require('../utils/contactServiceHolder');
 const express = require('express');
 const router = express.Router();
-
-let contactService;
 
 // Preload names on startup
 (async () => {
   const greekNames = await NamedayService.getAllNames();
-  contactService = new ContactService(greekNames);
+  setContactService(new ContactService(greekNames));
 })();
 
 /**
@@ -52,12 +51,12 @@ router.post('/import/vcf', authenticateToken, async (req, res) => {
     if (!Array.isArray(contacts) || contacts.length === 0) 
       return res.status(422).json({ message: 'Invalid request: contacts must be a non-empty array.' });
 
-    contacts = contactService.correctContacts(contacts, userId);
+    contacts = getContactService().correctContacts(contacts, userId);
 
     if (!validateContactsBatch(contacts)) 
       return res.status(422).json({message: 'One or more contacts failed validation.'});
     
-    const { inserted, updated } = await contactService.importContacts(contacts);
+    const { inserted, updated } = await getContactService().importContacts(contacts);
     
     res.status(201).json({
       message: 'Contacts imported successfully.',

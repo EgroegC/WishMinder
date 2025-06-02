@@ -4,8 +4,26 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../../../src/models/user');
 const Contact = require('../../../src/models/contact');
+const NamedayService = require('../../../src/services/namedays_service');
+const ContactService = require('../../../src/services/contact_service');
 const { deleteAllContactsForUser } = require('../../helpers/contact_route_helper');
 const { itShouldRequireAuth } = require('../../helpers/auth_test_helper');
+const { getContactService, setContactService } = require('../../../src/utils/contactServiceHolder');
+const { insertTestNameday, clearNamedaysAndNames } = require('../../helpers/namedays_helper');
+
+jest.mock('../../../src/config/rollbar', () => {
+    const mRollbar = {
+      error: jest.fn()
+    };
+    return () => mRollbar;
+});
+  
+jest.mock('../../../src/config/logger', () => {
+    return () => ({
+      error: jest.fn(),
+      info: jest.fn()
+    });
+});
 
 describe('/api/contacts', () => {
     let server;
@@ -173,4 +191,98 @@ describe('/api/contacts', () => {
             expect(res.body.name).toBe('Updated');
         });
     });
+
+    describe('POST /import/vcf', () => {
+        const importPath = '/api/contacts/import/vcf';
+
+        const execImport = async (contacts) => {
+            return request(server)
+                .post(importPath)
+                .set('Authorization', `Bearer ${token}`)
+                .send({ contacts });
+        };
+
+        itShouldRequireAuth(() => server, importPath, 'post', { contacts: [{}] });
+
+        it('should return 422 if contacts is not an array or is empty', async () => {
+            const res1 = await execImport(null);
+            const res2 = await execImport([]);
+            expect(res1.status).toBe(422);
+            expect(res2.status).toBe(422);
+            expect(res1.body.message).toMatch(/contacts must be a non-empty array/i);
+        });
+
+        it('should return 422 if one or more contacts fail validation', async () => {
+            const invalidContacts = [
+                { name: '', phone: 'not-a-phone' },
+                { email: 'missing-fields@example.com' }
+            ];
+            const res = await execImport(invalidContacts);
+            expect(res.status).toBe(422);
+            expect(res.body.message).toMatch(/failed validation/i);
+        });
+
+        it('should import valid contacts and return inserted and updated counts', async () => {
+            const newContacts = [
+                { ...contactPayload },
+                { ...contactPayload, phone: '+30999999', email: 'second@email.com' }
+            ];
+            const res = await execImport(newContacts);
+            expect(res.status).toBe(201);
+            expect(res.body.message).toBe('Contacts imported successfully.');
+            expect(res.body.insertedCount).toBeGreaterThanOrEqual(2);
+            expect(res.body.updatedCount).toBe(0);
+        });
+
+        it('should swap name and surname and import the contact', async () => {
+            await insertTestNameday('Γιώργος', new Date());
+
+            const greekNames = await NamedayService.getAllNames();
+            setContactService(new ContactService(greekNames));
+
+            const newContact = [
+                { ...contactPayload, name: 'Alex', surname: 'γιωργος' }
+            ];
+            const res = await execImport(newContact);
+            expect(res.status).toBe(201);
+            expect(res.body.message).toBe('Contacts imported successfully.');
+            expect(res.body.insertedCount).toBeGreaterThanOrEqual(1);
+            expect(res.body.updatedCount).toBe(0);
+
+            const savedContacts = await Contact.getAllContacts(user.id);
+            expect(savedContacts.length).toBeGreaterThanOrEqual(1);
+            const saved = savedContacts[0];
+            expect(saved.name).toBe('Γιώργος');
+            expect(saved.surname).toBe('Alex');
+
+            await clearNamedaysAndNames();
+        });
+
+        it('should update existing contact if already in database', async () => {
+            await createContact();
+
+            const updatedPayload = {
+                ...contactPayload,
+                name: 'UpdatedName'
+            };
+
+            const res = await execImport([updatedPayload]);
+            expect(res.status).toBe(201);
+            expect(res.body.insertedCount).toBe(0);
+            expect(res.body.updatedCount).toBeGreaterThanOrEqual(1);
+            expect(res.body.updated[0]).toHaveProperty('name', 'UpdatedName');
+        });
+
+        it('should return 500 when an unhandled error occurs', async () => {
+            jest.spyOn(getContactService(), 'importContacts').mockImplementation(() => {
+              throw new Error('Unexpected failure');
+            });
+
+            const newContact = [ contactPayload ];
+          
+            const res = await execImport(newContact);
+            expect(res.status).toBe(500);
+        });
+    });
+
 });

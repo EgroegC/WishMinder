@@ -38,6 +38,9 @@ class ContactService {
   
   correctContacts(contacts, userId) {
     return contacts.map((c) => {
+      if (!c.name || !c.surname || !c.phone) 
+        return c;
+
       const phone = this.normalizePhoneNumber(c.phone);
       const { name, surname } = this.correctNameAndSurname(c.name, c.surname);
   
@@ -48,15 +51,20 @@ class ContactService {
         phone,
       };
   
-      if (c.email) 
+      if (c.email && c.email.trim()) {
         corrected.email = c.email.trim();
-      if(c.birthdate)
-        corrected.birthdate = new Date(c.birthdate);
+      }
+  
+      if (c.birthdate) {
+        const date = new Date(c.birthdate);
+        if (!isNaN(date)) {
+          corrected.birthdate = date;
+        }
+      }
   
       return corrected;
     });
   }
-  
 
   async importContacts(corrected) {
     const deduped = this.deduplicateByUserAndPhone(corrected);
