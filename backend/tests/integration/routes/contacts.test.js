@@ -94,10 +94,8 @@ describe('/api/contacts', () => {
             expect(res.status).toBe(400);
         });
 
-        it('should save and return the valid contact', async () => {
-            const res = await execPost({
-                ...contactPayload
-            });
+        it('should save and return 200 with the valid contact ', async () => {
+            const res = await execPost(contactPayload);
 
             expect(res.status).toBe(200);
             expect(res.body).toMatchObject({
@@ -105,7 +103,7 @@ describe('/api/contacts', () => {
             });
         });
 
-        it('should save and return the valid contact that has no email and birthdate', async () => {
+        it('should save and return 200 with the valid contact that has no email and birthdate', async () => {
             const newContact = {
                 name: 'ContactName',
                 surname: 'ContactSurname',
@@ -118,6 +116,15 @@ describe('/api/contacts', () => {
             expect(res.body).toMatchObject({
                 ...newContact
             });
+        });
+
+        it('should return 500 when an unhandled error occurs', async () => {
+            jest.spyOn(Contact , 'findByPhoneNumber').mockImplementation(() => {
+                throw new Error('Unexpected failure');
+            });
+            const res = await execPost(contactPayload);
+            expect(res.status).toBe(500);
+            Contact.findByPhoneNumber.mockRestore();
         });
     });
 
@@ -148,6 +155,15 @@ describe('/api/contacts', () => {
                 expect(contact).toHaveProperty('birthdate');
             });
         });
+
+        it('should return 500 when an unhandled error occurs', async () => {
+            jest.spyOn(Contact , 'getAllContacts').mockImplementation(() => {
+                throw new Error('Unexpected failure');
+            });
+            const res = await execGet();
+            expect(res.status).toBe(500);
+            Contact.getAllContacts.mockRestore();
+        });
     });
 
     describe('DELETE /:id', () => {
@@ -167,6 +183,17 @@ describe('/api/contacts', () => {
                 .set('Authorization', `Bearer ${token}`);
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('id', contact.id);
+        });
+
+        it('should return 500 when an unhandled error occurs', async () => {
+            jest.spyOn(Contact , 'deleteContact').mockImplementation(() => {
+                throw new Error('Unexpected failure');
+            });
+            const res = await request(server)
+                .delete(`/api/contacts/1`)
+                .set('Authorization', `Bearer ${token}`);
+            expect(res.status).toBe(500);
+            Contact.deleteContact.mockRestore();
         });
     });
 
@@ -204,6 +231,20 @@ describe('/api/contacts', () => {
 
             expect(res.status).toBe(200);
             expect(res.body.name).toBe('Updated');
+        });
+
+        it('should return 500 when an unhandled error occurs', async () => {
+            const updateSpy = jest.spyOn(Contact.prototype, 'update').mockImplementation(() => {
+                throw new Error('Unexpected error');
+            });
+            const res = await request(server)
+                .put(`/api/contacts/1`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    ...contactPayload, name: 'Updated'
+                });
+            expect(res.status).toBe(500);
+            updateSpy.mockRestore();
         });
     });
 
