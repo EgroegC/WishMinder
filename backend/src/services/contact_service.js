@@ -9,6 +9,11 @@ class ContactService {
     });
   }
 
+  normalizePhoneNumber = (phone) => {
+    if (!phone) return '';
+    return phone.trim().replace(/(?!^\+)[^\d]/g, '');
+  };
+
   correctNameAndSurname(name, surname) {
     const normName = normalizeGreek(name);
     const normSurname = normalizeGreek(surname);
@@ -31,20 +36,29 @@ class ContactService {
     };
   }
   
-
-  async importContacts(contacts, userId) {
-    const corrected = contacts.map((c) => {
+  correctContacts(contacts, userId) {
+    return contacts.map((c) => {
+      const phone = this.normalizePhoneNumber(c.phone);
       const { name, surname } = this.correctNameAndSurname(c.name, c.surname);
-      return {
+  
+      const corrected = {
         user_id: userId,
         name,
         surname,
-        phone: c.phone,
-        email: c.email || null,
-        birthdate: c.birthdate ? new Date(c.birthdate) : null,
+        phone,
       };
+  
+      if (c.email) 
+        corrected.email = c.email.trim();
+      if(c.birthdate)
+        corrected.birthdate = new Date(c.birthdate);
+  
+      return corrected;
     });
+  }
+  
 
+  async importContacts(corrected) {
     const deduped = this.deduplicateByUserAndPhone(corrected);
     if (deduped.length === 0) return { inserted: [], updated: [] };
 

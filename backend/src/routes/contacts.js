@@ -46,17 +46,18 @@ let contactService;
  *         description: Internal server error
  */
 router.post('/import/vcf', authenticateToken, async (req, res) => {
-    const contacts = req.body.contacts;
+    let contacts = req.body.contacts;
     const userId = req.user.id;
-
+    
     if (!Array.isArray(contacts) || contacts.length === 0) 
       return res.status(422).json({ message: 'Invalid request: contacts must be a non-empty array.' });
-    
 
-    if (validateContactsBatch(contacts)) 
+    contacts = contactService.correctContacts(contacts, userId);
+
+    if (!validateContactsBatch(contacts)) 
       return res.status(422).json({message: 'One or more contacts failed validation.'});
     
-    const { inserted, updated } = await contactService.importContacts(contacts, userId);
+    const { inserted, updated } = await contactService.importContacts(contacts);
     
     res.status(201).json({
       message: 'Contacts imported successfully.',
