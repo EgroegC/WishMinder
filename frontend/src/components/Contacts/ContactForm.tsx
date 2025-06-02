@@ -30,6 +30,7 @@ const schema = z.object({
 
   birthdate: z
     .string()
+    .transform((val) => (val === "" ? undefined : val))
     .optional()
     .refine((date) => !date || new Date(date) <= new Date(), {
       message: "Birthdate cannot be in the future.",

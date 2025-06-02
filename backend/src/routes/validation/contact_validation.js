@@ -17,9 +17,6 @@ function validateContact(contact) {
             }), 
         birthdate: Joi.date().iso()
             .max(oneYearAgo)
-            .empty('')
-            .default(null)
-            .optional()
             .messages({
               'date.base': 'Birthdate must be a valid date.',
               'date.format': 'Birthdate must be in ISO format (YYYY-MM-DD).',
@@ -27,7 +24,7 @@ function validateContact(contact) {
             }),
     });
 
-    return contactSchema.validate(contact, { stripUnknown: true });
+    return contactSchema.validate(contact);
 }
 
 function validateContactsBatch(contacts) {

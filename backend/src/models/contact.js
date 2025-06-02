@@ -2,7 +2,7 @@ const pool = require('../config/db')();
 
 class Contact {
     
-  constructor({ id = null, user_id, name, surname, phone, email, birthdate }) {
+  constructor({ id = null, user_id, name, surname, phone, email = null , birthdate = null }) {
     this.id = id;
     this.user_id = user_id;
     this.name = name;

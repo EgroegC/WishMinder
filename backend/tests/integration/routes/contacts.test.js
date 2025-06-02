@@ -94,7 +94,7 @@ describe('/api/contacts', () => {
             expect(res.status).toBe(400);
         });
 
-        it('should save and return the contact if valid', async () => {
+        it('should save and return the valid contact', async () => {
             const res = await execPost({
                 ...contactPayload
             });
@@ -102,6 +102,21 @@ describe('/api/contacts', () => {
             expect(res.status).toBe(200);
             expect(res.body).toMatchObject({
                 ...contactPayload
+            });
+        });
+
+        it('should save and return the valid contact that has no email and birthdate', async () => {
+            const newContact = {
+                name: 'ContactName',
+                surname: 'ContactSurname',
+                phone: '+30748374',
+            };
+
+            const res = await execPost(newContact);
+
+            expect(res.status).toBe(200);
+            expect(res.body).toMatchObject({
+                ...newContact
             });
         });
     });

@@ -92,16 +92,15 @@ router.post('/import/vcf', authenticateToken, async (req, res) => {
  *         description: Internal server error
  */
 router.post('/', authenticateToken, async (req, res) => {
-    const { error, value } = validateContact(req.body); 
+
+    const { error } = validateContact(req.body); 
     if (error) return res.status(422).send(error.details[0].message);
-    
-    let user = await Contact.findByPhoneNumber(req.user.id, value.phone);
+
+    let user = await Contact.findByPhoneNumber(req.user.id, req.body.phone);
     if (user) return res.status(400).send('The Contact Already Exists.');
 
-    const contact = new Contact({
-        user_id: req.user.id, 
-        ..._.pick(value, ['name', 'surname', 'phone', 'email', 'birthdate'])
-    });
+    req.body.user_id = req.user.id;
+    const contact = new Contact(req.body);
 
     await contact.save();
     
