@@ -13,33 +13,39 @@ import NavBar from "../components/NavBar/NavBar";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import ContactsList from "@/components/Contacts/Contacts";
+import { useBreakpointValue } from "@chakra-ui/react";
 
 const HomePage = () => {
   const axiosPrivate = useAxiosPrivate();
   usePushNotifications(axiosPrivate);
-
   const navigate = useNavigate();
+  const showContactsList = useBreakpointValue({ base: false, lg: true });
 
   return (
     <Grid
-      templateAreas={`"nav"
-                      "main"`}
-      gridTemplateRows={"60px 1fr"}
-      gridTemplateColumns={"1fr"}
+      templateAreas={{
+        base: `"nav" "main"`,
+        lg: `"nav nav" "contacts main"`,
+      }}
+      gridTemplateRows="60px 1fr"
+      gridTemplateColumns={{ base: "1fr", lg: "300px 1fr" }}
       minH="100vh"
       bg="gray.50"
     >
-      {/* NavBar Section */}
-      <GridItem area="nav" p={-1} bg="white" boxShadow="sm">
+      {/* NavBar */}
+      <GridItem area="nav" p={0} bg="white" boxShadow="sm">
         <NavBar />
       </GridItem>
 
-      <ContactsList />
+      {showContactsList && (
+        <GridItem area="contacts" bg="white" p={4} boxShadow="sm" height="100%">
+          <ContactsList />
+        </GridItem>
+      )}
 
-      {/* Main Content Section */}
+      {/* Main Content */}
       <GridItem area="main">
         <Box p={8} display="flex" flexDirection="column" alignItems="center">
-          {/* Hero Section */}
           <Box textAlign="center" mb={8}>
             <Heading size="2xl" color="blue.600">
               🎉 Welcome to the Celebration Hub!
@@ -49,9 +55,7 @@ const HomePage = () => {
             </Text>
           </Box>
 
-          {/* Links Section */}
           <Flex gap={8} mb={10} flexWrap="wrap" justify="center">
-            {/* Birthdays Link */}
             <LinkBox
               onClick={() => navigate("/birthdays")}
               cursor="pointer"
@@ -74,7 +78,6 @@ const HomePage = () => {
               <Text color="gray.600">See upcoming birthdays 🎂</Text>
             </LinkBox>
 
-            {/* Name Days Link */}
             <LinkBox
               onClick={() => navigate("/namedays")}
               cursor="pointer"
@@ -98,7 +101,6 @@ const HomePage = () => {
             </LinkBox>
           </Flex>
 
-          {/* Today's Celebrations Card */}
           <Box
             bgGradient="linear(to-r, teal.100, blue.100)"
             p={6}
@@ -125,7 +127,6 @@ const HomePage = () => {
             </Text>
           </Box>
 
-          {/* Fun Quote Section */}
           <Box mt={10} textAlign="center" maxW="600px">
             <FaQuoteLeft size="30px" color="gray" />
             <Text fontSize="lg" fontStyle="italic" color="gray.700">

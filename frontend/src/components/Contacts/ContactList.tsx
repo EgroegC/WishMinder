@@ -18,7 +18,7 @@ const ContactList = ({ searchTerm, buttons, contacts }: Props) => {
   );
 
   return (
-    <Box maxH="200px" overflowY="auto">
+    <Box overflowY="auto">
       {filteredContacts.length === 0 ? (
         <Text fontSize="sm" color="gray.500" textAlign="center">
           No contacts found.

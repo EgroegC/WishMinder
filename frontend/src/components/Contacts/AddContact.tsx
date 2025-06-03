@@ -33,7 +33,7 @@ const AddContact = ({
   };
 
   return (
-    <Box className="contacts-container" mt={4}>
+    <Box mt={4}>
       {error && (
         <AlertMessage
           status="error"

@@ -8,14 +8,16 @@ function BirthdayPage() {
   const [searchTerm, setSearchTerm] = useState("");
   return (
     <Grid
-      templateAreas={`"nav nav"
-                      "main main"`}
+      templateAreas={{
+        base: `"nav" "main"`,
+        lg: `"nav nav" "main main"`,
+      }}
       gridTemplateRows={"60px 1fr"}
       gridTemplateColumns={"1fr"}
       minH="100vh"
     >
       {/* Navbar */}
-      <GridItem area="nav" p={-1} bg="white" boxShadow="sm">
+      <GridItem area="nav" p={0} bg="white" boxShadow="sm">
         <NavBar />
       </GridItem>
 
@@ -26,7 +28,7 @@ function BirthdayPage() {
           direction={"column"}
           gap={6}
           flexWrap="wrap"
-          maxW="48%"
+          maxW={{ base: "100%", md: "90%", lg: "48%" }}
           mx="auto"
         >
           {/* 🔍 Search Bar */}

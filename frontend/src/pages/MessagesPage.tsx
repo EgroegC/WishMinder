@@ -5,13 +5,15 @@ import { Grid, GridItem } from "@chakra-ui/react";
 function MessagesPage() {
   return (
     <Grid
-      templateAreas={`"nav nav"
-                      "main main"`}
+      templateAreas={{
+        base: `"nav" "main"`,
+        lg: `"nav nav" "main main"`,
+      }}
       gridTemplateRows={"60px 1fr"}
       gridTemplateColumns={"1fr"}
       minH="100vh"
     >
-      <GridItem area="nav" p={-1} bg="white" boxShadow="sm">
+      <GridItem area="nav" p={0} bg="white" boxShadow="sm">
         <NavBar />
       </GridItem>
 

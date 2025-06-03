@@ -65,7 +65,7 @@ const Contacts = () => {
     );
 
   return (
-    <Box className="contacts-container">
+    <Box height="calc(100vh - 120px)">
       {contactCardMess && (
         <Box mb={4}>
           <AlertMessage status="info" message={contactCardMess} />
@@ -100,7 +100,7 @@ const Contacts = () => {
         ) : btnError ? (
           <AlertMessage status="error" message="Failed to delete contact." />
         ) : (
-          <Box maxH="200px" overflowY="auto">
+          <Box height="calc(100vh - 180px)" overflowY="auto">
             <ContactList
               searchTerm={searchTerm}
               contacts={contacts}
