@@ -1,24 +1,33 @@
 // hooks/usePush.ts
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AxiosInstance } from "axios";
 import {
-    registerServiceWorker,
-    subscribeUser,
-  } from "@/services/push/push-notification";
+  registerServiceWorker,
+  subscribeUser,
+} from "@/services/push/push-notification";
 
 export const usePushNotifications = (axiosInstance: AxiosInstance) => {
+  const [shouldShowPrompt, setShouldShowPrompt] = useState(false);
+
   useEffect(() => {
     async function setup() {
       try {
         const registration = await registerServiceWorker();
-        const sub = await registration.pushManager.getSubscription();
+        const existingSub = await registration.pushManager.getSubscription();
 
-        if (!sub) {
+        if (existingSub) {
+          await axiosInstance.post("/api/notification/subscribe", existingSub);
+          console.log("✅ Subscription re-sent to backend.");
+          setShouldShowPrompt(false);
+          return;
+        }
+
+        if (Notification.permission === "default") {
+          setShouldShowPrompt(true);
+        } else if (Notification.permission === "granted") {
           const newSub = await subscribeUser(registration, axiosInstance);
-          console.log("✅ Subscribed and sent to server:", newSub);
-        } else {
-          await axiosInstance.post("/api/notification/subscribe", sub);
-          console.log("✅ Existing subscription updated.");
+          console.log("✅ Subscribed:", newSub);
+          setShouldShowPrompt(false);
         }
       } catch (err) {
         console.error("❌ Push setup failed:", err);
@@ -27,4 +36,6 @@ export const usePushNotifications = (axiosInstance: AxiosInstance) => {
 
     setup();
   }, [axiosInstance]);
+
+  return { shouldShowPrompt };
 };

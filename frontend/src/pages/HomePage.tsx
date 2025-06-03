@@ -6,6 +6,7 @@ import {
   Grid,
   GridItem,
   LinkBox,
+  Button,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { FaBirthdayCake, FaCalendarAlt, FaQuoteLeft } from "react-icons/fa";
@@ -17,9 +18,16 @@ import { useBreakpointValue } from "@chakra-ui/react";
 
 const HomePage = () => {
   const axiosPrivate = useAxiosPrivate();
-  usePushNotifications(axiosPrivate);
+  const { shouldShowPrompt } = usePushNotifications(axiosPrivate);
   const navigate = useNavigate();
   const showContactsList = useBreakpointValue({ base: false, lg: true });
+
+  const handleEnableNotifications = async () => {
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      location.reload();
+    }
+  };
 
   return (
     <Grid
@@ -126,6 +134,12 @@ const HomePage = () => {
               Tap to see who’s celebrating today!
             </Text>
           </Box>
+
+          {shouldShowPrompt && (
+            <Button colorScheme="blue" onClick={handleEnableNotifications}>
+              Enable Notifications
+            </Button>
+          )}
 
           <Box mt={10} textAlign="center" maxW="600px">
             <FaQuoteLeft size="30px" color="gray" />
