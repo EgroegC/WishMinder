@@ -10,7 +10,6 @@ class ContactService {
   }
 
   normalizePhoneNumber = (phone) => {
-    if (!phone) return '';
     return phone.trim().replace(/(?!^\+)[^\d]/g, '');
   };
 
@@ -56,9 +55,7 @@ class ContactService {
   
       if (c.birthdate) {
         const date = new Date(c.birthdate);
-        if (!isNaN(date)) {
-          corrected.birthdate = date;
-        }
+        corrected.birthdate = date;
       }
   
       return corrected;

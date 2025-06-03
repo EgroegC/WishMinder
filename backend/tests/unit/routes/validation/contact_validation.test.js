@@ -1,4 +1,5 @@
 const {validateContact} = require('../../../../src/routes/validation/contact_validation');
+const { validateContactsBatch } = require('../../../../src/routes/validation/contact_validation');
 
 const oneYearAgo = new Date();
 oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
@@ -177,5 +178,29 @@ describe('validate_contact', () => {
       });
   });
 })
+
+describe('validateContactsBatch', () => {
+  const validContact = {
+    name: 'John',
+    surname: 'Doe',
+    email: 'johndoe@example.com',
+    phone: '+1234567890',
+    birthdate: '1990-01-01'
+  };
+
+  it('should return true if all contacts are valid', () => {
+    const contacts = [validContact, validContact];
+    const result = validateContactsBatch(contacts);
+    expect(result).toBe(true);
+  });
+
+  it('should return false if one contact is invalid', () => {
+    const invalidContact = { ...validContact, phone: 'invalid' };
+    const contacts = [validContact, invalidContact];
+    const result = validateContactsBatch(contacts);
+    expect(result).toBe(false);
+  });
+});
+
 
 
