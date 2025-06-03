@@ -61,31 +61,31 @@ describe('validate_subscription', () => {
     });
 
     it("should return an error if p256dh is not a string", () => {
-        keys.p256dh = 12345;
-        const { error } = validatePushSubscription({ endpoint, expirationTime, keys });
-        expect(error).toBeDefined();
-        expect(error.details[0].message).toMatch(/p256dh.*string/i);
+      keys.p256dh = 12345;
+      const { error } = validatePushSubscription({ endpoint, expirationTime, keys });
+      expect(error).toBeDefined();
+      expect(error.details[0].message).toMatch(/p256dh.*string/i);
     });
-  
+
     it("should return an error if p256dh is an empty string", () => {
-        keys.p256dh = "";
-        const { error } = validatePushSubscription({ endpoint, expirationTime, keys });
-        expect(error).toBeDefined();
-        expect(error.details[0].message).toMatch(/p256dh.*not allowed to be empty/i);
+      keys.p256dh = "";
+      const { error } = validatePushSubscription({ endpoint, expirationTime, keys });
+      expect(error).toBeDefined();
+      expect(error.details[0].message).toMatch(/p256dh.*not allowed to be empty/i);
     });
 
     it("should return an error if auth is not a string", () => {
-        keys.auth = { token: "abc" };
-        const { error } = validatePushSubscription({ endpoint, expirationTime, keys });
-        expect(error).toBeDefined();
-        expect(error.details[0].message).toMatch(/auth.*string/i);
+      keys.auth = { token: "abc" };
+      const { error } = validatePushSubscription({ endpoint, expirationTime, keys });
+      expect(error).toBeDefined();
+      expect(error.details[0].message).toMatch(/auth.*string/i);
     });
-  
+
     it("should return an error if auth is an empty string", () => {
-        keys.auth = "";
-        const { error } = validatePushSubscription({ endpoint, expirationTime, keys });
-        expect(error).toBeDefined();
-        expect(error.details[0].message).toMatch(/auth.*not allowed to be empty/i);
+      keys.auth = "";
+      const { error } = validatePushSubscription({ endpoint, expirationTime, keys });
+      expect(error).toBeDefined();
+      expect(error.details[0].message).toMatch(/auth.*not allowed to be empty/i);
     });
   });
 });

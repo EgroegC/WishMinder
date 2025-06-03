@@ -1,4 +1,4 @@
-const {validateContact} = require('../../../../src/routes/validation/contact_validation');
+const { validateContact } = require('../../../../src/routes/validation/contact_validation');
 const { validateContactsBatch } = require('../../../../src/routes/validation/contact_validation');
 
 const oneYearAgo = new Date();
@@ -25,8 +25,8 @@ describe('validate_contact', () => {
     });
 
     it("should validate contact without birthdate", () => {
-        const { error } = validateContact({ name, surname, email, phone });
-        expect(error).toBeUndefined();
+      const { error } = validateContact({ name, surname, email, phone });
+      expect(error).toBeUndefined();
     });
   });
 
@@ -136,19 +136,19 @@ describe('validate_contact', () => {
     });
 
     it('should return an error if phone starts with 0', () => {
-        phone = "+0123425";
-  
-        const { error } = validateContact({ name, surname, email, phone, birthdate });
-        expect(error).toBeDefined();
-        expect(error.details[0].message).toMatch(/phone.* valid/i);
+      phone = "+0123425";
+
+      const { error } = validateContact({ name, surname, email, phone, birthdate });
+      expect(error).toBeDefined();
+      expect(error.details[0].message).toMatch(/phone.* valid/i);
     });
 
     it('should return an error if phone is non numeric', () => {
-        phone = "+0123bb25";
-  
-        const { error } = validateContact({ name, surname, email, phone, birthdate });
-        expect(error).toBeDefined();
-        expect(error.details[0].message).toMatch(/phone.* valid/i);
+      phone = "+0123bb25";
+
+      const { error } = validateContact({ name, surname, email, phone, birthdate });
+      expect(error).toBeDefined();
+      expect(error.details[0].message).toMatch(/phone.* valid/i);
     });
   });
 
@@ -162,20 +162,20 @@ describe('validate_contact', () => {
     });
 
     it("Should return an error if birthdate is not a valid Date", () => {
-        birthdate = new Date();
-  
-        const { error } = validateContact({ name, surname, email, phone, birthdate });
-        expect(error).toBeDefined();
-        expect(error.details[0].message).toMatch(/birthdate.* at least one/i);
+      birthdate = new Date();
+
+      const { error } = validateContact({ name, surname, email, phone, birthdate });
+      expect(error).toBeDefined();
+      expect(error.details[0].message).toMatch(/birthdate.* at least one/i);
     });
 
     it("Should return an error if birthdate is not a parsable date ", () => {
-        birthdate = 874373278; 
-      
-        const { error } = validateContact({ name, surname, email, phone, birthdate });
-        expect(error).toBeDefined();
-        expect(error.details[0].message).toMatch(/birthdate.* valid/i);
-      });
+      birthdate = 874373278;
+
+      const { error } = validateContact({ name, surname, email, phone, birthdate });
+      expect(error).toBeDefined();
+      expect(error.details[0].message).toMatch(/birthdate.* valid/i);
+    });
   });
 })
 

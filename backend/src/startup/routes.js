@@ -8,7 +8,7 @@ const webpush = require('../routes/web_push');
 const todays_celebrations = require('../routes/todays_celebrations');
 const messages = require('../routes/messages');
 
-module.exports = function(app){
+module.exports = function (app) {
     app.use(express.json());
     app.use('/api/users', users);
     app.use('/api/auth', auth);

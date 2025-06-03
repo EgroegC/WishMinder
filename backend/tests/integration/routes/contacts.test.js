@@ -13,15 +13,15 @@ const { insertTestNameday, clearNamedaysAndNames } = require('../../helpers/name
 
 jest.mock('../../../src/config/rollbar', () => {
     const mRollbar = {
-      error: jest.fn()
+        error: jest.fn()
     };
     return () => mRollbar;
 });
-  
+
 jest.mock('../../../src/config/logger', () => {
     return () => ({
-      error: jest.fn(),
-      info: jest.fn()
+        error: jest.fn(),
+        info: jest.fn()
     });
 });
 
@@ -79,7 +79,7 @@ describe('/api/contacts', () => {
     });
 
     describe('POST /', () => {
-        itShouldRequireAuth(() => server, '/api/contacts', 'post', {...contactPayload});
+        itShouldRequireAuth(() => server, '/api/contacts', 'post', { ...contactPayload });
 
         it('should return 422 if validation fails', async () => {
             const res = await execPost({ name: '', phone: 'abc' });
@@ -119,7 +119,7 @@ describe('/api/contacts', () => {
         });
 
         it('should return 500 when an unhandled error occurs', async () => {
-            jest.spyOn(Contact , 'findByPhoneNumber').mockImplementation(() => {
+            jest.spyOn(Contact, 'findByPhoneNumber').mockImplementation(() => {
                 throw new Error('Unexpected failure');
             });
             const res = await execPost(contactPayload);
@@ -139,7 +139,7 @@ describe('/api/contacts', () => {
         });
 
         it('should return 200 and all contacts for the user', async () => {
-            await execPost({ ...contactPayload});
+            await execPost({ ...contactPayload });
 
             const res = await execGet();
 
@@ -157,7 +157,7 @@ describe('/api/contacts', () => {
         });
 
         it('should return 500 when an unhandled error occurs', async () => {
-            jest.spyOn(Contact , 'getAllContacts').mockImplementation(() => {
+            jest.spyOn(Contact, 'getAllContacts').mockImplementation(() => {
                 throw new Error('Unexpected failure');
             });
             const res = await execGet();
@@ -186,7 +186,7 @@ describe('/api/contacts', () => {
         });
 
         it('should return 500 when an unhandled error occurs', async () => {
-            jest.spyOn(Contact , 'deleteContact').mockImplementation(() => {
+            jest.spyOn(Contact, 'deleteContact').mockImplementation(() => {
                 throw new Error('Unexpected failure');
             });
             const res = await request(server)
@@ -198,7 +198,7 @@ describe('/api/contacts', () => {
     });
 
     describe('PUT /:id', () => {
-        itShouldRequireAuth(() => server, '/api/contacts/1', 'put', {...contactPayload, name: 'Upd'});
+        itShouldRequireAuth(() => server, '/api/contacts/1', 'put', { ...contactPayload, name: 'Upd' });
 
         it('should return 404 if contact not found', async () => {
             const res = await request(server)
@@ -304,7 +304,7 @@ describe('/api/contacts', () => {
             expect(res.body.message).toBe('Contacts imported successfully.');
             expect(res.body.insertedCount).toBeGreaterThanOrEqual(1);
             expect(res.body.updatedCount).toBe(0);
-            
+
             const savedContacts = await Contact.getAllContacts(user.id);
             expect(savedContacts.length).toBeGreaterThanOrEqual(1);
             const saved = savedContacts[0];
@@ -331,12 +331,12 @@ describe('/api/contacts', () => {
 
         it('should return 500 when an unhandled error occurs', async () => {
             const contactService = getContactService();
-            jest.spyOn(contactService , 'importContacts').mockImplementation(() => {
-              throw new Error('Unexpected failure');
+            jest.spyOn(contactService, 'importContacts').mockImplementation(() => {
+                throw new Error('Unexpected failure');
             });
 
-            const newContact = [ contactPayload ];
-          
+            const newContact = [contactPayload];
+
             const res = await execImport(newContact);
             expect(res.status).toBe(500);
             contactService.importContacts.mockRestore();

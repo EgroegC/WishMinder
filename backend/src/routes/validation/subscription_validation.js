@@ -26,7 +26,7 @@ function validateNotificationPayload(payload) {
 }
 
 module.exports = {
-    validatePushSubscription,
-    validateNotificationPayload
-  };
-  
+  validatePushSubscription,
+  validateNotificationPayload
+};
+

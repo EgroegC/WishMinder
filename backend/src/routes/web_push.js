@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const {authenticateToken} = require('../middleware/authorization');
+const { authenticateToken } = require('../middleware/authorization');
 const PushSubscription = require('../models/push_subscription');
 const logger = require('../config/logger')();
 const rollbar = require('../config/rollbar')();
 const sendNotification = require('../utils/sendNotification');
-const {validatePushSubscription, 
-  validateNotificationPayload} = require('./validation/subscription_validation');
+const { validatePushSubscription,
+  validateNotificationPayload } = require('./validation/subscription_validation');
 
 /**
  * @swagger
@@ -41,10 +41,10 @@ const {validatePushSubscription,
  *         description: Internal server error
  */
 router.post('/subscribe', authenticateToken, express.json(), async (req, res) => {
-  
+
   const { error } = validatePushSubscription(req.body);
   if (error) return res.status(400).send({ message: error.details[0].message });
-  
+
   const subscription = req.body;
   const userId = req.user.id;
   const userAgent = req.headers['user-agent'];
@@ -78,14 +78,14 @@ router.post('/subscribe', authenticateToken, express.json(), async (req, res) =>
  *         description: Something went wrong
  */
 router.post('/send', authenticateToken, express.json(), async (req, res) => {
-  
+
   const { error } = validateNotificationPayload(req.body);
   if (error) return res.status(422).send({ message: error.details[0].message });
-  
+
   const user_id = req.user.id;
   const payload = JSON.stringify(req.body);
 
-  try { 
+  try {
     await sendNotification(user_id, payload);
     res.status(200).json({ message: 'Notification process completed' });
   } catch (err) {

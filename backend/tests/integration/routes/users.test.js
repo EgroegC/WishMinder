@@ -3,47 +3,47 @@ const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../../../src/models/user');
-const {itShouldRequireAuth} = require('../../helpers/auth_test_helper');
+const { itShouldRequireAuth } = require('../../helpers/auth_test_helper');
 
 describe('/api/users', () => {
-    beforeEach( () => { server = require('../../../src/index'); } );
-    afterEach( () => { server.close(); } );
+    beforeEach(() => { server = require('../../../src/index'); });
+    afterEach(() => { server.close(); });
 
     describe('GET /me', () => {
         let token;
         let user;
-    
+
         const exec = async () => {
             return request(server)
-            .get('/api/users/me')
-            .set('Authorization', `Bearer ${token}`);
-        } 
-    
-        beforeEach( async () => {
+                .get('/api/users/me')
+                .set('Authorization', `Bearer ${token}`);
+        }
+
+        beforeEach(async () => {
             const hashedPassword = await bcrypt.hash('12345', 10);
-            user = new User( {name: 'TestUser', email: 'test_user@gmail.com', password: hashedPassword} );
+            user = new User({ name: 'TestUser', email: 'test_user@gmail.com', password: hashedPassword });
             await user.save();
-            
+
             token = jwt.sign({ id: user.id }, process.env.JWT_ACCESS_TOKEN);
         });
-    
-        afterEach( async () => {
+
+        afterEach(async () => {
             await User.delete('test_user@gmail.com');
         })
-    
+
         itShouldRequireAuth(() => server, '/api/users/me', 'get');
 
         it('should return 404 if token does not corespond to a existing user', async () => {
-            token = jwt.sign({ id: user.id+1 }, process.env.JWT_ACCESS_TOKEN);
-    
+            token = jwt.sign({ id: user.id + 1 }, process.env.JWT_ACCESS_TOKEN);
+
             const res = await exec();
-    
+
             expect(res.status).toBe(404);
         });
-    
+
         it('should return user_id, name and email if token is valid', async () => {
             const res = await exec();
-    
+
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('id', user.id);
             expect(res.body).toHaveProperty('name', user.name);
@@ -54,7 +54,7 @@ describe('/api/users', () => {
             jest.spyOn(User, 'findById').mockRejectedValue(
                 new Error('Unexpected failure')
             );
-            
+
             const res = await exec();
             expect(res.status).toBe(500);
             User.findById.mockRestore();
@@ -64,20 +64,20 @@ describe('/api/users', () => {
     describe('POST /', () => {
 
         let name, email, password;
-        
+
         const exec = async () => {
             return request(server)
                 .post('/api/users/')
                 .send({ name, email, password });
         }
 
-        beforeEach( async () => {
+        beforeEach(async () => {
             name = 'TestUser';
             email = 'test_user@gmail.com';
             password = '12345';
         });
 
-        afterEach( async () => {
+        afterEach(async () => {
             await User.delete('test_user@gmail.com');
         });
 
@@ -91,7 +91,7 @@ describe('/api/users', () => {
 
         it('should return 400 if user is already registered', async () => {
             const hashedPassword = await bcrypt.hash('12345', 10);
-            const user = new User( {name: 'TestUser', email: 'test_user@gmail.com', password: hashedPassword} );
+            const user = new User({ name: 'TestUser', email: 'test_user@gmail.com', password: hashedPassword });
             await user.save();
 
             const res = await exec();
@@ -113,7 +113,7 @@ describe('/api/users', () => {
             jest.spyOn(User, 'findByEmail').mockRejectedValue(
                 new Error('Unexpected failure')
             );
-            
+
             const res = await exec();
             expect(res.status).toBe(500);
             User.findByEmail.mockRestore();

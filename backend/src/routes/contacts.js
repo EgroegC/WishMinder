@@ -1,9 +1,9 @@
-const {authenticateToken} = require('../middleware/authorization');
+const { authenticateToken } = require('../middleware/authorization');
 const _ = require('lodash');
-const { validateContact, validateContactsBatch} = require('./validation/contact_validation');
-const Contact = require('../models/contact'); 
+const { validateContact, validateContactsBatch } = require('./validation/contact_validation');
+const Contact = require('../models/contact');
 const ContactService = require('../services/contact_service');
-const NamedayService = require('../services/namedays_service'); 
+const NamedayService = require('../services/namedays_service');
 const { getContactService, setContactService } = require('../utils/contactServiceHolder');
 const express = require('express');
 const router = express.Router();
@@ -45,25 +45,25 @@ const router = express.Router();
  *         description: Internal server error
  */
 router.post('/import/vcf', authenticateToken, async (req, res) => {
-    let contacts = req.body.contacts;
-    const userId = req.user.id;
-    
-    if (!Array.isArray(contacts) || contacts.length === 0) 
-      return res.status(422).json({ message: 'Invalid request: contacts must be a non-empty array.' });
+  let contacts = req.body.contacts;
+  const userId = req.user.id;
 
-    contacts = getContactService().correctContacts(contacts, userId);
+  if (!Array.isArray(contacts) || contacts.length === 0)
+    return res.status(422).json({ message: 'Invalid request: contacts must be a non-empty array.' });
 
-    if (!validateContactsBatch(contacts)) 
-      return res.status(422).json({message: 'One or more contacts failed validation.'});
-    
-    const { inserted, updated } = await getContactService().importContacts(contacts, userId);
-    
-    res.status(201).json({
-      message: 'Contacts imported successfully.',
-      insertedCount: inserted.length,
-      updatedCount: updated.length,
-      updated,
-    });
+  contacts = getContactService().correctContacts(contacts, userId);
+
+  if (!validateContactsBatch(contacts))
+    return res.status(422).json({ message: 'One or more contacts failed validation.' });
+
+  const { inserted, updated } = await getContactService().importContacts(contacts, userId);
+
+  res.status(201).json({
+    message: 'Contacts imported successfully.',
+    insertedCount: inserted.length,
+    updatedCount: updated.length,
+    updated,
+  });
 });
 
 /**
@@ -93,18 +93,18 @@ router.post('/import/vcf', authenticateToken, async (req, res) => {
  */
 router.post('/', authenticateToken, async (req, res) => {
 
-    const { error } = validateContact(req.body); 
-    if (error) return res.status(422).send(error.details[0].message);
+  const { error } = validateContact(req.body);
+  if (error) return res.status(422).send(error.details[0].message);
 
-    let user = await Contact.findByPhoneNumber(req.user.id, req.body.phone);
-    if (user) return res.status(400).send('The Contact Already Exists.');
+  let user = await Contact.findByPhoneNumber(req.user.id, req.body.phone);
+  if (user) return res.status(400).send('The Contact Already Exists.');
 
-    req.body.user_id = req.user.id;
-    const contact = new Contact(req.body);
+  req.body.user_id = req.user.id;
+  const contact = new Contact(req.body);
 
-    await contact.save();
-    
-    res.send(contact);
+  await contact.save();
+
+  res.send(contact);
 });
 
 /**
@@ -130,8 +130,8 @@ router.post('/', authenticateToken, async (req, res) => {
  */
 router.get('/', authenticateToken, async (req, res) => {
 
-    const contacts = await Contact.getAllContacts(req.user.id);
-    res.json(contacts);
+  const contacts = await Contact.getAllContacts(req.user.id);
+  res.json(contacts);
 });
 
 /**
@@ -202,10 +202,10 @@ router.delete('/:id', authenticateToken, async (req, res) => {
  */
 router.put("/:id", authenticateToken, async (req, res) => {
   const contactId = parseInt(req.params.id);
-  const userId = req.user.id; 
+  const userId = req.user.id;
 
-  const { error, value } = validateContact(req.body); 
-    if (error) return res.status(422).send(error.details[0].message);
+  const { error, value } = validateContact(req.body);
+  if (error) return res.status(422).send(error.details[0].message);
 
   const { name, surname, phone, email, birthdate } = value;
 

@@ -18,7 +18,7 @@ function getOrthodoxEaster(year) {
 
     // Convert the UTC date to local time by using the local timezone
     const localDate = new Date(easterUTC.toLocaleDateString("en-CA"));
-    
+
     return localDate; // Returns a Date object
 }
 

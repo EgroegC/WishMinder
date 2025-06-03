@@ -1,4 +1,4 @@
-const {authenticateToken} = require('../middleware/authorization');
+const { authenticateToken } = require('../middleware/authorization');
 const Messages = require('../models/messages');
 const express = require('express');
 const router = express.Router();
@@ -36,19 +36,19 @@ const router = express.Router();
  *         description: Internal server error
  */
 router.get('/', authenticateToken, async (req, res) => {
-    const { type } = req.query;
-  
-    if (!type || (type !== 'birthday' && type !== 'nameday')) {
-      return res.status(400).json({ error: "Invalid type" });
-    }
-  
-    const messages = await Messages.getAllMessages(type);
-  
-    if (!messages) {
-      throw new Error("Failed to retrieve messages");
-    }
-  
-    res.json(messages);
+  const { type } = req.query;
+
+  if (!type || (type !== 'birthday' && type !== 'nameday')) {
+    return res.status(400).json({ error: "Invalid type" });
+  }
+
+  const messages = await Messages.getAllMessages(type);
+
+  if (!messages) {
+    throw new Error("Failed to retrieve messages");
+  }
+
+  res.json(messages);
 });
 
 module.exports = router;

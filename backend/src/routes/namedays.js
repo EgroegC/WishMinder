@@ -1,5 +1,5 @@
-const {authenticateToken} = require('../middleware/authorization');
-const NamedayService = require('../services/namedays_service'); 
+const { authenticateToken } = require('../middleware/authorization');
+const NamedayService = require('../services/namedays_service');
 const express = require('express');
 const router = express.Router();
 

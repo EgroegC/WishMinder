@@ -9,7 +9,7 @@ function getGeorgeNameday(year) {
     const easterDate = getOrthodoxEaster(year);
     const april23 = new Date(year, 3, 23); // April is month 3 (0-based index)
 
-    if (april23 < new Date (easterDate)) {
+    if (april23 < new Date(easterDate)) {
         // If April 23 is before Easter, nameday is on Easter Monday
         const easterMonday = new Date(easterDate);
         easterMonday.setDate(easterMonday.getDate() + 1);
@@ -48,8 +48,8 @@ async function updateGeorgeNameday() {
             await pool.query(
                 "DELETE FROM namedays WHERE name_id = $1",
                 [nameId]
-              );
-              
+            );
+
             await pool.query(
                 "INSERT INTO namedays (name_id, nameday_date) VALUES ($1, $2)",
                 [nameId, georgeNameday]

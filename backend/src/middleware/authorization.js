@@ -4,12 +4,12 @@ const authenticateToken = (req, res, next) => {
     const token = req.header('Authorization')?.split(' ')[1];
     if (!token) return res.status(401).send('Access denied. No token provided.');
 
-    try{
+    try {
         const decoded = jwt.verify(token, process.env.JWT_ACCESS_TOKEN);
         req.user = decoded;
         next();
     }
-    catch(error){
+    catch (error) {
         if (error.name === 'TokenExpiredError') {
             return res.status(401).send('Access token expired.');
         } else {
@@ -25,7 +25,7 @@ const authenticateRefreshToken = (req, res, next) => {
     try {
         const user = jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN);
         req.user = user;
-        next();  
+        next();
     } catch (err) {
         if (err.name === 'TokenExpiredError') {
             return res.status(403).send('Refresh token expired.');

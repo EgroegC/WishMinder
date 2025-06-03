@@ -3,7 +3,7 @@ const config = require("config");
 
 const dbConfig = config.get("database");
 
-module.exports = function(){
+module.exports = function () {
   if (!process.env.DATABASE_PASSWORD) {
     throw new Error("FATAL ERROR: DATABASE_PASSWORD is not set in .env file");
   }

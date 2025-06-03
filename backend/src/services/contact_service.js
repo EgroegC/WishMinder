@@ -16,48 +16,48 @@ class ContactService {
   correctNameAndSurname(name, surname) {
     const normName = normalizeGreek(name);
     const normSurname = normalizeGreek(surname);
-  
+
     const nameMatch = this.normalizedMap.get(normName);
     const reverseNameMatch = this.normalizedMap.get(normSurname);
-  
+
     const isSwapped = !nameMatch && reverseNameMatch
-  
+
     if (isSwapped) {
       return {
         name: reverseNameMatch,
         surname: name,
       };
     }
-  
+
     return {
       name: nameMatch || name,
       surname: surname,
     };
   }
-  
+
   correctContacts(contacts) {
     return contacts.map((c) => {
-      if (!c.name || !c.surname || !c.phone) 
+      if (!c.name || !c.surname || !c.phone)
         return c;
 
       const phone = this.normalizePhoneNumber(c.phone);
       const { name, surname } = this.correctNameAndSurname(c.name, c.surname);
-  
+
       const corrected = {
         name,
         surname,
         phone,
       };
-  
+
       if (c.email && c.email.trim()) {
         corrected.email = c.email.trim();
       }
-  
+
       if (c.birthdate) {
         const date = new Date(c.birthdate);
         corrected.birthdate = date;
       }
-  
+
       return corrected;
     });
   }
@@ -119,7 +119,7 @@ class ContactService {
       return true;
     });
   };
-  
+
 }
 
 module.exports = ContactService;

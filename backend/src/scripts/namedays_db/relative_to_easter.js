@@ -40,7 +40,7 @@ async function updateSpecialNamedays() {
           "DELETE FROM namedays WHERE name_id = $1",
           [nameId]
         );
-        
+
         await pool.query(
           "INSERT INTO namedays (name_id, nameday_date) VALUES ($1, $2)",
           [nameId, formattedDate]

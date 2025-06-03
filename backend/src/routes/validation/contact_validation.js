@@ -14,13 +14,13 @@ function validateContact(contact) {
             .messages({
                 "string.pattern.base": "Phone number must be a valid format (e.g., +123456789 or 1234567890).",
                 "any.required": "Phone number is required."
-            }), 
+            }),
         birthdate: Joi.date().iso()
             .max(oneYearAgo)
             .messages({
-              'date.base': 'Birthdate must be a valid date.',
-              'date.format': 'Birthdate must be in ISO format (YYYY-MM-DD).',
-              'date.max': 'Birthdate must be at least one year before today.',
+                'date.base': 'Birthdate must be a valid date.',
+                'date.format': 'Birthdate must be in ISO format (YYYY-MM-DD).',
+                'date.max': 'Birthdate must be at least one year before today.',
             }),
     });
 
@@ -29,10 +29,10 @@ function validateContact(contact) {
 
 function validateContactsBatch(contacts) {
     for (const contact of contacts) {
-      const { error } = validateContact(contact);
-      if (error) return false; 
+        const { error } = validateContact(contact);
+        if (error) return false;
     }
     return true;
 }
 
-module.exports = {validateContact, validateContactsBatch};
+module.exports = { validateContact, validateContactsBatch };

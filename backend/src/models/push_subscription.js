@@ -1,7 +1,7 @@
 const pool = require("../config/db")();
 
 class PushSubscription {
-   
+
   static async removeOldSubscriptions(userId, userAgent, currentEndpoint) {
     await pool.query(
       `DELETE FROM push_subscriptions

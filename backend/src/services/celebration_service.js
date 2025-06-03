@@ -1,20 +1,20 @@
 const pool = require("../config/db")();
 
 class CelebrationService {
-  
-    static async getTodaysBirthdaysForUser(userId) {
-      const { rows } = await pool.query(`
+
+  static async getTodaysBirthdaysForUser(userId) {
+    const { rows } = await pool.query(`
         SELECT id, user_id, name, surname, phone, birthdate, created_at
         FROM contacts
         WHERE user_id = $1
           AND EXTRACT(MONTH FROM birthdate) = EXTRACT(MONTH FROM CURRENT_DATE)
           AND EXTRACT(DAY FROM birthdate) = EXTRACT(DAY FROM CURRENT_DATE)
       `, [userId]);
-      return rows;
-    }
-  
-    static async getTodaysNamedaysForUser(userId) {
-      const { rows } = await pool.query(`
+    return rows;
+  }
+
+  static async getTodaysNamedaysForUser(userId) {
+    const { rows } = await pool.query(`
         SELECT c.id, c.user_id, c.name, c.surname, c.phone, c.birthdate, nd.nameday_date, c.created_at
         FROM contacts c
         JOIN names n ON c.name = n.name
@@ -23,24 +23,24 @@ class CelebrationService {
           AND EXTRACT(MONTH FROM nd.nameday_date) = EXTRACT(MONTH FROM CURRENT_DATE)
           AND EXTRACT(DAY FROM nd.nameday_date) = EXTRACT(DAY FROM CURRENT_DATE)
       `, [userId]);
-      return rows;
-    }
+    return rows;
+  }
 
-    static async getTodaysCelebrationsForUser(userId) {
-        const birthdays = await CelebrationService.getTodaysBirthdaysForUser(userId);
-        const namedays = await CelebrationService.getTodaysNamedaysForUser(userId);
-    
-        const formattedBirthdays = birthdays.map(b => ({
-          ...b,
-          type: 'birthday'
-        }));
-    
-        const formattedNamedays = namedays.map(n => ({
-          ...n,
-          type: 'nameday'
-        }));
-    
-        return [...formattedBirthdays, ...formattedNamedays];
+  static async getTodaysCelebrationsForUser(userId) {
+    const birthdays = await CelebrationService.getTodaysBirthdaysForUser(userId);
+    const namedays = await CelebrationService.getTodaysNamedaysForUser(userId);
+
+    const formattedBirthdays = birthdays.map(b => ({
+      ...b,
+      type: 'birthday'
+    }));
+
+    const formattedNamedays = namedays.map(n => ({
+      ...n,
+      type: 'nameday'
+    }));
+
+    return [...formattedBirthdays, ...formattedNamedays];
   }
 }
 
