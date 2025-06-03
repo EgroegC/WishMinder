@@ -65,8 +65,10 @@ function TodaysCelebrations() {
       direction="column"
       gap={6}
       flexWrap="wrap"
-      maxW="48%"
+      w="100%"
+      maxW={{ base: "100%", md: "90%", lg: "60%" }}
       mx="auto"
+      px={4}
     >
       {error ? (
         <p style={{ color: "red" }}>{error}</p>

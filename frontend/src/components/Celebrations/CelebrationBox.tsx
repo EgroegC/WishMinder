@@ -15,7 +15,7 @@ const CelebrationBox = ({ heading, children }: Props) => {
         borderRadius="lg"
         boxShadow="md"
         w="100%"
-        maxW="1000px"
+        maxW={{ base: "100%", md: "90%", lg: "1000px" }}
       >
         <Heading size={"4xl"} mb={2} color="blue.500" textAlign="center">
           {heading}

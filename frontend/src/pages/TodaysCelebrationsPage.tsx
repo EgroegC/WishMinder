@@ -5,14 +5,16 @@ import TodaysCelebrations from "@/components/Celebrations/TodaysCelebrations";
 function TodaysCelebrationsPage() {
   return (
     <Grid
-      templateAreas={`"nav nav"
-                      "main main"`}
-      gridTemplateRows={"60px 1fr"}
-      gridTemplateColumns={"1fr"}
+      templateAreas={{
+        base: `"nav" "main"`,
+        lg: `"nav nav" "main main"`,
+      }}
+      gridTemplateRows="60px 1fr"
+      gridTemplateColumns={{ base: "1fr", lg: "1fr" }}
       minH="100vh"
     >
       {/* Navbar */}
-      <GridItem area="nav" p={-1} bg="white" boxShadow="sm">
+      <GridItem area="nav" p={0} bg="white" boxShadow="sm">
         <NavBar />
       </GridItem>
 
