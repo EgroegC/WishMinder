@@ -21,8 +21,9 @@ function BirthdayPage() {
         <NavBar />
       </GridItem>
 
-      <GridItem area="main" bg="gray.100" p={6}>
+      <GridItem area="main" bg="gray.100" p={3} overflowX="hidden">
         <Flex
+          w="100%"
           justifyContent="center"
           direction={"column"}
           gap={6}

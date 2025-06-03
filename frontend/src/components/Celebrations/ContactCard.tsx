@@ -35,44 +35,62 @@ const ContactCard = ({
     month: "short",
     day: "numeric",
   });
+
   const age = isBirthday
     ? currentYear - celebrationDate.getFullYear()
     : undefined;
 
   return (
-    <Box className="birthday-card">
+    <Box className="birthday-card" w="100%">
       <Flex
-        className="birthday-card-content"
-        justify="space-between"
+        direction={{ base: "column", md: "row" }}
         align="center"
+        justify={{ base: "center", md: "space-between" }}
+        wrap="wrap"
+        gap={{ base: 4, md: 0 }}
       >
-        <HStack minW="250px" gap={4} align="center">
+        {/* Left: Avatar + Name */}
+        <HStack minW="200px" gap={4} flexShrink={0}>
           <Box className="avatar-container">
             <FaUserCircle size="50px" color="gray" />
           </Box>
-          <Text className="contact-name" color={"black"}>
+          <Text className="contact-name" color="black">
             {contact.name} {contact.surname}
           </Text>
         </HStack>
 
-        <Flex direction="column" align="center" minW="100px">
-          <Text className="date-label">Date</Text>
-          <Text className="date-value">{formattedDate}</Text>
+        {/* Center: Date & Turns */}
+        <Flex
+          align="center"
+          justify="center"
+          flexGrow={1}
+          gap={10}
+          mt={{ base: 2, md: 0 }}
+        >
+          <Flex direction="column" align="center" minW="80px">
+            <Text className="date-label">Date</Text>
+            <Text className="date-value">{formattedDate}</Text>
+          </Flex>
+
+          {isBirthday && (
+            <Flex direction="column" align="center" minW="80px">
+              <Text className="age-label">Turns</Text>
+              <Badge className="age-badge">{age} years</Badge>
+            </Flex>
+          )}
         </Flex>
 
-        {isBirthday && (
-          <Flex direction="column" align="center" minW="100px" mx={10}>
-            <Text className="age-label">Turns</Text>
-            <Badge className="age-badge">{age} years</Badge>
-          </Flex>
-        )}
-
-        <HStack gap={6}>
+        {/* Right: Buttons */}
+        <HStack gap={3} mt={{ base: 4, md: 0 }}>
           {buttons.map((btn, idx) => (
             <Button
               key={idx}
+              size="sm"
               borderColor={colorStyles[btn.variant]}
-              _hover={{ backgroundColor: colorStyles[btn.variant] }}
+              _hover={{
+                backgroundColor: colorStyles[btn.variant],
+                color: "white",
+              }}
               className={`listrow_button_${idx}`}
               onClick={() => btn.onClick(contact)}
             >
