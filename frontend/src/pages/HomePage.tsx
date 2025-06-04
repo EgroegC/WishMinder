@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { FaBirthdayCake, FaCalendarAlt, FaQuoteLeft } from "react-icons/fa";
+import { MdNotifications } from "react-icons/md";
 import NavBar from "../components/NavBar/NavBar";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
@@ -136,8 +137,25 @@ const HomePage = () => {
           </Box>
 
           {shouldShowPrompt && (
-            <Button colorScheme="blue" onClick={handleEnableNotifications}>
-              Enable Notifications
+            <Button
+              onClick={handleEnableNotifications}
+              colorScheme="blue"
+              size="lg"
+              variant="solid"
+              borderRadius="md"
+              boxShadow="sm"
+              px={6}
+              gap={2}
+              _hover={{
+                transform: "translateY(-2px)",
+                boxShadow: "md",
+              }}
+              _active={{
+                transform: "translateY(0)",
+                boxShadow: "sm",
+              }}
+            >
+              Activate Notifications <MdNotifications />
             </Button>
           )}
 
