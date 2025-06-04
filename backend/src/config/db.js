@@ -13,7 +13,7 @@ module.exports = function () {
   return new Pool({
     host: dbConfig.host,
     port: dbConfig.port,
-    user: dbConfig.user,
+    user: isProduction ? process.env.DATABASE_USER : dbConfig.user,
     password: process.env.DATABASE_PASSWORD,
     database: dbConfig.name,
     ssl: isProduction ? { rejectUnauthorized: false } : false
