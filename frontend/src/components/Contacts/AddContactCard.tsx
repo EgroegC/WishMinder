@@ -10,8 +10,8 @@ interface Duplicates {
 }
 
 interface PartialContact {
-  name: string;
-  surname: string;
+  name?: string;
+  surname?: string;
   phone: string;
   email?: string;
   birthdate?: Date;
@@ -110,31 +110,35 @@ const parseVcfToContacts = (vcfText: string): PartialContact[] => {
   const cards = vcfText.split("BEGIN:VCARD").slice(1);
 
   for (const card of cards) {
-    let name = "";
-    let surname = "";
-    let phone = "";
+    let name: string | undefined;
+    let surname: string | undefined;
+    let phone: string | undefined;
     let email: string | undefined;
     let birthdate: Date | undefined;
 
     const lines = card.split("\n").map((line) => line.trim());
 
     for (const line of lines) {
-      if (line.startsWith("FN:")) {
+      if (line.startsWith("FN:") && !name && !surname) {
         const fullName = line.replace("FN:", "").trim();
         const parts = fullName.split(" ");
-        name = parts[0];
-        surname = parts.slice(1).join(" ");
+        if (parts.length > 0 && parts[0]) name = parts[0];
+        if (parts.length > 1) surname = parts.slice(1).join(" ").trim() || undefined;
       }
 
-      if (line.startsWith("TEL")) {
+      if (line.startsWith("N:") && !name && !surname) {
+        const parts = line.replace("N:", "").split(";");
+        if (parts[0]) surname = parts[0].trim() || undefined;
+        if (parts[1]) name = parts[1].trim() || undefined;
+      }
+
+      if (line.startsWith("TEL") && !phone) {
         const telParts = line.split(":");
-        if (telParts.length > 1) {
-          phone = telParts[1].trim();
-        }
+        if (telParts[1]) phone = telParts[1].trim() || undefined;
       }
 
-      if (line.startsWith("EMAIL:")) {
-        email = line.replace("EMAIL:", "").trim();
+      if (line.startsWith("EMAIL:") && !email) {
+        email = line.replace("EMAIL:", "").trim() || undefined;
       }
 
       if (line.startsWith("BDAY:")) {
@@ -146,7 +150,7 @@ const parseVcfToContacts = (vcfText: string): PartialContact[] => {
       }
     }
 
-    if (name && surname && phone) {
+    if ((name || surname) && phone) {
       contacts.push({
         name,
         surname,
@@ -159,5 +163,6 @@ const parseVcfToContacts = (vcfText: string): PartialContact[] => {
 
   return contacts;
 };
+
 
 export default AddContactCard;
