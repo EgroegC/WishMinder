@@ -10,12 +10,18 @@ const AlertMessage = ({
   message: string;
 }) => {
   return (
-    <div>
+    <div style={{ maxWidth: "100%", overflow: "hidden" }}>
       <Alert.Root status={status}>
         <Alert.Indicator />
         <Alert.Content>
-          <Alert.Title>{title}</Alert.Title>
-          <Alert.Description>{message}</Alert.Description>
+          {title && <Alert.Title>{title}</Alert.Title>}
+          <Alert.Description
+            whiteSpace="pre-wrap"
+            wordBreak="break-word"
+            overflowWrap="break-word"
+          >
+            {message}
+          </Alert.Description>
         </Alert.Content>
       </Alert.Root>
     </div>
