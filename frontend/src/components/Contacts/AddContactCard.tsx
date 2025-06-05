@@ -47,7 +47,7 @@ const AddContactCard = ({
     }
 
     axiosPrivate
-      .post("/api/contacts/import/vcf", {
+      .post("/api/contacts/batch", {
         contacts,
       })
       .then((res) => {
