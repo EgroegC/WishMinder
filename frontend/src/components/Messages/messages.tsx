@@ -54,7 +54,9 @@ function Messages() {
               className="message-box"
               onClick={() => handleSelectMessage(msg.text)}
             >
-              <Text>{msg.text}</Text>
+              <Text whiteSpace="pre-wrap" wordBreak="break-word">
+                {msg.text}
+              </Text>
             </Box>
           ))}
           <Box

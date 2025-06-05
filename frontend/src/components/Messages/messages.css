@@ -1,45 +1,50 @@
 .messages-container {
-    padding: 1.5rem;
-    gap: 1.5rem;
-  }
-  
-  .header {
-    display: flex;
-    color: black;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  
-  .back-button {
-    margin-right: 1rem;
-    border-radius: 9999px; /* full */
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  }
-  
-  .back-button:hover {
-    transform: scale(1.05);
-    box-shadow: var(--chakra-shadows-lg);
-  }
-  
-  .message-box {
-    background-color: white;
-    border-radius: 1rem;
-    padding: 1rem;
-    color: black;
-    height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    box-shadow: var(--chakra-shadows-md);
-    transition: all 0.2s ease-in-out;
-  }
-  
-  .message-box:hover {
-    cursor: pointer;
-    background-color: var(--chakra-colors-gray-100);
-    transform: scale(1.03);
-  }
-  
+  padding: 1.5rem;
+  gap: 1.5rem;
+}
+
+.header {
+  display: flex;
+  color: black;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.back-button {
+  margin-right: 1rem;
+  border-radius: 9999px;
+  /* full */
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.back-button:hover {
+  transform: scale(1.05);
+  box-shadow: var(--chakra-shadows-lg);
+}
+
+.message-box {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 1rem;
+  color: black;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: var(--chakra-shadows-md);
+  transition: all 0.2s ease-in-out;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  overflow: hidden;
+}
+
+
+.message-box:hover {
+  cursor: pointer;
+  background-color: var(--chakra-colors-gray-100);
+  transform: scale(1.03);
+}
