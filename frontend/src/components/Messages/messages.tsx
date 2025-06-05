@@ -3,6 +3,7 @@ import { Box, Flex, Text, SimpleGrid, Heading } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import "./messages.css";
+import LoadingIndicator from "../Loading/LoadingIndicator";
 
 interface Message {
   id: number;
@@ -11,6 +12,7 @@ interface Message {
 
 function Messages() {
   const axiosPrivate = useAxiosPrivate();
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
 
   const { type, phone } = location.state as {
@@ -21,10 +23,12 @@ function Messages() {
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
+    setLoading(true);
     axiosPrivate
       .get<Message[]>(`/api/messages?type=${type}`)
       .then((res) => setMessages(res.data))
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
   }, [axiosPrivate, type]);
 
   const handleSelectMessage = (messageText: string) => {
@@ -40,25 +44,28 @@ function Messages() {
           Choose a {type === "birthday" ? "Birthday" : "Nameday"} Message
         </Heading>
       </div>
-
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={4}>
-        {messages.map((msg) => (
+      {loading ? (
+        <LoadingIndicator />
+      ) : (
+        <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={4}>
+          {messages.map((msg) => (
+            <Box
+              key={msg.id}
+              className="message-box"
+              onClick={() => handleSelectMessage(msg.text)}
+            >
+              <Text>{msg.text}</Text>
+            </Box>
+          ))}
           <Box
-            key={msg.id}
+            key={"text"}
             className="message-box"
-            onClick={() => handleSelectMessage(msg.text)}
+            onClick={() => handleSelectMessage("")}
           >
-            <Text>{msg.text}</Text>
+            <Text>Add your own message</Text>
           </Box>
-        ))}
-        <Box
-          key={"text"}
-          className="message-box"
-          onClick={() => handleSelectMessage("")}
-        >
-          <Text>Add your own message</Text>
-        </Box>
-      </SimpleGrid>
+        </SimpleGrid>
+      )}
     </Flex>
   );
 }
