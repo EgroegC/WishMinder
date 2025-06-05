@@ -10,6 +10,10 @@ module.exports = function () {
 
   const isProduction = process.env.NODE_ENV === 'production';
 
+  if (isProduction && !process.env.DATABASE_USER) {
+    throw new Error("FATAL ERROR: DATABASE_USER is not set in .env file");
+  }
+
   return new Pool({
     host: dbConfig.host,
     port: dbConfig.port,
