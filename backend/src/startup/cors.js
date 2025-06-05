@@ -2,7 +2,9 @@ const cors = require("cors");
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://lovely-puffpuff-4a6e3e.netlify.app'
+  'https://lovely-puffpuff-4a6e3e.netlify.app',
+  'http://localhost:3000',
+  'https://wishminder.onrender.com'
 ];
 
 module.exports = function (app) {

@@ -1,11 +1,11 @@
-const normalizeGreek = require('../utils/normalizeGreekNames');
+const normalizeName = require('../utils/normalizeName');
 const pool = require('../config/db')();
 
 class ContactService {
-  constructor(knownGreekNames) {
+  constructor(knownNames) {
     this.normalizedMap = new Map();
-    knownGreekNames.forEach((name) => {
-      this.normalizedMap.set(normalizeGreek(name), name);
+    knownNames.forEach((name) => {
+      this.normalizedMap.set(normalizeName(name), name);
     });
   }
 
@@ -13,9 +13,9 @@ class ContactService {
     return phone.trim().replace(/(?!^\+)[^\d]/g, '');
   };
 
-  correctNameAndSurname(name, surname) {
-    const normName = normalizeGreek(name);
-    const normSurname = normalizeGreek(surname);
+  normalizeAndResolveNameOrder(name, surname) {
+    const normName = normalizeName(name || "");
+    const normSurname = normalizeName(surname || "");
 
     const nameMatch = this.normalizedMap.get(normName);
     const reverseNameMatch = this.normalizedMap.get(normSurname);
@@ -35,27 +35,28 @@ class ContactService {
     };
   }
 
-  correctContacts(contacts) {
+  normalizeContacts(contacts) {
     return contacts.map((c) => {
-      if (!c.name || !c.surname || !c.phone)
-        return c;
+      const hasNameOrSurname = !!(c.name || c.surname);
+      const hasPhone = !!c.phone;
 
-      const phone = this.normalizePhoneNumber(c.phone);
-      const { name, surname } = this.correctNameAndSurname(c.name, c.surname);
+      if (!hasNameOrSurname || !hasPhone) return c;
+
+      const { name, surname } = this.normalizeAndResolveNameOrder(c.name, c.surname);
 
       const corrected = {
-        name,
-        surname,
-        phone,
+        phone: this.normalizePhoneNumber(c.phone),
       };
 
-      if (c.email && c.email.trim()) {
+      if (name) corrected.name = name;
+      if (surname) corrected.surname = surname;
+
+      if (c.email?.trim()) {
         corrected.email = c.email.trim();
       }
 
       if (c.birthdate) {
-        const date = new Date(c.birthdate);
-        corrected.birthdate = date;
+        corrected.birthdate = new Date(c.birthdate);
       }
 
       return corrected;

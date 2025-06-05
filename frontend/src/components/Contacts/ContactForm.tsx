@@ -3,39 +3,55 @@ import { FieldValues, useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const schema = z.object({
-  name: z.string().min(3, { message: "Name must be at least 3 characters." }),
-  surname: z
-    .string()
-    .min(3, { message: "Surname must be at least 3 characters." }),
+const schema = z
+  .object({
+    name: z
+      .string()
+      .transform((val) => val?.trim() === "" ? undefined : val.trim())
+      .optional()
+      .refine((val) => !val || val.length >= 3, {
+        message: "Name must be at least 3 characters.",
+      }),
 
-  email: z
-    .string()
-    .transform((val) => (val === "" ? undefined : val))
-    .optional()
-    .refine((val) => !val || val.length >= 12, {
-      message: "Email must be at least 12 characters.",
-    })
-    .refine((val) => !val || val.length <= 255, {
-      message: "Email must be no more than 255 characters.",
-    })
-    .refine((val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
-      message: "Must be a valid email.",
+    surname: z
+      .string()
+      .transform((val) => val?.trim() === "" ? undefined : val.trim())
+      .optional()
+      .refine((val) => !val || val.length >= 3, {
+        message: "Surname must be at least 3 characters.",
+      }),
+
+    email: z
+      .string()
+      .transform((val) => (val === "" ? undefined : val))
+      .optional()
+      .refine((val) => !val || val.length >= 12, {
+        message: "Email must be at least 12 characters.",
+      })
+      .refine((val) => !val || val.length <= 255, {
+        message: "Email must be no more than 255 characters.",
+      })
+      .refine((val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
+        message: "Must be a valid email.",
+      }),
+
+    phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, {
+      message:
+        "Phone number must be a valid format (e.g., +123456789 or 1234567890).",
     }),
 
-  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, {
-    message:
-      "Phone number must be a valid format (e.g., +123456789 or 1234567890).",
-  }),
-
-  birthdate: z
-    .string()
-    .transform((val) => (val === "" ? undefined : val))
-    .optional()
-    .refine((date) => !date || new Date(date) <= new Date(), {
-      message: "Birthdate cannot be in the future.",
-    }),
-});
+    birthdate: z
+      .string()
+      .transform((val) => (val === "" ? undefined : val))
+      .optional()
+      .refine((date) => !date || new Date(date) <= new Date(), {
+        message: "Birthdate cannot be in the future.",
+      }),
+  })
+  .refine((data) => !!(data.name?.trim() || data.surname?.trim()), {
+    message: "Either name or surname is required.",
+    path: ["name"],
+  });
 
 interface Props {
   onFormSubmit: (data: FieldValues) => void;

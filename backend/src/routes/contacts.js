@@ -10,15 +10,15 @@ const router = express.Router();
 
 // Preload names on startup
 (async () => {
-  const greekNames = await NamedayService.getAllNames();
-  setContactService(new ContactService(greekNames));
+  const names = await NamedayService.getAllNames();
+  setContactService(new ContactService(names));
 })();
 
 /**
  * @swagger
- * /api/contacts/import/vcf:
+ * /api/contacts/batch:
  *   post:
- *     summary: Import multiple contacts using contact card (.vcf file)
+ *     summary: Import multiple contacts
  *     tags: [Contacts]
  *     security: [ { bearerAuth: [] } ]
  *     requestBody:
@@ -26,35 +26,73 @@ const router = express.Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - contacts
- *             properties:
- *               contacts:
- *                 type: array
- *                 items:
- *                   $ref: '#/components/schemas/ContactRequest'
+ *             $ref: '#/components/schemas/ContactBatchImportRequest'
  *     responses:
  *       201:
  *         description: Contacts imported successfully
- *       400:
- *         description: Invalid request body
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Contacts imported successfully.
+ *                 insertedCount:
+ *                   type: integer
+ *                   example: 10
+ *                 updatedCount:
+ *                   type: integer
+ *                   example: 1
+ *                 updated:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Contact'
  *       401:
  *         description: Unauthorized
+ *       400:
+ *         description: Invalid request body
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: contacts must be a non-empty array.
+ *       422:
+ *         description: Validation failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Some contacts failed validation.
+ *                 invalidContacts:
+ *                   type: array
+ *                   description: List of invalid contact objects with reasons.
+ *                   items:
+ *                     type: object
+ *                     additionalProperties: true
  *       500:
  *         description: Internal server error
  */
-router.post('/import/vcf', authenticateToken, async (req, res) => {
+router.post('/batch', authenticateToken, async (req, res) => {
   let contacts = req.body.contacts;
   const userId = req.user.id;
 
   if (!Array.isArray(contacts) || contacts.length === 0)
-    return res.status(422).json({ message: 'Invalid request: contacts must be a non-empty array.' });
+    return res.status(400).json({ message: 'Invalid request: contacts must be a non-empty array.' });
 
-  contacts = getContactService().correctContacts(contacts, userId);
+  contacts = getContactService().normalizeContacts(contacts, userId);
 
-  if (!validateContactsBatch(contacts))
-    return res.status(422).json({ message: 'One or more contacts failed validation.' });
+  const invalidContacts = validateContactsBatch(contacts);
+
+  if (invalidContacts.length > 0) {
+    return res.status(422).json({ message: 'Some contacts failed validation.', invalidContacts, });
+  }
 
   const { inserted, updated } = await getContactService().importContacts(contacts, userId);
 
@@ -78,16 +116,25 @@ router.post('/import/vcf', authenticateToken, async (req, res) => {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/ContactRequest'
+ *             $ref: '#/components/schemas/ContactCreateRequest'
  *     responses:
  *       200:
  *         description: Contact created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Contact'
  *       400:
  *         description: The contact already exists
  *       401:
  *         description: Unauthorized
  *       422:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Phone is required." 
  *       500:
  *         description: Internal server error
  */
@@ -129,7 +176,6 @@ router.post('/', authenticateToken, async (req, res) => {
  *         description: Internal server error
  */
 router.get('/', authenticateToken, async (req, res) => {
-
   const contacts = await Contact.getAllContacts(req.user.id);
   res.json(contacts);
 });
@@ -187,7 +233,7 @@ router.delete('/:id', authenticateToken, async (req, res) => {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Contact'
+ *             $ref: '#/components/schemas/ContactUpdateRequest'
  *     responses:
  *       200:
  *         description: Contact updated

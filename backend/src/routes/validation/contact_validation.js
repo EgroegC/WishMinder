@@ -5,8 +5,8 @@ function validateContact(contact) {
     oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
 
     const contactSchema = Joi.object({
-        name: Joi.string().min(3).max(50).required(),
-        surname: Joi.string().min(3).max(50).required(),
+        name: Joi.string().min(3).max(50),
+        surname: Joi.string().min(3).max(50),
         email: Joi.string().min(12).max(255).email(),
         phone: Joi.string()
             .pattern(/^\+?[1-9]\d{1,14}$/)
@@ -22,17 +22,27 @@ function validateContact(contact) {
                 'date.format': 'Birthdate must be in ISO format (YYYY-MM-DD).',
                 'date.max': 'Birthdate must be at least one year before today.',
             }),
-    });
+    }).or('name', 'surname');
 
     return contactSchema.validate(contact);
 }
 
 function validateContactsBatch(contacts) {
+    const validContacts = [];
+    const invalidContacts = [];
+
     for (const contact of contacts) {
         const { error } = validateContact(contact);
-        if (error) return false;
+
+        if (error) {
+            invalidContacts.push({
+                contact,
+                errors: error.details.map((e) => e.message),
+            });
+        }
     }
-    return true;
+
+    return invalidContacts;
 }
 
 module.exports = { validateContact, validateContactsBatch };
