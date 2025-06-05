@@ -1,6 +1,5 @@
 require("dotenv").config();
 const ContactService = require('../../../src/services/contact_service');
-const normalizeGreek = require('../../../src/utils/normalizeGreekNames');
 
 describe('ContactService - normalizePhoneNumber', () => {
   const service = new ContactService([]);
@@ -18,29 +17,29 @@ describe('ContactService - normalizePhoneNumber', () => {
   });
 });
 
-describe('ContactService - correctNameAndSurname', () => {
+describe('ContactService - normalizeAndResolveNameOrder', () => {
   const knownNames = ['Γιώργος'];
   const service = new ContactService(knownNames);
 
   it('should correct a reversed name and surname', () => {
-    const { name, surname } = service.correctNameAndSurname('Alex', 'Γιώργος');
+    const { name, surname } = service.normalizeAndResolveNameOrder('Alex', 'Γιώργος');
     expect(name).toBe('Γιώργος');
     expect(surname).toBe('Alex');
   });
 
   it('should return original name and surname if no match', () => {
-    const { name, surname } = service.correctNameAndSurname('John', 'Doe');
+    const { name, surname } = service.normalizeAndResolveNameOrder('John', 'Doe');
     expect(name).toBe('John');
     expect(surname).toBe('Doe');
   });
 
   it('should correct casing if name matches normalized', () => {
-    const { name } = service.correctNameAndSurname('γιωργος', 'Smith');
+    const { name } = service.normalizeAndResolveNameOrder('γιωργος', 'Smith');
     expect(name).toBe('Γιώργος');
   });
 });
 
-describe('ContactService - correctContacts', () => {
+describe('ContactService - normalizeContacts', () => {
   const knownNames = ['Γιώργος'];
   const service = new ContactService(knownNames);
 
@@ -53,7 +52,7 @@ describe('ContactService - correctContacts', () => {
       birthdate: '1990-01-01'
     }];
 
-    const [corrected] = service.correctContacts(contacts);
+    const [corrected] = service.normalizeContacts(contacts);
     expect(corrected.name).toBe('Γιώργος');
     expect(corrected.surname).toBe('Alex');
     expect(corrected.phone).toBe('+306971234567');
@@ -68,7 +67,7 @@ describe('ContactService - correctContacts', () => {
       phone: '+30 697-123-4567',
     }];
 
-    const [corrected] = service.correctContacts(contacts);
+    const [corrected] = service.normalizeContacts(contacts);
     expect(corrected.name).toBe('Γιώργος');
     expect(corrected.surname).toBe('Alex');
     expect(corrected.phone).toBe('+306971234567');
@@ -76,16 +75,29 @@ describe('ContactService - correctContacts', () => {
     expect(corrected.birthdate).toBeUndefined();
   });
 
-  it('should return the same object if name, surname or phone are undifined', () => {
+  it('should return the same object if name and surname are undifined', () => {
     const contacts = [{
-      surname: 'γιωργος',
       phone: '+30 697-123-4567',
     }];
 
-    const [corrected] = service.correctContacts(contacts);
+    const [corrected] = service.normalizeContacts(contacts);
     expect(corrected.name).toBeUndefined();
-    expect(corrected.surname).toBe('γιωργος');
+    expect(corrected.surname).toBeUndefined();
     expect(corrected.phone).toBe('+30 697-123-4567');
+    expect(corrected.email).toBeUndefined();
+    expect(corrected.birthdate).toBeUndefined();
+  });
+
+  it('should return the same object if phone is undifined', () => {
+    const contacts = [{
+      name: 'Alex',
+      surname: 'γιωργος',
+    }];
+
+    const [corrected] = service.normalizeContacts(contacts);
+    expect(corrected.name).toBe('Alex');
+    expect(corrected.surname).toBe('γιωργος');
+    expect(corrected.phone).toBeUndefined();
     expect(corrected.email).toBeUndefined();
     expect(corrected.birthdate).toBeUndefined();
   });

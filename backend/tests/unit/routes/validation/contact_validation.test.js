@@ -31,11 +31,17 @@ describe('validate_contact', () => {
   });
 
   describe("tets an invalid name", () => {
-    it("should return an error if name is missing", () => {
+    it("should return an error if name and surname are missing", () => {
+
+      const { error } = validateContact({ email, phone, birthdate });
+      expect(error).toBeDefined();
+      expect(error.details[0].message).toMatch(/ must contain at least one of.*name, surname/i);
+    });
+
+    it("should not return an error if name is missing", () => {
 
       const { error } = validateContact({ surname, email, phone, birthdate });
-      expect(error).toBeDefined();
-      expect(error.details[0].message).toMatch(/name.*required/i);
+      expect(error).toBeUndefined();
     });
 
     it("Should return an error if name is too short", () => {
@@ -56,11 +62,10 @@ describe('validate_contact', () => {
   });
 
   describe("tets an invalid surname", () => {
-    it("should return an error if surname is missing", () => {
+    it("should not return an error if surname is missing", () => {
 
       const { error } = validateContact({ name, email, phone, birthdate });
-      expect(error).toBeDefined();
-      expect(error.details[0].message).toMatch(/surname.*required/i);
+      expect(error).toBeUndefined();
     });
 
     it("Should return an error if surname is too short", () => {
@@ -180,25 +185,86 @@ describe('validate_contact', () => {
 })
 
 describe('validateContactsBatch', () => {
-  const validContact = {
-    name: 'John',
-    surname: 'Doe',
-    email: 'johndoe@example.com',
-    phone: '+1234567890',
-    birthdate: '1990-01-01'
-  };
+  it('returns an empty array when all contacts are valid', () => {
+    const validContacts = [
+      {
+        name: 'Alice',
+        phone: '+1234567890',
+        birthdate: '2000-01-01',
+        email: 'alice@example.com',
+      },
+      {
+        surname: 'Smith',
+        phone: '+1987654321',
+        email: 'smith@example.com',
+        birthdate: '1990-05-12',
+      },
+    ];
 
-  it('should return true if all contacts are valid', () => {
-    const contacts = [validContact, validContact];
-    const result = validateContactsBatch(contacts);
-    expect(result).toBe(true);
+    const result = validateContactsBatch(validContacts);
+    expect(result).toEqual([]);
   });
 
-  it('should return false if one contact is invalid', () => {
-    const invalidContact = { ...validContact, phone: 'invalid' };
-    const contacts = [validContact, invalidContact];
+  it('returns errors for contacts missing both name and surname', () => {
+    const contacts = [
+      {
+        phone: '+1234567890',
+        email: 'user@example.com',
+      },
+    ];
+
     const result = validateContactsBatch(contacts);
-    expect(result).toBe(false);
+    expect(result.length).toBe(1);
+    expect(result[0].errors[0]).toMatch(/must contain at least one of\s*\[?name,\s*surname\]?/i);
+  });
+
+  it('returns errors for contacts with invalid phone numbers', () => {
+    const contacts = [
+      {
+        name: 'Test',
+        phone: '123abc',
+      },
+    ];
+
+    const result = validateContactsBatch(contacts);
+    expect(result.length).toBe(1);
+    expect(result[0].errors[0]).toMatch(/Phone number must be a valid format/);
+  });
+
+  it('returns errors for contacts with birthdates less than 1 year ago', () => {
+    const recentDate = new Date();
+    recentDate.setMonth(recentDate.getMonth() - 6);
+    const isoRecent = recentDate.toISOString().split('T')[0];
+
+    const contacts = [
+      {
+        name: 'Young',
+        phone: '+1112223333',
+        birthdate: isoRecent,
+      },
+    ];
+
+    const result = validateContactsBatch(contacts);
+    expect(result.length).toBe(1);
+    expect(result[0].errors[0]).toMatch(/Birthdate must be at least/);
+  });
+
+  it('returns multiple errors for multiple invalid contacts', () => {
+    const contacts = [
+      {
+        phone: 'bad',
+        birthdate: 'not-a-date',
+      },
+      {
+        name: 'B',
+        phone: '+1234',
+      },
+    ];
+
+    const result = validateContactsBatch(contacts);
+    expect(result.length).toBe(2);
+    expect(result[0].errors.length).toBeGreaterThan(0);
+    expect(result[1].errors.length).toBeGreaterThan(0);
   });
 });
 

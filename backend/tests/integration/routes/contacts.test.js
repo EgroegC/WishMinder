@@ -103,6 +103,27 @@ describe('/api/contacts', () => {
             });
         });
 
+        it('should save and return 200 with the normalized and resolved name order', async () => {
+            await insertTestNameday('George', new Date());
+
+            const names = await NamedayService.getAllNames();
+            setContactService(new ContactService(names));
+
+            const newContact =
+            {
+                ...contactPayload,
+                name: 'Alex', surname: 'george'
+            };
+
+            const res = await execPost(newContact);
+            expect(res.status).toBe(200);
+            expect(res.body).toMatchObject({
+                ...contactPayload, name: 'George', surname: 'Alex'
+            });
+
+            await clearNamedaysAndNames();
+        });
+
         it('should save and return 200 with the valid contact that has no email and birthdate', async () => {
             const newContact = {
                 name: 'ContactName',
@@ -248,8 +269,8 @@ describe('/api/contacts', () => {
         });
     });
 
-    describe('POST /import/vcf', () => {
-        const importPath = '/api/contacts/import/vcf';
+    describe('POST /batch', () => {
+        const importPath = '/api/contacts/batch';
 
         const execImport = async (contacts) => {
             return request(server)
@@ -260,11 +281,11 @@ describe('/api/contacts', () => {
 
         itShouldRequireAuth(() => server, importPath, 'post', { contacts: [{}] });
 
-        it('should return 422 if contacts is not an array or is empty', async () => {
+        it('should return 400 if contacts is not an array or is empty', async () => {
             const res1 = await execImport(null);
             const res2 = await execImport([]);
-            expect(res1.status).toBe(422);
-            expect(res2.status).toBe(422);
+            expect(res1.status).toBe(400);
+            expect(res2.status).toBe(400);
             expect(res1.body.message).toMatch(/contacts must be a non-empty array/i);
         });
 
@@ -291,13 +312,13 @@ describe('/api/contacts', () => {
         });
 
         it('should swap name and surname and import the contact', async () => {
-            await insertTestNameday('Γιώργος', new Date());
+            await insertTestNameday('George', new Date());
 
-            const greekNames = await NamedayService.getAllNames();
-            setContactService(new ContactService(greekNames));
+            const names = await NamedayService.getAllNames();
+            setContactService(new ContactService(names));
 
             const newContact = [
-                { ...contactPayload, name: 'Alex', surname: 'γιωργος' }
+                { ...contactPayload, name: 'Alex', surname: 'george' }
             ];
             const res = await execImport(newContact);
             expect(res.status).toBe(201);
@@ -308,7 +329,7 @@ describe('/api/contacts', () => {
             const savedContacts = await Contact.getAllContacts(user.id);
             expect(savedContacts.length).toBeGreaterThanOrEqual(1);
             const saved = savedContacts[0];
-            expect(saved.name).toBe('Γιώργος');
+            expect(saved.name).toBe('George');
             expect(saved.surname).toBe('Alex');
 
             await clearNamedaysAndNames();
