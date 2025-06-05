@@ -86,7 +86,7 @@ router.post('/batch', authenticateToken, async (req, res) => {
   if (!Array.isArray(contacts) || contacts.length === 0)
     return res.status(400).json({ message: 'Invalid request: contacts must be a non-empty array.' });
 
-  contacts = getContactService().normalizeContacts(contacts, userId);
+  contacts = getContactService().normalizeContacts(contacts);
 
   const invalidContacts = validateContactsBatch(contacts);
 
@@ -139,15 +139,16 @@ router.post('/batch', authenticateToken, async (req, res) => {
  *         description: Internal server error
  */
 router.post('/', authenticateToken, async (req, res) => {
-
   const { error } = validateContact(req.body);
   if (error) return res.status(422).send(error.details[0].message);
 
   let user = await Contact.findByPhoneNumber(req.user.id, req.body.phone);
   if (user) return res.status(400).send('The Contact Already Exists.');
 
-  req.body.user_id = req.user.id;
-  const contact = new Contact(req.body);
+  const normalized = getContactService().normalizeContact(req.body);
+
+  normalized.user_id = req.user.id;
+  const contact = new Contact(normalized);
 
   await contact.save();
 

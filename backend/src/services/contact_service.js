@@ -37,30 +37,34 @@ class ContactService {
 
   normalizeContacts(contacts) {
     return contacts.map((c) => {
-      const hasNameOrSurname = !!(c.name || c.surname);
-      const hasPhone = !!c.phone;
-
-      if (!hasNameOrSurname || !hasPhone) return c;
-
-      const { name, surname } = this.normalizeAndResolveNameOrder(c.name, c.surname);
-
-      const corrected = {
-        phone: this.normalizePhoneNumber(c.phone),
-      };
-
-      if (name) corrected.name = name;
-      if (surname) corrected.surname = surname;
-
-      if (c.email?.trim()) {
-        corrected.email = c.email.trim();
-      }
-
-      if (c.birthdate) {
-        corrected.birthdate = new Date(c.birthdate);
-      }
-
-      return corrected;
+      return this.normalizeContact(c);
     });
+  }
+
+  normalizeContact(c) {
+    const hasNameOrSurname = !!(c.name || c.surname);
+    const hasPhone = !!c.phone;
+
+    if (!hasNameOrSurname || !hasPhone) return c;
+
+    const { name, surname } = this.normalizeAndResolveNameOrder(c.name, c.surname);
+
+    const corrected = {
+      phone: this.normalizePhoneNumber(c.phone),
+    };
+
+    if (name) corrected.name = name;
+    if (surname) corrected.surname = surname;
+
+    if (c.email?.trim()) {
+      corrected.email = c.email.trim();
+    }
+
+    if (c.birthdate) {
+      corrected.birthdate = new Date(c.birthdate);
+    }
+
+    return corrected;
   }
 
   async importContacts(corrected, userId) {

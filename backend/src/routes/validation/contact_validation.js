@@ -28,7 +28,6 @@ function validateContact(contact) {
 }
 
 function validateContactsBatch(contacts) {
-    const validContacts = [];
     const invalidContacts = [];
 
     for (const contact of contacts) {
