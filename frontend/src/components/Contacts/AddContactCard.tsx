@@ -52,7 +52,7 @@ const AddContactCard = ({
       })
       .then((res) => {
         const updatedContacts = (res.data.updated as Duplicates[])
-          .map((c) => `${c.name} ${c.surname}`)
+          .map((c) => [c.name, c.surname].filter(Boolean).join(" "))
           .join(", ");
 
         onContactAdded(
