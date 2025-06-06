@@ -5,6 +5,8 @@ const Contact = require('../models/contact');
 const ContactService = require('../services/contact_service');
 const NamedayService = require('../services/namedays_service');
 const { getContactService, setContactService } = require('../utils/contactServiceHolder');
+const { hash } = require('../utils/crypto');
+const { encryptContact, decryptContact } = require('../services/contact_encryption_service');
 const express = require('express');
 const router = express.Router();
 
@@ -142,17 +144,19 @@ router.post('/', authenticateToken, async (req, res) => {
   const { error } = validateContact(req.body);
   if (error) return res.status(422).send(error.details[0].message);
 
-  let user = await Contact.findByPhoneNumber(req.user.id, req.body.phone);
+  const normalized = getContactService().normalizeContact(req.body);
+  const phoneHash = hash(normalized.phone);
+
+  let user = await Contact.findByPhoneHash(req.user.id, phoneHash);
   if (user) return res.status(400).send('The Contact Already Exists.');
 
-  const normalized = getContactService().normalizeContact(req.body);
+  const encrypted = encryptContact({
+    ...normalized,
+    user_id: req.user.id,
+  });
 
-  normalized.user_id = req.user.id;
-  const contact = new Contact(normalized);
-
-  await contact.save();
-
-  res.send(contact);
+  const saved = await encrypted.save();
+  res.send(decryptContact(saved).serialize());
 });
 
 /**
@@ -177,8 +181,10 @@ router.post('/', authenticateToken, async (req, res) => {
  *         description: Internal server error
  */
 router.get('/', authenticateToken, async (req, res) => {
-  const contacts = await Contact.getAllContacts(req.user.id);
-  res.json(contacts);
+
+  const encryptedContacts = await Contact.getAllContacts(req.user.id);
+  const decryptedContacts = encryptedContacts.map(decryptContact);
+  res.json(decryptedContacts.map(c => c.serialize()));
 });
 
 /**
@@ -213,7 +219,7 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     return res.status(404).send('Contact not found');
   }
 
-  res.status(200).json(deletedContact);
+  res.status(200).json(decryptContact(deletedContact).serialize());
 });
 
 /**
@@ -251,12 +257,12 @@ router.put("/:id", authenticateToken, async (req, res) => {
   const contactId = parseInt(req.params.id);
   const userId = req.user.id;
 
-  const { error, value } = validateContact(req.body);
+  const { error } = validateContact(req.body);
   if (error) return res.status(422).send(error.details[0].message);
 
-  const { name, surname, phone, email, birthdate } = value;
+  const { name, surname, phone, email, birthdate } = req.body;
 
-  const contact = new Contact({
+  const contact = encryptContact({
     id: contactId,
     user_id: userId,
     name,
@@ -272,7 +278,7 @@ router.put("/:id", authenticateToken, async (req, res) => {
     return res.status(404).json({ message: "Contact not found or not updated" });
   }
 
-  res.json(updatedContact);
+  res.json(decryptContact(updatedContact).serialize());
 });
 
 module.exports = router;

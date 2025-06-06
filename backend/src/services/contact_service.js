@@ -1,5 +1,7 @@
-const normalizeName = require('../utils/normalizeName');
 const pool = require('../config/db')();
+const normalizeName = require('../utils/normalizeName');
+const { encryptContact, decryptContact } = require('../services/contact_encryption_service');
+
 
 class ContactService {
   constructor(knownNames) {
@@ -71,10 +73,12 @@ class ContactService {
     const deduped = this.deduplicateByUserAndPhone(corrected);
     if (deduped.length === 0) return { inserted: [], updated: [] };
 
-    const contacts = deduped.map(contact => ({
-      user_id: userId,
-      ...contact,
-    }));
+    const contacts = deduped.map(contact =>
+      encryptContact({
+        user_id: userId,
+        ...contact,
+      })
+    );
 
     return await this.bulkInsertContacts(contacts);
   }
@@ -83,36 +87,50 @@ class ContactService {
     const values = [];
     const placeholders = contacts
       .map((contact, i) => {
-        const baseIndex = i * 6;
+        const base = i * 8;
         values.push(
           contact.user_id,
           contact.name,
           contact.surname,
           contact.phone,
+          contact.phone_hash,
           contact.email,
+          contact.email_hash,
           contact.birthdate
         );
-        return `($${baseIndex + 1}, $${baseIndex + 2}, $${baseIndex + 3}, $${baseIndex + 4}, $${baseIndex + 5}, $${baseIndex + 6})`;
+        return `($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5}, $${base + 6}, $${base + 7}, $${base + 8})`;
       })
       .join(', ');
 
     const query = `
-      INSERT INTO contacts (user_id, name, surname, phone, email, birthdate)
+      INSERT INTO contacts (user_id, name, surname, phone, phone_hash, email, email_hash, birthdate)
       VALUES ${placeholders}
-      ON CONFLICT (user_id, phone) DO UPDATE SET
+      ON CONFLICT (user_id, phone_hash) DO UPDATE SET
         name = EXCLUDED.name,
         surname = EXCLUDED.surname,
+        phone = EXCLUDED.phone,
         email = EXCLUDED.email,
+        email_hash = EXCLUDED.email_hash,
         birthdate = EXCLUDED.birthdate
       RETURNING *, (xmax = 0) AS inserted;
     `;
 
     const result = await pool.query(query, values);
 
-    const inserted = result.rows.filter(row => row.inserted).map(({ name, surname }) => ({ name, surname }));
-    const updated = result.rows.filter(row => !row.inserted).map(({ name, surname }) => ({ name, surname }));
+    const inserted = [];
+    const updated = [];
 
-    return { inserted, updated };
+    for (const row of result.rows) {
+      const decrypted = decryptContact(row);
+      const serialized = decrypted.serialize?.();
+      if (row.inserted) inserted.push(serialized);
+      else updated.push(serialized);
+    }
+
+    return {
+      inserted: inserted.filter(Boolean),
+      updated: updated.filter(Boolean)
+    };
   }
 
   deduplicateByUserAndPhone = (contacts) => {
