@@ -37,8 +37,4 @@ function decrypt(encrypted) {
     return decrypted.toString('utf8');
 }
 
-function hash(text) {
-    return crypto.createHash('sha256').update(text).digest('hex');
-}
-
-module.exports = { encrypt, decrypt, hash };
+module.exports = { encrypt, decrypt };

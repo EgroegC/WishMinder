@@ -2,18 +2,16 @@ const { authenticateToken } = require('../middleware/authorization');
 const _ = require('lodash');
 const { validateContact, validateContactsBatch } = require('./validation/contact_validation');
 const Contact = require('../models/contact');
-const ContactService = require('../services/contact_service');
+const { encryptContact, decryptContact, hash, ContactNormalizer, ContactImporter } = require('../services/contact');
 const NamedayService = require('../services/namedays_service');
 const { getContactService, setContactService } = require('../utils/contactServiceHolder');
-const { hash } = require('../utils/crypto');
-const { encryptContact, decryptContact } = require('../services/contact_encryption_service');
 const express = require('express');
 const router = express.Router();
 
 // Preload names on startup
 (async () => {
   const names = await NamedayService.getAllNames();
-  setContactService(new ContactService(names));
+  setContactService(new ContactNormalizer(names));
 })();
 
 /**
@@ -83,20 +81,19 @@ const router = express.Router();
  */
 router.post('/batch', authenticateToken, async (req, res) => {
   let contacts = req.body.contacts;
-  const userId = req.user.id;
 
   if (!Array.isArray(contacts) || contacts.length === 0)
     return res.status(400).json({ message: 'Invalid request: contacts must be a non-empty array.' });
 
   contacts = getContactService().normalizeContacts(contacts);
-
   const invalidContacts = validateContactsBatch(contacts);
 
   if (invalidContacts.length > 0) {
     return res.status(422).json({ message: 'Some contacts failed validation.', invalidContacts, });
   }
 
-  const { inserted, updated } = await getContactService().importContacts(contacts, userId);
+  const importer = new ContactImporter({ encryptContact, decryptContact });
+  const { inserted, updated } = await importer.importContacts(contacts, req.user.id);
 
   res.status(201).json({
     message: 'Contacts imported successfully.',
@@ -181,7 +178,6 @@ router.post('/', authenticateToken, async (req, res) => {
  *         description: Internal server error
  */
 router.get('/', authenticateToken, async (req, res) => {
-
   const encryptedContacts = await Contact.getAllContacts(req.user.id);
   const decryptedContacts = encryptedContacts.map(decryptContact);
   res.json(decryptedContacts.map(c => c.serialize()));
