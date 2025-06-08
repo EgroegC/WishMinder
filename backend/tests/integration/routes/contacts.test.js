@@ -5,7 +5,8 @@ const bcrypt = require('bcrypt');
 const User = require('../../../src/models/user');
 const Contact = require('../../../src/models/contact');
 const NamedayService = require('../../../src/services/namedays_service');
-const ContactService = require('../../../src/services/contact_service');
+const ContactNormalizer = require('../../../src/services/contact/contact_normalizer_service');
+const { encryptContact } = require('../../../src/utils/contact_encryption');
 const { deleteAllContactsForUser } = require('../../helpers/contact_route_helper');
 const { itShouldRequireAuth } = require('../../helpers/auth_test_helper');
 const { getContactService, setContactService } = require('../../../src/utils/contactServiceHolder');
@@ -59,7 +60,7 @@ describe('/api/contacts', () => {
     };
 
     const createContact = async () => {
-        const contact = new Contact({
+        const contact = encryptContact({
             user_id: user.id,
             ...contactPayload
         });
@@ -107,7 +108,7 @@ describe('/api/contacts', () => {
             await insertTestNameday('George', new Date());
 
             const names = await NamedayService.getAllNames();
-            setContactService(new ContactService(names));
+            setContactService(new ContactNormalizer(names));
 
             const newContact =
             {
@@ -140,12 +141,12 @@ describe('/api/contacts', () => {
         });
 
         it('should return 500 when an unhandled error occurs', async () => {
-            jest.spyOn(Contact, 'findByPhoneNumber').mockImplementation(() => {
+            jest.spyOn(Contact, 'findByPhoneHash').mockImplementation(() => {
                 throw new Error('Unexpected failure');
             });
             const res = await execPost(contactPayload);
             expect(res.status).toBe(500);
-            Contact.findByPhoneNumber.mockRestore();
+            Contact.findByPhoneHash.mockRestore();
         });
     });
 
@@ -315,7 +316,7 @@ describe('/api/contacts', () => {
             await insertTestNameday('George', new Date());
 
             const names = await NamedayService.getAllNames();
-            setContactService(new ContactService(names));
+            setContactService(new ContactNormalizer(names));
 
             const newContact = [
                 { ...contactPayload, name: 'Alex', surname: 'george' }
@@ -352,7 +353,7 @@ describe('/api/contacts', () => {
 
         it('should return 500 when an unhandled error occurs', async () => {
             const contactService = getContactService();
-            jest.spyOn(contactService, 'importContacts').mockImplementation(() => {
+            jest.spyOn(contactService, 'normalizeContacts').mockImplementation(() => {
                 throw new Error('Unexpected failure');
             });
 
@@ -360,7 +361,7 @@ describe('/api/contacts', () => {
 
             const res = await execImport(newContact);
             expect(res.status).toBe(500);
-            contactService.importContacts.mockRestore();
+            contactService.normalizeContacts.mockRestore();
         });
     });
 

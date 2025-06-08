@@ -13,8 +13,8 @@ class ContactNormalizer {
     }
 
     splitFullNameIfNeeded(name, surname) {
-        if (!surname && name && name.trim().split(" ").length === 2) {
-            const [first, last] = name.trim().split(" ");
+        if (!surname && name && name.trim().split(/\s+/).length === 2) {
+            const [first, last] = name.trim().split(/\s+/);
             return { name: first, surname: last };
         }
         return { name, surname };

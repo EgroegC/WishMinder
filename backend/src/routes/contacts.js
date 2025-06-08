@@ -2,7 +2,9 @@ const { authenticateToken } = require('../middleware/authorization');
 const _ = require('lodash');
 const { validateContact, validateContactsBatch } = require('./validation/contact_validation');
 const Contact = require('../models/contact');
-const { encryptContact, decryptContact, hash, ContactNormalizer, ContactImporter } = require('../services/contact');
+const ContactNormalizer = require('../services/contact/contact_normalizer_service');
+const ContactImporter = require('../services/contact/contact_importer_service');
+const { encryptContact, decryptContact, hash } = require('../utils/contact_encryption');
 const NamedayService = require('../services/namedays_service');
 const { getContactService, setContactService } = require('../utils/contactServiceHolder');
 const express = require('express');
@@ -152,8 +154,8 @@ router.post('/', authenticateToken, async (req, res) => {
     user_id: req.user.id,
   });
 
-  const saved = await encrypted.save();
-  res.send(decryptContact(saved).serialize());
+  await encrypted.save();
+  res.send(decryptContact(encrypted).serialize());
 });
 
 /**

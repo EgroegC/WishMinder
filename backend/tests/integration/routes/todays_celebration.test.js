@@ -3,7 +3,7 @@ const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const User = require('../../../src/models/user');
 const CelebrationService = require('../../../src/services/celebration_service');
-const Contact = require('../../../src/models/contact');
+const { encryptContact } = require('../../../src/utils/contact_encryption');
 const { itShouldRequireAuth } = require('../../helpers/auth_test_helper');
 const { insertTestNameday, clearNamedaysAndNames } = require('../../helpers/namedays_helper');
 const { deleteAllContactsForUser } = require('../../helpers/contact_route_helper');
@@ -31,7 +31,8 @@ describe('/api/celebrations/today', () => {
     let token, user;
 
     const createContact = async (id) => {
-      const contact = new Contact({
+
+      const contact = encryptContact({
         user_id: id,
         name: 'Γιώργος',
         surname: 'ContactSurname',
@@ -39,6 +40,7 @@ describe('/api/celebrations/today', () => {
         email: 'email@gmail.com',
         birthdate: new Date()
       });
+
       await contact.save();
     };
 

@@ -1,6 +1,6 @@
 const crypto = require('crypto');
-const { encrypt, decrypt } = require('../../utils/crypto');
-const Contact = require('../../models/contact');
+const { encrypt, decrypt } = require('./crypto');
+const Contact = require('../models/contact');
 
 function hash(text) {
     return crypto.createHash('sha256').update(text).digest('hex');

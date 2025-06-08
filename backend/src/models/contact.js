@@ -3,6 +3,11 @@ const pool = require('../config/db')();
 class Contact {
 
   constructor({ id = null, user_id, name, surname, phone, email = null, birthdate = null, phone_hash = null, email_hash = null }) {
+    if (!user_id) throw new Error('user_id is required');
+    if (!phone) throw new Error('phone is required');
+    if (!name && !surname) throw new Error('At least one of name or surname is required');
+
+
     this.id = id;
     this.user_id = user_id;
     this.name = name;
