@@ -20,6 +20,19 @@ class NamedayService {
     );
   }
 
+  static async getNamedaysByDate(date) {
+    const query = `
+          SELECT n.name
+          FROM namedays nd
+          JOIN names n ON nd.name_id = n.id
+          WHERE nd.nameday_date = $1
+        `;
+
+    const result = await pool.query(query, [date]);
+
+    return result.rows;
+  }
+
   static async getAllNames() {
     const query = `SELECT name FROM names`;
     const result = await pool.query(query);
