@@ -1,5 +1,6 @@
 import { SidebarProvider } from '@/components/ui/sidebar.tsx';
 import { AppSidebar } from './AppSideBar.tsx';
+import '../../index.css';
 import NavBar from './NavBar.tsx';
 import { type ReactNode } from 'react';
 
