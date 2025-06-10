@@ -44,7 +44,7 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
                             <Link to="/">
-                                <img className='rounded-full' src='/icons/favicon-96x96.png' alt="logo" width={20} height={20} />
+                                <img className='rounded-md' src='/icons/favicon-96x96.png' alt="logo" width={20} height={20} />
                                 <span>Dev</span>
                             </Link>
                         </SidebarMenuButton>
