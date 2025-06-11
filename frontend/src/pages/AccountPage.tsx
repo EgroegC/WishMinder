@@ -1,3 +1,4 @@
+import Notifications from "@/components/account/Notifications";
 import UserInfoCard from "@/components/account/UserInfo";
 
 const Account = () => {
@@ -6,7 +7,7 @@ const Account = () => {
             {/* LEFT */}
             <div className="w-full xl:w-1/3 space-y-6">
                 <UserInfoCard />
-                <div className="bg-primary-foreground p-4 rounded-lg"> NOTIFICATIONS </div>
+                <Notifications />
             </div>
             {/* RIGHT */}
             <div className="w-full xl:w-2/3 space-y-6">
