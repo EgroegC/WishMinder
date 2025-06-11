@@ -1,7 +1,7 @@
 // columns.ts
 import { Button } from "@/components/ui/button";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Pencil, Trash2 } from "lucide-react";
+import { ArrowUpDown, Pencil, Trash2 } from "lucide-react";
 
 export type Contacts = {
     id: string;
@@ -21,8 +21,18 @@ export const getColumns = (
         },
         {
             accessorKey: "surname",
-            header: "Surname",
-            cell: ({ getValue }) => <div className="text-center">{getValue() as string}</div>,
+            header: ({ column }) => {
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    >
+                        Surname
+                        <ArrowUpDown />
+                    </Button>
+                )
+            },
+            cell: ({ row }) => <div className="lowercase">{row.getValue("surname")}</div>,
         },
         {
             accessorKey: "phone",
