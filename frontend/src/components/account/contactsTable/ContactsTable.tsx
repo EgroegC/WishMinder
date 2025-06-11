@@ -1,15 +1,17 @@
-import useContacts from "@/hooks/useContacts";
-import { getColumns } from './columns';
+import { type Contacts, getColumns } from './columns';
 import { DataTable } from "./data-table";
-import { Spinner } from "@/components/Spinner";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useState } from "react";
 import ContactsCardsMobile from "./ContactCardMobile";
 
-const ContactsTable = () => {
+const ContactsTable = ({
+    onContactAdded,
+    contacts,
+}: {
+    onContactAdded: () => void;
+    contacts: Contacts[];
+}) => {
     const axiosPrivate = useAxiosPrivate();
-    const [refreshTrigger, setRefreshTrigger] = useState(0);
-    const { contacts, error, loading } = useContacts(refreshTrigger);
     const [btnError, setBtnError] = useState("");
 
     const handleEdit = (id: string) => {
@@ -18,17 +20,13 @@ const ContactsTable = () => {
     const handleDelete = (id: string) => {
         axiosPrivate
             .delete(`/api/contacts/${id}`)
-            .then(() => setRefreshTrigger((prev) => prev + 1))
+            .then(() => onContactAdded())
             .catch((err) => setBtnError(err));
     };
 
     return (
         <div className="">
-            {loading ? (
-                <Spinner />
-            ) : error ? (
-                <p>Failed to load contacts.</p>
-            ) : btnError ? (
+            {btnError ? (
                 <p>Failed to delete contact.</p>
             ) : (
                 <>
