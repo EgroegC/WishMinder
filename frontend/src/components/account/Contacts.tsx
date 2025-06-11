@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import ContactsTable from './contactsTable/contactsTable';
+import ContactsTable from './contactsTable/ContactsTable';
 
 const Notifications = () => {
 
