@@ -1,17 +1,18 @@
 import Notifications from "@/components/account/Notifications";
-import UserInfoCard from "@/components/account/UserInfo";
+import UserInfo from "@/components/account/UserInfo";
+import Contacts from "@/components/account/Contacts";
 
 const Account = () => {
     return (
         <div className="mt-4 flex flex-col xl:flex-row gap-8">
             {/* LEFT */}
             <div className="w-full xl:w-1/3 space-y-6">
-                <UserInfoCard />
+                <UserInfo />
                 <Notifications />
             </div>
             {/* RIGHT */}
             <div className="w-full xl:w-2/3 space-y-6">
-                <div className="bg-primary-foreground p-4 rounded-lg"> CONTACTS </div>
+                <Contacts />
             </div>
         </div>
     );
