@@ -30,7 +30,7 @@ const useContacts = (refreshTrigger = 0) => {
             .then((res) => setContacts(res.data))
             .catch((err) => {
                 if (err instanceof CanceledError) return;
-                setError(err.message);
+                setError(err.response.data);
             })
             .finally(() => setLoading(false));
 
