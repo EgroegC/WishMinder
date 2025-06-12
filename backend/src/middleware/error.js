@@ -4,5 +4,5 @@ const rollbar = require('../config/rollbar')();
 module.exports = function (error, req, res, next) {
     logger.error(error.message);
     rollbar.error(error.message);
-    res.status(500).send('Something failed.');
+    res.status(500).send('Something failed, please try again later.');
 }
