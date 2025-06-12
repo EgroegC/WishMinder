@@ -37,8 +37,11 @@ const ContactsTable = ({
             return;
         }
 
-        const localIsoDate = data.birthdate.toLocaleDateString('en-CA');
-        data = { ...data, birthdate: localIsoDate, }
+        if (data.birthdate) {
+            const localIsoDate = data.birthdate.toLocaleDateString('en-CA');
+            data = { ...data, birthdate: localIsoDate, }
+        }
+
 
         axiosPrivate
             .put(`/api/contacts/${selectedContact.id}`, data)

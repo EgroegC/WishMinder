@@ -43,7 +43,7 @@ const EditContactDialog = ({
                         defaultValues={{
                             ...contact,
                             email: contact.email ? contact.email : undefined,
-                            birthdate: contact.birthdate
+                            birthdate: contact.birthdate ? contact.birthdate : undefined
                         }}
                     />
                 )}

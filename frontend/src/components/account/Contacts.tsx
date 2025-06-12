@@ -32,7 +32,6 @@ const Contacts = () => {
     }
 
     const onFormSubmit = (data: FieldValues) => {
-        const localDateString = data.birthdate.toLocaleDateString('en-CA');
 
         axiosPrivate
             .post("/api/contacts", {
@@ -40,7 +39,7 @@ const Contacts = () => {
                 surname: data.surname,
                 email: data.email,
                 phone: data.phone,
-                birthdate: localDateString,
+                birthdate: data.birthdate ? data.birthdate.toLocaleDateString('en-CA') : undefined,
             })
             .then(() => {
                 onContactAdded();
