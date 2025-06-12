@@ -70,7 +70,7 @@ const Contacts = () => {
                 </div>
                 <CardAction>
                     <Dialog open={open} onOpenChange={setOpen}>
-                        <div className="flex items-center gap-4 max-w-sm w-full">
+                        <div className="flex flex-col md:flex-row items-center gap-4 max-w-sm w-full">
                             <div className="flex flex-col">
                                 <AddContactCard onContactAdded={onContactAdded} />
                             </div>
