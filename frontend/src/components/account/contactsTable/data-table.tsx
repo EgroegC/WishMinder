@@ -58,9 +58,9 @@ export function DataTable<TData, TValue>({
                     className="max-w-sm"
                 />
             </ div>
-            <div className="rounded-md border w-full overflow-hidden">
-                <div className="max-h-[340px] overflow-y-auto">
-                    <Table>
+            <div className="rounded-md border w-full overflow-x-auto">
+                <div className="max-h-[340px] overflow-y-auto min-w-full">
+                    <Table className="min-w-full table-auto">
                         <TableHeader className="sticky top-0 bg-white dark:bg-gray-900 z-10 shadow-sm">
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id}>
@@ -80,7 +80,10 @@ export function DataTable<TData, TValue>({
                                 table.getRowModel().rows.map((row) => (
                                     <TableRow key={row.id}>
                                         {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id} className="text-center">
+                                            <TableCell
+                                                key={cell.id}
+                                                className="text-center max-w-[200px] truncate whitespace-nowrap overflow-hidden"
+                                            >
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                             </TableCell>
                                         ))}

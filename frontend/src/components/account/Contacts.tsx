@@ -17,6 +17,7 @@ import { useState } from 'react';
 import useContacts from '@/hooks/useContacts';
 import { Spinner } from '../Spinner';
 import { AlertMessage } from '../Alert'
+import AddContactCard from './AddContactCard';
 
 
 const Contacts = () => {
@@ -70,9 +71,14 @@ const Contacts = () => {
                 </div>
                 <CardAction>
                     <Dialog open={open} onOpenChange={setOpen}>
-                        <DialogTrigger asChild>
-                            <Button variant="outline">Create Contact</Button>
-                        </DialogTrigger>
+                        <div className="flex items-center gap-4 max-w-sm w-full">
+                            <div className="flex flex-col">
+                                <AddContactCard onContactAdded={onContactAdded} />
+                            </div>
+                            <DialogTrigger asChild>
+                                <Button variant="outline">Create Contact</Button>
+                            </DialogTrigger>
+                        </div>
                         <DialogContent className="sm:max-w-[425px]">
                             <DialogHeader>
                                 <DialogTitle>Create Contacts</DialogTitle>
