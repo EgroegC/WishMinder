@@ -1,5 +1,5 @@
 import AuthForm from "../components/loginSignUpForm/LoginSignupForm";
-import "../components/LoginSignUpForm/LoginSignUpForm.css";
+import "../components/loginSignUpForm/LoginSignUpForm.css";
 import apiClient from "../services/api-client";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
