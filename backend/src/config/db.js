@@ -1,5 +1,7 @@
-const { Pool } = require("pg");
+const { Pool, types } = require("pg");
 const config = require("config");
+
+types.setTypeParser(1082, (val) => val);
 
 const dbConfig = config.get("database");
 
@@ -22,4 +24,4 @@ module.exports = function () {
     database: dbConfig.name,
     ssl: isProduction ? { rejectUnauthorized: false } : false
   });
-}
+};

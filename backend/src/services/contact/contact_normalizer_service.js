@@ -55,7 +55,7 @@ class ContactNormalizer {
         if (name) normalized.name = name;
         if (surname) normalized.surname = surname;
         if (c.email?.trim()) normalized.email = c.email.trim();
-        if (c.birthdate) normalized.birthdate = new Date(c.birthdate);
+        if (c.birthdate) normalized.birthdate = c.birthdate;
 
         return normalized;
     }
