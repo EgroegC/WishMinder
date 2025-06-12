@@ -23,18 +23,23 @@ export const getColumns = (
         },
         {
             accessorKey: "surname",
-            header: ({ column }) => {
-                return (
-                    <Button
-                        variant="ghost"
-                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                    >
-                        Surname
-                        <ArrowUpDown />
-                    </Button>
-                )
+            header: ({ column }) => (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Surname
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            ),
+            cell: ({ row }) => (
+                <div className="lowercase">{row.getValue("surname")}</div>
+            ),
+            filterFn: (row, columnId, filterValue) => {
+                const value = row.getValue(columnId);
+                return typeof value === "string" &&
+                    value.toLowerCase().includes(filterValue.toLowerCase());
             },
-            cell: ({ row }) => <div className="lowercase">{row.getValue("surname")}</div>,
         },
         {
             accessorKey: "phone",
