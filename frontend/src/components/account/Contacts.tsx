@@ -4,6 +4,7 @@ import { Button } from '../ui/button';
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -30,13 +31,15 @@ const Contacts = () => {
     }
 
     const onFormSubmit = (data: FieldValues) => {
+        const localDateString = data.birthdate.toLocaleDateString('en-CA');
+
         axiosPrivate
             .post("/api/contacts", {
                 name: data.name,
                 surname: data.surname,
                 email: data.email,
                 phone: data.phone,
-                birthdate: data.birthdate,
+                birthdate: localDateString,
             })
             .then(() => {
                 onContactAdded();
@@ -73,6 +76,9 @@ const Contacts = () => {
                         <DialogContent className="sm:max-w-[425px]">
                             <DialogHeader>
                                 <DialogTitle>Create Contacts</DialogTitle>
+                                <DialogDescription>
+                                    Please fill the fields below to create a new contact.
+                                </DialogDescription>
                             </DialogHeader>
                             <ContactForm onFormSubmit={onFormSubmit} />
                         </DialogContent>
@@ -85,7 +91,7 @@ const Contacts = () => {
                 ) : contactsError ? (
                     <p className='text-red-500'>{contactsError}</p>
                 ) : (
-                    <ContactsTable onContactAdded={onContactAdded} contacts={contacts} />
+                    <ContactsTable onContactEdited={onContactAdded} contacts={contacts} />
                 )}
             </CardContent>
             <CardFooter className="flex-col gap-2">

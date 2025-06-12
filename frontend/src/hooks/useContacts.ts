@@ -9,7 +9,7 @@ export interface Contact {
     surname: string;
     phone: string;
     email?: string;
-    birthdate?: Date;
+    birthdate?: string;
     created_at: Date;
 }
 

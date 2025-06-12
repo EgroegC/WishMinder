@@ -8,10 +8,12 @@ export type Contacts = {
     name: string;
     surname: string;
     phone: string;
+    email?: string;
+    birthdate?: string;
 };
 
 export const getColumns = (
-    handleEdit: (id: string) => void,
+    handleEdit: (contact: Contacts) => void,
     handleDelete: (id: string) => void
 ): ColumnDef<Contacts>[] => [
         {
@@ -55,7 +57,7 @@ export const getColumns = (
                             size="sm"
                             variant="outline"
                             className="px-5"
-                            onClick={() => handleEdit(contact.id)}
+                            onClick={() => handleEdit(contact)}
                         >
                             <Pencil className="w-4 h-4 mr-1" />
                             Edit

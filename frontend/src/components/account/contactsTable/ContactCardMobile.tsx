@@ -10,7 +10,7 @@ export type Contact = {
 
 interface ContactsCardsMobileProps {
     contacts: Contact[];
-    onEdit: (id: string) => void;
+    onEdit: (contact: Contact) => void;
     onDelete: (id: string) => void;
 }
 
@@ -40,7 +40,7 @@ const ContactsCardsMobile = ({
                         <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => onEdit(contact.id)}
+                            onClick={() => onEdit(contact)}
                         >
                             <Pencil className="w-4 h-4 mr-1" />
                             Edit

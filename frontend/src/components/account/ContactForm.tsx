@@ -5,6 +5,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from '../ui/button';
 import { DialogClose } from '../ui/dialog';
+import { parseISO } from 'date-fns';
 
 const oneYearAgo = new Date();
 oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
@@ -48,7 +49,7 @@ const schema = z
 
         birthdate: z
             .string()
-            .transform((val) => (val === "" ? undefined : val))
+            .transform((val) => (val === "" ? undefined : parseISO(val)))
             .optional()
             .refine((date) => !date || new Date(date) <= new Date(), {
                 message: "Birthdate cannot be in the future.",
@@ -67,7 +68,7 @@ interface Props {
     defaultValues?: {
         name: string;
         surname: string;
-        email: string;
+        email?: string;
         phone: string;
         birthdate?: string;
     };
@@ -120,7 +121,7 @@ const ContactForm = ({
                     )}
                 </div>
                 <div className="grid gap-3">
-                    <Label htmlFor="email">email</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
                         placeholder="Email"
                         {...register("email")}
