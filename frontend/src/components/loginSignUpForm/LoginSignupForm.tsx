@@ -67,7 +67,7 @@ function AuthForm({ isSignup, onSubmit, authError }: AuthFormProps) {
             name="email"
             required
           />
-          <Lock className="icon" />
+          <Mail className="icon" />
           {errors.email && (
             <p className="text-danger">{errors.email.message}</p>
           )}
@@ -82,7 +82,7 @@ function AuthForm({ isSignup, onSubmit, authError }: AuthFormProps) {
             name="password"
             required
           />
-          <Mail className="icon" />
+          <Lock className="icon" />
           {errors.password && (
             <p className="text-danger">{errors.password.message}</p>
           )}
