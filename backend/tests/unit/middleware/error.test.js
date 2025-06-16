@@ -30,7 +30,7 @@ describe('error middleware', () => {
     expect(mockLoggerError).toHaveBeenCalledWith('Test error');
     expect(mockRollbarError).toHaveBeenCalledWith('Test error');
     expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.send).toHaveBeenCalledWith('Something failed.');
+    expect(res.send).toHaveBeenCalledWith('Something failed, please try again later.');
     expect(next).not.toHaveBeenCalled();
   });
 });

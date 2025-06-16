@@ -73,7 +73,7 @@ describe('ContactNormalizer', () => {
             expect(result.surname).toBe('Alex');
             expect(result.phone).toBe('+306971234567');
             expect(result.email).toBe('test@example.com');
-            expect(result.birthdate instanceof Date).toBe(true);
+            expect(result.birthdate).toBe('1990-01-01');
         });
 
         it('should keep name and surname unchanged if no known name matched', () => {
