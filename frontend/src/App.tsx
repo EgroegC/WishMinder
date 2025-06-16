@@ -8,6 +8,7 @@ import PersistLogin from './components/authentication/PersistAuthForPages';
 import RequireAuth from './components/authentication/AuthenticationForPage';
 import CelebrationsPage from './pages/CelebarionsPage';
 import AccountPage from './pages/AccountPage';
+import MessagesPage from './pages/MessagesPage';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route element={<RequireAuth />}>
           <Route path="/upcoming/celebrations" element={<AppLayout><CelebrationsPage /></AppLayout>} />
           <Route path="/account" element={<AppLayout><AccountPage /></AppLayout>} />
+          <Route path="/messages" element={<AppLayout><MessagesPage /></AppLayout>} />
         </Route>
       </Routes>
     </ThemeProvider>
