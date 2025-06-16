@@ -199,7 +199,7 @@ Most API routes require authentication. To test them via Swagger:
   Logging handled via Winston (with Rollbar integration for production error tracking).
 
 - 🎨 **Responsive & Maintainable Frontend**  
-  Built with **React** and **Chakra UI**, following component-based architecture.  
+  Built with **React**, **Tailwind CSS** and **shadcn/ui**, following component-based architecture.  
   Responsive layout optimized for both desktop and mobile usage.  
   Structured with reusable **custom components** and **custom hooks** for clarity and separation of concerns.  
   Integrated **Zod** for runtime schema validation and better user feedback on forms. 
