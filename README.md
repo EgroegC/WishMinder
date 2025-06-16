@@ -141,9 +141,8 @@ everything together into a cohesive, user-centered product.
 
 ## 🌐 Live Demo & API Docs
 
-- 🔗 **Frontend (Web App)**: [https://your-frontend-url.com](https://your-frontend-url.com)
-- 🔗 **Backend Swagger Docs**: [https://your-backend-url.com/api-docs](https://your-backend-url.com/api-docs)
-- 🧩 **Base API URL**: `https://your-backend-url.com/api`
+- 🔗 **Frontend (Web App)**: [Frontend URL](https://lovely-puffpuff-4a6e3e.netlify.app/)
+- 🔗 **Backend Swagger Docs**: [Backend API-Docs](https://wishminder.onrender.com/api-docs)
 
 The web application is fully deployed and responsive. You can explore the frontend interface or interact directly with the backend via Swagger documentation.
 
