@@ -2,27 +2,32 @@
 
 **WishMinder** is a full-stack web app that reminds users of their contacts’ **birthdays** and **namedays**, helping them stay organized and thoughtful by suggesting wish messages.
 
-## 📑 Table of Contents
-- [Description](#description)
-  - [Built with](#1-built-with)
-  - [Motivation and takeaways](#2-motivation-and-takeaways)
-- [Live Demo & API Docs](#live-demo--api-docs)
-  - [Using Swagger to test API calls](#1-using-swagger-to-test-api-calls)
-  - [Deployment Overview](#2-deployment-overview)
-- [Features](#features)
-- [Architecture](#architecture)
-- [Getting Started](#getting-started)
-  - [Clone the Repository](#1-clone-the-repository)
-  - [Install Dependencies](#2-install-dependencies)
-  - [Environment Variables](#3-environment-variables)
-  - [Database Setup](#4-database-setup)
-- [Running the Server](#running-the-server)
-- [Testing](#testing)
-  - [Unit Tests](#unit-tests)
-  - [Integration Tests](#integration-tests)
-- [Project Structure](#project-structure)
-- [Author's Note](#authors-note)
-- [Contact](#contact)
+## Table of Contents
+
+- [Description](#description)  
+  - [Built With](#built-with)  
+  - [Motivation and Takeaways](#motivation-and-takeaways)  
+
+- [Live Demo and API Docs](#live-demo-and-api-docs)  
+  - [Deployment Overview](#deployment-overview)  
+  - [Using Swagger to Test API Calls](#using-swagger-to-test-api-calls)  
+
+- [Features](#features)  
+- [Architecture](#architecture)  
+
+- [Getting Started](#getting-started)  
+  - [Prerequisites](#prerequisites)  
+  - [Clone the Repository](#clone-the-repository)  
+  - [Install Dependencies](#install-dependencies)  
+  - [Environment Variables](#environment-variables)  
+  - [Database Setup](#database-setup)  
+  - [Running the Backend and Frontend](#running-the-backend-and-frontend)
+  - [API Testing with Postman](#api-testing-with-postman)
+
+- [Testing](#testing)  
+  - [Test Database Setup](#test-database-setup)  
+  - [Running Tests](#running-tests)  
+
 
 
 ## 📌 Description
@@ -34,6 +39,7 @@ The interface is fully **responsive**, working seamlessly across smartphones and
 - **JWT-based authentication** with refresh tokens and secure cookie storage for session management.
 - **Push notification system**, including web subscription endpoints and message delivery when a contact celebrates.
 - **Daily cron jobs** for scanning upcoming birthdays and namedays and triggering notifications.
+- **Encrypted storage of personal data**, such as contact emails and phone numbers, aligning with **GDPR principles** around data confidentiality and privacy.
 - **Swagger API documentation** for all routes.
 - **Production error monitoring** via Rollbar integration.
 - **PostgreSQL database schema** Organized backend with a clear separation between database models (for data access) and service classes (for business logic).
@@ -74,7 +80,18 @@ The interface is fully **responsive**, working seamlessly across smartphones and
         <br/>Rollbar
       </a>
     </td>
+    <td align="center">
+      <a href="https://tailwindcss.com/" target="_blank">
+        <img src="https://www.vectorlogo.zone/logos/tailwindcss/tailwindcss-icon.svg" width="40" height="40" alt="Tailwind CSS"/>
+        <br/>Tailwind
+      </a>
+    </td>
   </tr>
+
+  <tr>
+    <td colspan="6" align="center"><strong>WishMinder Tools</strong></td>
+  </tr>
+
   <tr>
     <td align="center">
       <a href="https://react.dev/" target="_blank">
@@ -101,9 +118,9 @@ The interface is fully **responsive**, working seamlessly across smartphones and
       </a>
     </td>
     <td align="center">
-      <a href="https://chakra-ui.com" target="_blank">
-        <img src="https://img.shields.io/badge/Chakra%20UI-319795?style=for-the-badge&logo=chakra-ui&logoColor=white" width="100" height="22" alt="Chakra UI Badge"/>
-        <br/>Chakra UI
+      <a href="https://ui.shadcn.com/" target="_blank">
+        <img src="https://img.shields.io/badge/ShadCN%20UI-000000?style=for-the-badge&logo=vercel&logoColor=white" width="100" height="22" alt="ShadCN UI Badge"/>
+        <br/>ShadCN UI
       </a>
     </td>
   </tr>
@@ -130,8 +147,6 @@ everything together into a cohesive, user-centered product.
 
 The web application is fully deployed and responsive. You can explore the frontend interface or interact directly with the backend via Swagger documentation.
 
----
-
 ### 🚀 Deployment Overview
 
 - **Frontend**: [Netlify](https://www.netlify.com/) — Used for easy and responsive deployment of the React-based interface.
@@ -140,8 +155,6 @@ The web application is fully deployed and responsive. You can explore the fronte
 - **Cron Jobs**: [GitHub Actions](https://github.com/features/actions) — Automates the daily notification task using scheduled workflows.
 
 > 🛠️ In a production environment, you'd typically consolidate services on a single platform, but this setup uses free-tier providers to maintain zero hosting cost.
-
----
 
 ### 🔐 Using Swagger to test API calls
 
@@ -169,6 +182,10 @@ Most API routes require authentication. To test them via Swagger:
 - 🛡️ **Secure Input Validation**  
   Validates user input on the server-side to enforce constraints (e.g., password length, username format) and prevent malformed data.
   Ensures consistency and protects critical endpoints beyond client-side checks.
+
+- 🔒 **Privacy-Conscious Contact Storage**  
+  Email and phone fields of user contacts are encrypted before being saved to the database.  
+  This promotes data confidentiality and aligns with **GDPR principles**.
 
 - 📄 **Interactive API Docs**  
   Full API documentation available via Swagger UI.  
@@ -210,3 +227,136 @@ Most API routes require authentication. To test them via Swagger:
 ![Architecture Diagram](./assets/architecture.png) 
 
 This diagram illustrates how the frontend, backend, database, and other services like GitHub Actions interact in the WishMinder application.
+
+## 🚀 Getting Started
+
+Follow these instructions to set up and run the project locally.
+
+### 📦 Prerequisites
+
+Make sure you have the following installed:
+
+- [Node.js](https://nodejs.org/) (v18+)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Yarn](https://yarnpkg.com/) or `npm`
+
+
+### 1. Clone the Repository
+
+Open your terminal and run:
+
+```bash
+git clone https://github.com/EgroegC/WishMinder.git
+
+cd WishMinder
+```
+
+### 2. Install Dependencies
+
+Navigate into the backend and frontend folders and install their dependencies:
+
+```bash
+# Backend dependencies
+cd backend
+npm install
+
+# Frontend dependencies
+cd ../frontend
+npm install
+```
+
+### 3. Environment Variables
+
+Create a .env file in the backend folder (you can copy from backend/.env.dist) and add the necessary environment variables.
+
+Create a .env file in the frontend folder (you can coppy from frontend/.env.dist) and add the necessary environment variables.
+
+### 4. Database Setup
+
+This project uses PostgreSQL as the database. Follow these steps to set up your local database:
+
+1. **Create the database**
+
+Open your PostgreSQL client (e.g., `psql` CLI or pgAdmin) and run:
+
+```sql
+CREATE DATABASE wish_minder;
+```
+
+2. **Create the necessary tables**
+
+Run the provided SQL schema file (schema.sql) to create all tables and constraints:
+
+```bash
+psql -U your_username -h localhost -d wish_minder -f database/schema.sql
+```
+
+- Make sure your database connection settings in .env match the created database.
+
+- Replace your_username with your PostgreSQL user (typically postgres).
+
+
+### ⚙️ 5. Running the Backend & Frontend
+
+With the database set up and environment variables configured, you're ready to run the full-stack application locally.
+
+#### ▶️ Start the Backend
+
+Navigate to the backend directory:
+
+```bash
+cd backend
+node ./src/index.js
+```
+
+The backend will start on the port specified in your .env file if you specify a PORT variable. If PORT undefined, port 3000 will be used automatically (http://localhost:3000).
+
+#### ▶️ Start the Frontend
+
+In a new terminal, navigate to the frontend directory and start the development server:
+
+```bash
+cd ../frontend
+npm run dev
+```
+
+The frontend will typically be available at http://localhost:5173.
+
+### API Testing with Postman
+
+A ready-to-use [Postman collection](postman/WishMinder.postman_collection.json) is included for testing core API endpoints.
+
+> ℹ️ Some routes related to authentication (e.g., refresh, logout) or browser-only functionality (e.g., push subscription) are not included, as they rely on cookies or browser APIs and are best tested via the frontend.
+
+#### 🛠 How to Use:
+
+1. **Import** the collection into Postman.  
+2. *(Optional)* Import the [Postman environment](postman/WishMinder.postman_environment.json) to simplify variable setup.  
+3. Make sure the `base_url` variable is set correctly (e.g., `http://localhost:3000`).  
+4. Start with the `/api/auth` login route to obtain a JWT and test protected routes.
+
+## 🧪 Testing
+
+This project includes automated tests for backend API routes and core business logic to ensure reliability and maintainability.
+
+### 📦 Prerequisites
+
+To run the tests, you need a separate test database. You can create it by duplicating your development database and naming it `test_wish_minder`.  
+
+Database connection settings for tests are configured in `backend/config/tests.json`. Feel free to update the database name, user, and other credentials as needed to match your environment.
+
+### ⚙️ Running Tests
+
+- **Testing frameworks:** Jest and Supertest  
+- **Test coverage:** Unit tests and integration tests covering API endpoints, validation, and business logic  
+- **Run tests:**  
+  From the `backend` directory, run:
+
+  ```bash
+  npm test
+  ```
+
+
+
+
+
