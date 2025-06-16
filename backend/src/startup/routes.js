@@ -7,6 +7,7 @@ const namedays = require('../routes/namedays');
 const webpush = require('../routes/web_push');
 const todays_celebrations = require('../routes/todays_celebrations');
 const messages = require('../routes/messages');
+const health_check = require('../routes/health_check');
 
 module.exports = function (app) {
     app.use(express.json());
@@ -17,5 +18,6 @@ module.exports = function (app) {
     app.use('/api/notification', webpush);
     app.use('/api/celebrations/today', todays_celebrations);
     app.use('/api/messages', messages);
+    app.use('/api/health', health_check);
     app.use(error);
 }
