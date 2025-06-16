@@ -1,9 +1,8 @@
-import { Calendar, ChevronUp, Home, Inbox, User2 } from "lucide-react"
+import { Calendar, Home, Inbox } from "lucide-react"
 
 import {
     Sidebar,
     SidebarContent,
-    SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
@@ -14,10 +13,7 @@ import {
     SidebarSeparator,
 } from "@/components/ui/sidebar"
 import { Link } from "react-router-dom"
-import { DropdownMenuTrigger, } from "@/components/ui/dropdown-menu"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
 
-// Menu items.
 const items = [
     {
         title: "Home",
@@ -45,7 +41,7 @@ export function AppSidebar() {
                         <SidebarMenuButton asChild>
                             <Link to="/">
                                 <img className='rounded-md' src='/icons/favicon-96x96.png' alt="logo" width={20} height={20} />
-                                <span>Dev</span>
+                                <span>WishMinder</span>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -71,22 +67,6 @@ export function AppSidebar() {
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
-            <SidebarFooter>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton>
-                                    <User2 />Joe Doe <ChevronUp className="ml-auto" />
-                                </SidebarMenuButton>
-                            </DropdownMenuTrigger >
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuItem className="text-sm">Sign Out</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarFooter>
         </Sidebar>
     )
 }
