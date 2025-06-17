@@ -22,7 +22,7 @@ const AppCalendar = () => {
     return (
         <div className="flex flex-col lg:flex-row gap-4 w-full">
             {/* Calendar Section */}
-            <div className="w-full lg:max-w-[320px]">
+            <div className="w-full lg:max-w-[320px] shrink-0">
                 <Calendar
                     mode="single"
                     selected={date}
@@ -33,7 +33,7 @@ const AppCalendar = () => {
             </div>
 
             {/* Info Panel Section */}
-            <div className="w-full flex flex-col justify-center bg-muted/70 rounded-2xl p-6 shadow-md relative border border-muted min-w-0">
+            <div className="w-full flex flex-col justify-center bg-muted/70 rounded-2xl p-6 shadow-md relative border border-muted min-w-0 flex-grow">
                 <div className="text-center flex flex-col items-center space-y-2">
                     <h2 className="text-2xl font-bold text-primary">{displayDate}</h2>
                     {date && (<h3 className="text-lg font-medium text-muted-foreground">
