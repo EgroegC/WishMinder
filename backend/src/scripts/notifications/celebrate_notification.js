@@ -58,7 +58,7 @@ async function notifyForTodaysNamedaysAndBirthdays() {
         title: 'Hey!',
         body: message,
         data: {
-          url: `${clientUrl}/send-wish`
+          url: `${clientUrl}`
         }
       });
 
