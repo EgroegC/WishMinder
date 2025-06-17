@@ -97,6 +97,17 @@ const AddContactCard = ({
     );
 };
 
+const decodeQuotedPrintableUTF8 = (input: string): string => {
+    input = input.replace(/=\r?\n/g, "");
+
+    const bytes = input
+        .split("=")
+        .slice(1)
+        .map((hex) => parseInt(hex, 16));
+    const uint8array = new Uint8Array(bytes);
+    return new TextDecoder("utf-8").decode(uint8array);
+};
+
 const parseVcfToContacts = (vcfText: string): PartialContact[] => {
     const contacts: PartialContact[] = [];
     const cards = vcfText.split("BEGIN:VCARD").slice(1);
@@ -111,28 +122,41 @@ const parseVcfToContacts = (vcfText: string): PartialContact[] => {
         const lines = card.split("\n").map((line) => line.trim());
 
         for (const line of lines) {
-            if (line.startsWith("FN:") && !name && !surname) {
-                const fullName = line.replace("FN:", "").trim();
-                const parts = fullName.split(" ");
-                if (parts.length > 0 && parts[0]) name = parts[0];
-                if (parts.length > 1) surname = parts.slice(1).join(" ").trim() || undefined;
+            const isQuotedPrintable = line.includes("ENCODING=QUOTED-PRINTABLE");
+
+            if (line.startsWith("FN") && !name && !surname) {
+                let value = line.split(":").slice(1).join(":").trim();
+                if (isQuotedPrintable) {
+                    value = decodeQuotedPrintableUTF8(value);
+                }
+                const parts = value.split(" ");
+                if (parts[0]) name = parts[0];
+                if (parts.length > 1) surname = parts.slice(1).join(" ");
             }
 
-            if (line.startsWith("N:") && !name && !surname) {
-                const parts = line.replace("N:", "").split(";");
-                if (parts[0]) surname = parts[0].trim() || undefined;
-                if (parts[1]) name = parts[1].trim() || undefined;
+            // Structured Name (N)
+            if (line.startsWith("N") && !name && !surname) {
+                let value = line.split(":").slice(1).join(":").trim();
+                if (isQuotedPrintable) {
+                    value = decodeQuotedPrintableUTF8(value);
+                }
+                const parts = value.split(";");
+                if (parts[1]) name = parts[1].trim();
+                if (parts[0]) surname = parts[0].trim();
             }
 
+            // Telephone
             if (line.startsWith("TEL") && !phone) {
                 const telParts = line.split(":");
                 if (telParts[1]) phone = telParts[1].trim() || undefined;
             }
 
+            // Email
             if (line.startsWith("EMAIL:") && !email) {
                 email = line.replace("EMAIL:", "").trim() || undefined;
             }
 
+            // Birthday
             if (line.startsWith("BDAY:")) {
                 const rawDate = line.replace("BDAY:", "").trim();
                 const parsedDate = new Date(rawDate);
