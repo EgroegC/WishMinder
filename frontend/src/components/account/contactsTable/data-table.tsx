@@ -7,6 +7,7 @@ import {
     getSortedRowModel,
     type SortingState,
     useReactTable,
+    type Row,
 } from "@tanstack/react-table"
 
 import {
@@ -17,20 +18,28 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
+import type { Contacts } from "./columns"
 
-interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+interface DataTableProps {
+    columns: ColumnDef<Contacts, unknown>[]
+    data: Contacts[]
 }
 
-export function DataTable<TData, TValue>({
-    columns,
-    data,
-}: DataTableProps<TData, TValue>) {
-    const [sorting, setSorting] = useState<SortingState>([]);
+function nameOrSurnameFilter(row: Row<Contacts>, _columnId: string, filterValue: string) {
+    const name = row.original.name?.toLowerCase() ?? ""
+    const surname = row.original.surname?.toLowerCase() ?? ""
+    const value = filterValue.toLowerCase()
+
+    return name.includes(value) || surname.includes(value)
+}
+
+export function DataTable({ columns, data }: DataTableProps) {
+    const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+    const [globalFilter, setGlobalFilter] = useState("")
 
     const table = useReactTable({
         data,
@@ -40,24 +49,26 @@ export function DataTable<TData, TValue>({
         getFilteredRowModel: getFilteredRowModel(),
         onColumnFiltersChange: setColumnFilters,
         onSortingChange: setSorting,
+        onGlobalFilterChange: setGlobalFilter,
+        globalFilterFn: nameOrSurnameFilter,
         state: {
             sorting,
             columnFilters,
-        }
+            globalFilter,
+        },
     });
 
     return (
         <>
             <div className="flex items-center py-4">
                 <Input
-                    placeholder="Filter surnames..."
-                    value={(table.getColumn("surname")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("surname")?.setFilterValue(event.target.value)
-                    }
+                    placeholder="Filter by name or surname..."
+                    value={globalFilter}
+                    onChange={(event) => setGlobalFilter(event.target.value)}
                     className="max-w-sm"
                 />
-            </ div>
+            </div>
+
             <div className="rounded-md border w-full overflow-x-auto">
                 <div className="max-h-[340px] overflow-y-auto min-w-full">
                     <Table className="min-w-full table-auto">
@@ -101,6 +112,5 @@ export function DataTable<TData, TValue>({
                 </div>
             </div>
         </>
-    );
+    )
 }
-

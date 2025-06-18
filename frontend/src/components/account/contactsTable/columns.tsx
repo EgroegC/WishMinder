@@ -35,11 +35,6 @@ export const getColumns = (
             cell: ({ row }) => (
                 <div className="lowercase">{row.getValue("surname")}</div>
             ),
-            filterFn: (row, columnId, filterValue) => {
-                const value = row.getValue(columnId);
-                return typeof value === "string" &&
-                    value.toLowerCase().includes(filterValue.toLowerCase());
-            },
         },
         {
             accessorKey: "phone",
