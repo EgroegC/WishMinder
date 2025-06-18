@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { CircleUserRound, MessageSquare, Phone } from "lucide-react";
 import { parseISO } from "date-fns";
 import { ScrollArea } from "./ui/scroll-area";
+import { useNavigate } from "react-router-dom";
 
 type Celebration = {
     id: string;
@@ -20,8 +21,6 @@ interface Props {
     type: "birthday" | "nameday";
 }
 
-import { useNavigate } from "react-router-dom";
-
 export default function CelebrationList({ celebrations, type }: Props) {
     const navigate = useNavigate();
     const isBirthday = type === "birthday";
@@ -31,7 +30,7 @@ export default function CelebrationList({ celebrations, type }: Props) {
             console.log("phone: ", contact.phone);
             navigate("/messages", {
                 state: {
-                    type: type,
+                    type,
                     phone: contact.phone,
                 },
             });
@@ -46,7 +45,7 @@ export default function CelebrationList({ celebrations, type }: Props) {
     }
 
     return (
-        <ScrollArea className="max-h-[150px] overflow-y-auto space-y-4 pr-1 rounded-sm border ">
+        <ScrollArea className="max-h-[150px] overflow-y-auto space-y-4 pr-1 rounded-sm border">
             <div className="space-y-4">
                 {celebrations.map((c) => {
                     const today = new Date();
@@ -64,16 +63,18 @@ export default function CelebrationList({ celebrations, type }: Props) {
                     return (
                         <div
                             key={c.id}
-                            className="flex flex-col md:flex-row items-center justify-between bg-white dark:bg-gray-900 border p-4 rounded-lg shadow-sm"
+                            className="flex flex-col md:flex-row items-center md:items-center justify-between bg-white dark:bg-gray-900 border p-4 rounded-lg shadow-sm"
                         >
+                            {/* Name + Icon */}
                             <div className="flex items-center gap-3 min-w-[200px]">
                                 <CircleUserRound size={25} className="text-gray-400" />
-                                <span className="font-medium text-gray-900 dark:text-gray-100">
+                                <span className="font-medium text-gray-900 dark:text-gray-100 text-center md:text-left">
                                     {c.name} {c.surname}
                                 </span>
                             </div>
 
-                            <div className="flex items-center gap-6 mt-3 md:mt-0">
+                            {/* Age + Actions */}
+                            <div className="flex flex-col md:flex-row md:items-center gap-3 mt-4 md:mt-0 w-full md:w-auto">
                                 {isBirthday && age !== null && (
                                     <div className="text-center">
                                         <p className="text-xs text-muted-foreground">Turns</p>
@@ -81,24 +82,27 @@ export default function CelebrationList({ celebrations, type }: Props) {
                                     </div>
                                 )}
 
-                                <div className="flex gap-2">
+                                <div className="flex flex-row gap-2 w-full max-w-xs mx-auto">
                                     <Button
                                         size="sm"
                                         variant="secondary"
+                                        className="flex-1 px-2 py-1 text-xs"
                                         onClick={() => window.open(`tel:${c.phone}`)}
                                     >
-                                        <Phone size={16} className="mr-1" />
+                                        <Phone size={14} className="mr-1" />
                                         Call
                                     </Button>
                                     <Button
                                         size="sm"
                                         variant="outline"
+                                        className="flex-1 px-2 py-1 text-xs"
                                         onClick={() => handleMessage(type)(c)}
                                     >
-                                        <MessageSquare size={16} className="mr-1" />
+                                        <MessageSquare size={14} className="mr-1" />
                                         Message
                                     </Button>
                                 </div>
+
                             </div>
                         </div>
                     );
