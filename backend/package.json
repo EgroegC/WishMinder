@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll --verbose --maxWorkers=1 --coverage",
-    "test:ci": "jest --watchAll --verbose --maxWorkers=1",
+    "test": "jest --watchAll --verbose --maxWorkers=1 --coverage --detectOpenHandles",
+    "test:ci": "jest --verbose --maxWorkers=1",
     "lint": "eslint ."
   },
   "repository": {

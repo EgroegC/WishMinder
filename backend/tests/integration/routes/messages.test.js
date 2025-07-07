@@ -41,7 +41,6 @@ describe('/api/messages', () => {
 
         afterEach(async () => {
             jest.restoreAllMocks();
-            await server.close();
         });
 
         const exec = (type) => {
