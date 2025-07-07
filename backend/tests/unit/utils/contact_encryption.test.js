@@ -1,5 +1,13 @@
 require("dotenv").config();
 const { encryptContact, decryptContact } = require('../../../src/utils/contact_encryption');
+
+jest.mock('pg', () => ({
+    Pool: jest.fn(),
+    types: {
+        setTypeParser: jest.fn(),
+    },
+}));
+
 const Contact = require('../../../src/models/contact');
 
 jest.mock('../../../src/utils/crypto', () => ({
