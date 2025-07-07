@@ -7,6 +7,7 @@ const PushSubscription = require('../../../src/models/push_subscription');
 const User = require('../../../src/models/user');
 const { itShouldRequireAuth } = require('../../helpers/auth_test_helper');
 const { deleteAllPushSubscriptionsForUser } = require('../../helpers/push_subscription_helper');
+const { closePool } = require('../../../src/config/db');
 
 jest.mock('web-push', () => ({
   setVapidDetails: jest.fn(),
@@ -30,8 +31,11 @@ jest.mock('../../../src/config/logger', () => {
 let server;
 
 describe('/api/notification', () => {
-  beforeEach(() => { server = require('../../../src/index'); });
+  beforeEach(async () => {
+    server = require('../../../src/index');
+  });
   afterEach(async () => { await server.close(); });
+  afterAll(async () => { await closePool(); });
 
   let user, token;
 

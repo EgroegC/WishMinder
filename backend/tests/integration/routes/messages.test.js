@@ -3,6 +3,7 @@ const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const Messages = require('../../../src/models/messages');
 const { itShouldRequireAuth } = require('../../helpers/auth_test_helper');
+const { closePool } = require('../../../src/config/db');
 
 jest.mock('../../../src/config/rollbar', () => {
     const mRollbar = {
@@ -23,6 +24,7 @@ let server;
 describe('/api/messages', () => {
     beforeEach(() => { server = require('../../../src/index'); });
     afterEach(async () => { await server.close(); });
+    afterAll(async () => { await closePool(); });
 
     describe('GET /me', () => {
         let token;

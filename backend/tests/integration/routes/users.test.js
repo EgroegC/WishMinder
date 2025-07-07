@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../../../src/models/user');
 const { itShouldRequireAuth } = require('../../helpers/auth_test_helper');
+const { closePool } = require('../../../src/config/db');
 
 jest.mock('../../../src/config/rollbar', () => {
     const mRollbar = {
@@ -24,6 +25,7 @@ let server;
 describe('/api/users', () => {
     beforeEach(() => { server = require('../../../src/index'); });
     afterEach(async () => { await server.close(); });
+    afterAll(async () => { await closePool(); });
 
     describe('GET /me', () => {
         let token;

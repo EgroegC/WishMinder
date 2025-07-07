@@ -3,12 +3,14 @@ const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../../../src/models/user');
+const { closePool } = require('../../../src/config/db');
 
 let server;
 
 describe('authorization middleware', () => {
     beforeEach(() => { server = require('../../../src/index'); });
     afterEach(async () => { await server.close(); });
+    afterAll(async () => { await closePool(); });
 
     let token;
     let user;

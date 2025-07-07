@@ -3,6 +3,7 @@ const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../../../src/models/user');
+const { closePool } = require('../../../src/config/db');
 
 jest.mock('../../../src/config/rollbar', () => {
     const mRollbar = {
@@ -25,9 +26,8 @@ describe('/api/auth', () => {
         server = require('../../../src/index');
     });
 
-    afterEach(async () => {
-        await server.close();
-    });
+    afterEach(async () => { await server.close(); });
+    afterAll(async () => { await closePool(); });
 
     let user, email, password, refreshToken;
 

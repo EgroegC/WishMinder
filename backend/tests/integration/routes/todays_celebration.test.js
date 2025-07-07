@@ -7,6 +7,7 @@ const { encryptContact } = require('../../../src/utils/contact_encryption');
 const { itShouldRequireAuth } = require('../../helpers/auth_test_helper');
 const { insertTestNameday, clearNamedaysAndNames } = require('../../helpers/namedays_helper');
 const { deleteAllContactsForUser } = require('../../helpers/contact_route_helper');
+const { closePool } = require('../../../src/config/db');
 
 jest.mock('../../../src/config/rollbar', () => {
   const mRollbar = {
@@ -27,6 +28,7 @@ let server;
 describe('/api/celebrations/today', () => {
   beforeEach(() => { server = require('../../../src/index'); });
   afterEach(async () => { await server.close(); });
+  afterAll(async () => { await closePool(); });
 
   describe('GET /', () => {
 

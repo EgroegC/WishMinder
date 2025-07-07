@@ -5,6 +5,7 @@ const NamedayService = require('../../../src/services/namedays_service');
 const User = require('../../../src/models/user');
 const { itShouldRequireAuth } = require('../../helpers/auth_test_helper');
 const { insertTestNameday, clearNamedaysAndNames } = require('../../helpers/namedays_helper');
+const { closePool } = require('../../../src/config/db');
 
 jest.mock('../../../src/config/rollbar', () => {
     const mRollbar = {
@@ -25,6 +26,7 @@ let server;
 describe('/api/namedays', () => {
     beforeEach(() => { server = require('../../../src/index'); });
     afterEach(async () => { await server.close(); });
+    afterAll(async () => { await closePool(); });
 
     describe('GET /upcomming', () => {
 

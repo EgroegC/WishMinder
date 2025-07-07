@@ -11,6 +11,7 @@ const { deleteAllContactsForUser } = require('../../helpers/contact_route_helper
 const { itShouldRequireAuth } = require('../../helpers/auth_test_helper');
 const { getContactService, setContactService } = require('../../../src/utils/contactServiceHolder');
 const { insertTestNameday, clearNamedaysAndNames } = require('../../helpers/namedays_helper');
+const { closePool } = require('../../../src/config/db');
 
 jest.mock('../../../src/config/rollbar', () => {
     const mRollbar = {
@@ -78,6 +79,7 @@ describe('/api/contacts', () => {
         await User.delete(user.email);
         await server.close();
     });
+    afterAll(async () => { await closePool(); });
 
     describe('POST /', () => {
         itShouldRequireAuth(() => server, '/api/contacts', 'post', { ...contactPayload });
