@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watchAll --verbose --maxWorkers=1 --coverage --detectOpenHandles",
-    "test:ci": "jest --verbose --maxWorkers=1 --detectOpenHandles",
+    "test:ci": "jest --verbose --maxWorkers=1",
     "lint": "eslint ."
   },
   "repository": {
