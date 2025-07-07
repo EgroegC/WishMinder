@@ -5,6 +5,20 @@ const bcrypt = require('bcrypt');
 const User = require('../../../src/models/user');
 const { itShouldRequireAuth } = require('../../helpers/auth_test_helper');
 
+jest.mock('../../../src/config/rollbar', () => {
+    const mRollbar = {
+        error: jest.fn()
+    };
+    return () => mRollbar;
+});
+
+jest.mock('../../../src/config/logger', () => {
+    return () => ({
+        error: jest.fn(),
+        info: jest.fn()
+    });
+});
+
 let server;
 
 describe('/api/users', () => {

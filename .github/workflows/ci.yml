@@ -44,4 +44,4 @@ jobs:
         run: dotenv -e .env.production -- npm run lint
 
       - name: 🧪 Run Tests
-        run: dotenv -e .env.production -- npm test
+        run: dotenv -e .env.production -- npm run test:ci

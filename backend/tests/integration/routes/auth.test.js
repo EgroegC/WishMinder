@@ -4,6 +4,20 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../../../src/models/user');
 
+jest.mock('../../../src/config/rollbar', () => {
+    const mRollbar = {
+        error: jest.fn()
+    };
+    return () => mRollbar;
+});
+
+jest.mock('../../../src/config/logger', () => {
+    return () => ({
+        error: jest.fn(),
+        info: jest.fn()
+    });
+});
+
 let server;
 
 describe('/api/auth', () => {

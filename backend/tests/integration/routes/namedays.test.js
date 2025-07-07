@@ -6,6 +6,20 @@ const User = require('../../../src/models/user');
 const { itShouldRequireAuth } = require('../../helpers/auth_test_helper');
 const { insertTestNameday, clearNamedaysAndNames } = require('../../helpers/namedays_helper');
 
+jest.mock('../../../src/config/rollbar', () => {
+    const mRollbar = {
+        error: jest.fn()
+    };
+    return () => mRollbar;
+});
+
+jest.mock('../../../src/config/logger', () => {
+    return () => ({
+        error: jest.fn(),
+        info: jest.fn()
+    });
+});
+
 let server;
 
 describe('/api/namedays', () => {
