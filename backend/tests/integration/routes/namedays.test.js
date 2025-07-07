@@ -24,7 +24,7 @@ let server;
 
 describe('/api/namedays', () => {
     beforeEach(() => { server = require('../../../src/index'); });
-    afterEach(() => { server.close(); });
+    afterEach(async () => { await server.close(); });
 
     describe('GET /upcomming', () => {
 

@@ -31,7 +31,7 @@ let server;
 
 describe('/api/notification', () => {
   beforeEach(() => { server = require('../../../src/index'); });
-  afterEach(() => { server.close(); });
+  afterEach(async () => { await server.close(); });
 
   let user, token;
 

@@ -23,7 +23,7 @@ let server;
 
 describe('/api/users', () => {
     beforeEach(() => { server = require('../../../src/index'); });
-    afterEach(() => { server.close(); });
+    afterEach(async () => { await server.close(); });
 
     describe('GET /me', () => {
         let token;

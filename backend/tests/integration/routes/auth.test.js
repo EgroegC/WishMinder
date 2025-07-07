@@ -26,7 +26,7 @@ describe('/api/auth', () => {
     });
 
     afterEach(async () => {
-        server.close();
+        await server.close();
     });
 
     let user, email, password, refreshToken;

@@ -26,7 +26,7 @@ let server;
 
 describe('/api/celebrations/today', () => {
   beforeEach(() => { server = require('../../../src/index'); });
-  afterEach(() => { server.close(); });
+  afterEach(async () => { await server.close(); });
 
   describe('GET /', () => {
 
