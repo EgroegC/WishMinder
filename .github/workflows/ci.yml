@@ -37,6 +37,9 @@ jobs:
       - name: 📝 Create .env.production from GitHub Secret
         run: echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
 
+      - name: ✏️ Create .env.test file from ENV_TEST secret
+        run: echo "${{ secrets.ENV_TEST }}" > .env.test
+
       - name: 🔑 Install dotenv-cli
         run: npm install -g dotenv-cli
 
@@ -44,4 +47,4 @@ jobs:
         run: dotenv -e .env.production -- npm run lint
 
       - name: 🧪 Run Tests
-        run: dotenv -e .env.production -- npm run test:ci
+        run: dotenv -e .env.test -- npm run test:ci
