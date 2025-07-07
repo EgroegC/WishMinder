@@ -8,7 +8,7 @@ let server;
 
 describe('authorization middleware', () => {
     beforeEach(() => { server = require('../../../src/index'); });
-    afterEach(() => { server.close(); });
+    afterEach(async () => { await server.close(); });
 
     let token;
     let user;
