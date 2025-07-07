@@ -20,6 +20,7 @@ class Contact {
   }
 
   serialize() {
+    // eslint-disable-next-line no-unused-vars
     const { phone_hash, email_hash, ...publicFields } = this;
     return publicFields;
   }

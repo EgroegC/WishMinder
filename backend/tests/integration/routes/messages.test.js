@@ -18,6 +18,8 @@ jest.mock('../../../src/config/logger', () => {
     });
 });
 
+let server;
+
 describe('/api/messages', () => {
     beforeEach(() => { server = require('../../../src/index'); });
     afterEach(() => { server.close(); });

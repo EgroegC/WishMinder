@@ -38,6 +38,7 @@ describe('Contact constructor validation', () => {
             phone: '123456',
         };
 
+        let result;
         result = new Contact(contact);
 
         expect(result).toBeInstanceOf(Contact);

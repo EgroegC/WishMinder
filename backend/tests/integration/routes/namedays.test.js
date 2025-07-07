@@ -6,6 +6,8 @@ const User = require('../../../src/models/user');
 const { itShouldRequireAuth } = require('../../helpers/auth_test_helper');
 const { insertTestNameday, clearNamedaysAndNames } = require('../../helpers/namedays_helper');
 
+let server;
+
 describe('/api/namedays', () => {
     beforeEach(() => { server = require('../../../src/index'); });
     afterEach(() => { server.close(); });

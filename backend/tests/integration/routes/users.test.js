@@ -5,6 +5,8 @@ const bcrypt = require('bcrypt');
 const User = require('../../../src/models/user');
 const { itShouldRequireAuth } = require('../../helpers/auth_test_helper');
 
+let server;
+
 describe('/api/users', () => {
     beforeEach(() => { server = require('../../../src/index'); });
     afterEach(() => { server.close(); });

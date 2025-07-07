@@ -3,7 +3,7 @@ const deduplicateByPhone = require('../../utils/deduplicateByPhone');
 
 
 class ContactImporter {
-    constructor({ encryptContact, decryptContact, db }) {
+    constructor({ encryptContact, decryptContact }) {
         this.encryptContact = encryptContact;
         this.decryptContact = decryptContact;
     }

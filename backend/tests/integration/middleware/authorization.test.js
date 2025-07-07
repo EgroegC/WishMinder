@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../../../src/models/user');
 
+let server;
+
 describe('authorization middleware', () => {
     beforeEach(() => { server = require('../../../src/index'); });
     afterEach(() => { server.close(); });

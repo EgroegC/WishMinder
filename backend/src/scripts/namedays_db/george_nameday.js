@@ -1,7 +1,5 @@
 require("dotenv").config();
-const fs = require("fs");
 const pool = require('../../config/db')();
-const path = require("path");
 const getOrthodoxEaster = require('./utils');
 
 // Function to determine George's nameday

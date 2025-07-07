@@ -1,5 +1,4 @@
 const { authenticateToken } = require('../middleware/authorization');
-const _ = require('lodash');
 const { validateContact, validateContactsBatch } = require('./validation/contact_validation');
 const Contact = require('../models/contact');
 const ContactNormalizer = require('../services/contact/contact_normalizer_service');

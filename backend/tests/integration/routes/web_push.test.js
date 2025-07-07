@@ -27,6 +27,8 @@ jest.mock('../../../src/config/logger', () => {
   });
 });
 
+let server;
+
 describe('/api/notification', () => {
   beforeEach(() => { server = require('../../../src/index'); });
   afterEach(() => { server.close(); });
