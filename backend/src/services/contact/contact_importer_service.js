@@ -1,4 +1,5 @@
-const pool = require('../../config/db')();
+const { getPool } = require('../../config/db');
+const pool = getPool();
 const deduplicateByPhone = require('../../utils/deduplicateByPhone');
 
 

@@ -3,18 +3,15 @@ const config = require("config");
 
 types.setTypeParser(1082, (val) => val);
 
-const dbConfig = config.get("database");
+let pool;
 
-module.exports = function () {
+function createPool() {
   if (!process.env.DATABASE_PASSWORD) {
     throw new Error("FATAL ERROR: DATABASE_PASSWORD is not set in .env file");
   }
 
-  const isProduction = process.env.NODE_ENV === 'production';
-
-  if (isProduction && !process.env.DATABASE_USER) {
-    throw new Error("FATAL ERROR: DATABASE_USER is not set in .env file");
-  }
+  const dbConfig = config.get("database");
+  const isProduction = process.env.NODE_ENV === "production";
 
   return new Pool({
     host: dbConfig.host,
@@ -22,6 +19,20 @@ module.exports = function () {
     user: isProduction ? process.env.DATABASE_USER : dbConfig.user,
     password: process.env.DATABASE_PASSWORD,
     database: dbConfig.name,
-    ssl: isProduction ? { rejectUnauthorized: false } : false
+    ssl: isProduction ? { rejectUnauthorized: false } : false,
   });
+}
+
+module.exports = {
+  getPool: () => {
+    if (!pool) {
+      pool = createPool();
+    }
+    return pool;
+  },
+  closePool: async () => {
+    if (pool && !pool.ended) {
+      await pool.end();
+    }
+  },
 };

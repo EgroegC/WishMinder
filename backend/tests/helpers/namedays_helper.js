@@ -1,4 +1,5 @@
-const pool = require('../../src/config/db')();
+const { getPool } = require('../../src/config/db');
+const pool = getPool();
 
 async function insertTestNameday(name, date) {
   const nameResult = await pool.query(
