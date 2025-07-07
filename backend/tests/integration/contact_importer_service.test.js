@@ -2,6 +2,7 @@ require("dotenv").config();
 const { deleteAllContactsForUser } = require('../helpers/contact_route_helper');
 const ContactImporter = require('../../src/services/contact/contact_importer_service');
 const crypto = require('crypto');
+const { closePool } = require("../../src/config/db");
 
 const fakeEncryptContact = (contact) => ({
     ...contact,
@@ -20,6 +21,7 @@ describe('ContactImporter Integration', () => {
 
     afterAll(async () => {
         await deleteAllContactsForUser(userId);
+        await closePool();
     });
 
     it('inserts new contacts', async () => {
