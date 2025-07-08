@@ -1,6 +1,7 @@
 require("dotenv").config();
 const fs = require("fs");
-const pool = require('../../config/db')();
+const { getPool } = require('../../config/db');
+const pool = getPool();
 const path = require("path");
 const getOrthodoxEaster = require('./utils');
 

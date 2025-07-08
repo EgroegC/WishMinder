@@ -1,5 +1,6 @@
 require("dotenv").config();
-const pool = require('../../config/db')();
+const { getPool } = require('../../config/db');
+const pool = getPool();
 const getOrthodoxEaster = require('./utils');
 
 // Function to determine George's nameday
